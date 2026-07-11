@@ -42,7 +42,7 @@ if(isset($_POST['form1'])) {
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Login</title>
+	<title>Admin Login - Manna Kampus</title>
 
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -59,37 +59,75 @@ if(isset($_POST['form1'])) {
 	<link rel="stylesheet" href="style.css">
 </head>
 
-<body class="hold-transition login-page sidebar-mini">
+<body class="hold-transition login-page sidebar-mini mk-admin-login-page">
 
-<div class="login-box">
-	<div class="login-logo">
-		<b>Admin Panel</b>
-	</div>
-  	<div class="login-box-body">
-    	<p class="login-box-msg">Log in to start your session</p>
-    
-	    <?php 
-	    if( (isset($error_message)) && ($error_message!='') ):
-	        echo '<div class="error">'.$error_message.'</div>';
-	    endif;
-	    ?>
+<main class="mk-admin-login">
+	<section class="mk-admin-card">
+		<div class="mk-admin-card-left">
+			<img src="../assets/uploads/logo.png" alt="Manna Kampus" class="mk-admin-logo">
 
-		<form action="" method="post">
-			<div class="form-group has-feedback">
-				<input class="form-control" placeholder="Email address" name="email" type="email" autocomplete="off" autofocus>
+			<div class="mk-admin-heading">
+				<h1>Admin Portal</h1>
+				<p>Secure access for authorized personnel only.</p>
 			</div>
-			<div class="form-group has-feedback">
-				<input class="form-control" placeholder="Password" name="password" type="password" autocomplete="off" value="">
-			</div>
-			<div class="row">
-				<div class="col-xs-8"></div>
-				<div class="col-xs-4">
-					<input type="submit" class="btn btn-primary btn-block btn-flat login-button" name="form1" value="Log In">
+
+			<?php 
+			if( (isset($error_message)) && ($error_message!='') ):
+				echo '<div class="error mk-login-error">'.$error_message.'</div>';
+			endif;
+			?>
+
+			<form action="" method="post" class="mk-admin-form">
+				<div class="mk-field">
+					<label for="email">Username or Email</label>
+					<div class="mk-input-wrap">
+						<i class="fa fa-user-o"></i>
+						<input id="email" class="form-control" placeholder="admin@gmail.com" name="email" type="email" autocomplete="off" autofocus>
+					</div>
 				</div>
+
+				<div class="mk-field">
+					<div class="mk-label-row">
+						<label for="password">Password</label>
+						<a href="#" class="mk-forgot-link">Forgot Password?</a>
+					</div>
+					<div class="mk-input-wrap">
+						<i class="fa fa-lock"></i>
+						<input id="password" class="form-control" placeholder="Password" name="password" type="password" autocomplete="off" value="">
+						<button type="button" class="mk-password-toggle" aria-label="Show password"><i class="fa fa-eye"></i></button>
+					</div>
+				</div>
+
+				<label class="mk-remember">
+					<input type="checkbox" name="remember_device" value="1">
+					<span>Remember this device</span>
+				</label>
+
+				<button type="submit" class="mk-login-button" name="form1">
+					Login to Dashboard <i class="fa fa-arrow-right"></i>
+				</button>
+			</form>
+		</div>
+
+		<aside class="mk-admin-card-right">
+			<div class="mk-sop-title">
+				<i class="fa fa-file-text-o"></i>
+				<h2>Panduan Penulisan Berita &amp;<br>Informasi (SOP)</h2>
 			</div>
-		</form>
+			<ul>
+				<li>Gunakan bahasa yang formal, ramah, dan sesuai dengan identitas Manna Kampus.</li>
+				<li>Pastikan gambar pendukung memiliki resolusi tinggi dan relevan.</li>
+				<li>Verifikasi keakuratan data dan tanggal sebelum dipublikasikan.</li>
+				<li>Setiap konten berita wajib melalui persetujuan Editor Senior.</li>
+			</ul>
+		</aside>
+	</section>
+
+	<div class="mk-admin-footer">
+		<div><i class="fa fa-shield"></i> 256-BIT SSL ENCRYPTED CONNECTION</div>
+		<a href="<?php echo BASE_URL; ?>"><i class="fa fa-arrow-left"></i> Back to Website</a>
 	</div>
-</div>
+</main>
 
 
 <script src="js/jquery-2.2.3.min.js"></script>
@@ -108,6 +146,18 @@ if(isset($_POST['form1'])) {
 <script src="js/jquery.slimscroll.min.js"></script>
 <script src="js/app.min.js"></script>
 <script src="js/demo.js"></script>
+<script>
+	(function() {
+		var toggle = document.querySelector('.mk-password-toggle');
+		var password = document.getElementById('password');
+		if (!toggle || !password) return;
+		toggle.addEventListener('click', function() {
+			var isPassword = password.getAttribute('type') === 'password';
+			password.setAttribute('type', isPassword ? 'text' : 'password');
+			toggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+		});
+	})();
+</script>
 
 </body>
 </html>

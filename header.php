@@ -376,6 +376,11 @@ foreach ($result as $row)
 			justify-content: space-between!important;
 			gap: 20px!important;
 		}
+		.mk-topbar-left {
+			display: flex!important;
+			align-items: center!important;
+			gap: 28px!important;
+		}
 		.mk-topbar-contact {
 			display: flex!important;
 			align-items: center!important;
@@ -419,7 +424,7 @@ foreach ($result as $row)
 			gap: 7px!important;
 			height: 46px!important;
 		}
-		.mk-topbar-menu-trigger:after {
+		.mk-topbar-menu:has(.mk-topbar-dropdown) .mk-topbar-menu-trigger:after {
 			content: "\f107"!important;
 			font-family: "FontAwesome"!important;
 			font-size: 12px!important;
@@ -786,6 +791,9 @@ foreach ($result as $row)
 					<div class="mk-topbar-inner">
 					<div class="mk-topbar-left">
 						<div class="mk-topbar-menu">
+							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">MannaKampus</a>
+						</div>
+						<div class="mk-topbar-menu">
 							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">Mitra Bisnis</a>
 							<div class="mk-topbar-dropdown">
 								<a href="#">Tenant</a>
@@ -793,6 +801,15 @@ foreach ($result as $row)
 								<a href="#">B2B</a>
 							</div>
 						</div>
+						<div class="mk-topbar-menu">
+							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">Our Brands</a>
+							<div class="mk-topbar-dropdown">
+								<a target="_blank" href="#">Lega Legi Kopi & Resto </a>
+								<a target="_blank" href="#">ROEMI Xtraordinary Ice Cream</a>
+								<a target="_blank" href="https://mannabakeryjogja.com/">Manna Bakery Jogja</a>
+							</div>
+						</div>
+						
 					</div>
 					<div class="mk-topbar-right">
 						<a href="mailto:<?php echo $contact_email; ?>" class="mk-topbar-button"><i class="fa fa-commenting-o"></i> Hubungi Kami</a>

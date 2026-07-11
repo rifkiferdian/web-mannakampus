@@ -59,6 +59,54 @@ foreach ($result as $row) {
 </section>
 <!-- Hero End -->
 
+<!-- Weekly Offers Start -->
+<section class="weekly-offers">
+	<div class="container">
+		<div class="weekly-offers-head">
+			<div>
+				<h2>Weekly Special Offers</h2>
+				<p>Don't miss out on our curated selection of deals.</p>
+			</div>
+			<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="weekly-offers-link">View All Deals <i class="fa fa-arrow-right"></i></a>
+		</div>
+
+		<div class="weekly-offers-grid">
+			<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="offer-card offer-card-featured" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/promo-fresh-harvest.png);">
+				<div class="offer-shade"></div>
+				<div class="offer-copy">
+					<span class="offer-badge">Fresh Harvest</span>
+					<h3>Morning Pick: Up to 30% Off</h3>
+					<p>Organic fruits directly from local farmers.</p>
+				</div>
+			</a>
+
+			<div class="weekly-offers-side">
+				<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="offer-card offer-card-wide" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/promo-dairy-delights.png);">
+					<div class="offer-copy offer-copy-dark">
+						<h3>Dairy Delights</h3>
+						<p>Buy 2 Get 1 Free on select brands</p>
+					</div>
+				</a>
+
+				<div class="weekly-offers-small">
+					<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="offer-card offer-card-solid">
+						<i class="fa fa-tags"></i>
+						<div class="offer-copy">
+							<h3>Member Day</h3>
+							<p>Double Points Today!</p>
+						</div>
+					</a>
+
+					<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="offer-card offer-card-small-image" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/promo-home-care.png);">
+						<span>Home Care</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- Weekly Offers End -->
+
 
 <?php if($home_status_service == 'Show'): ?>
 <!-- Service Start -->
