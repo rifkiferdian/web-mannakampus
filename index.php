@@ -124,12 +124,19 @@ foreach ($result as $row) {
 			<?php
 			$statement = $pdo->prepare("SELECT * FROM tbl_service ORDER BY id ASC");
 			$statement->execute();
-			$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
+			$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+			$service_icons = array(
+				'ultimate-trust' => 'fa-shield',
+				'premium-quality' => 'fa-certificate',
+				'convenience' => 'fa-shopping-basket'
+			);
 			foreach ($result as $row) {
+				$icon_class = isset($service_icons[$row['slug']]) ? $service_icons[$row['slug']] : 'fa-check-circle-o';
 				?>
 				<div class="col-sm-6 col-md-4 ser-item wow fadeInUp">
 					<div class="item">
-						<div class="photo" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/<?php echo $row['photo']; ?>);">
+						<div class="service-icon" aria-hidden="true">
+							<i class="fa <?php echo $icon_class; ?>"></i>
 						</div>
 						<div class="text">
 							<h3><a href="<?php echo BASE_URL.URL_SERVICE.$row['slug']; ?>"><?php echo $row['name']; ?></a></h3>
