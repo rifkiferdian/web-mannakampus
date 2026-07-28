@@ -424,7 +424,7 @@ foreach ($result as $row)
 			gap: 7px!important;
 			height: 46px!important;
 		}
-		.mk-topbar-menu:has(.mk-topbar-dropdown) .mk-topbar-menu-trigger:after {
+		.mk-topbar-menu.has-dropdown .mk-topbar-menu-trigger:after {
 			content: "\f107"!important;
 			font-family: "FontAwesome"!important;
 			font-size: 12px!important;
@@ -457,8 +457,13 @@ foreach ($result as $row)
 			transform: rotate(45deg)!important;
 		}
 		.mk-topbar-menu:hover .mk-topbar-dropdown,
-		.mk-topbar-menu:focus-within .mk-topbar-dropdown {
+		.mk-topbar-menu:focus-within .mk-topbar-dropdown,
+		.mk-topbar-menu.is-open .mk-topbar-dropdown {
 			display: block!important;
+		}
+		.mk-topbar-menu.is-open .mk-topbar-menu-trigger:after {
+			-webkit-transform: rotate(180deg)!important;
+			transform: rotate(180deg)!important;
 		}
 		.mk-topbar-dropdown a,
 		.mk-topbar-dropdown a:hover,
@@ -546,6 +551,7 @@ foreach ($result as $row)
 			margin-right: auto!important;
 		}
 		.mk-header .container {
+			position: relative!important;
 			padding-left: 28px!important;
 			padding-right: 28px!important;
 		}
@@ -572,6 +578,9 @@ foreach ($result as $row)
 			max-width: 180px!important;
 			max-height: 48px!important;
 			object-fit: contain!important;
+		}
+		.mk-mobile-menu {
+			display: none!important;
 		}
 		.mk-nav {
 			display: flex!important;
@@ -856,23 +865,89 @@ foreach ($result as $row)
 		@media only screen and (max-width: 991px) {
 			.mk-header,
 			.mk-header.sticky {
-				height: auto!important;
+				height: 72px!important;
+				min-height: 72px!important;
 			}
 			.mk-navbar {
-				height: auto!important;
+				position: relative!important;
+				height: 72px!important;
 				min-height: 72px!important;
-				flex-wrap: wrap!important;
-				padding: 12px 0!important;
+				flex-wrap: nowrap!important;
+				padding: 0!important;
 			}
-			.mk-nav {
-				order: 3!important;
-				width: 100%!important;
-				justify-content: flex-start!important;
-				gap: 18px!important;
-				overflow-x: auto!important;
+			.mk-nav-desktop {
+				display: none!important;
 			}
-			.mk-nav a {
-				line-height: 38px!important;
+			.mk-mobile-menu {
+				position: relative!important;
+				display: block!important;
+				margin-left: auto!important;
+				z-index: 1001!important;
+			}
+			.mk-mobile-menu summary {
+				display: flex!important;
+				width: 44px!important;
+				height: 44px!important;
+				align-items: center!important;
+				justify-content: center!important;
+				border: 1px solid rgba(255,122,0,0.24)!important;
+				border-radius: 6px!important;
+				background: #fff7ef!important;
+				color: #d95f00!important;
+				font-size: 20px!important;
+				cursor: pointer!important;
+				list-style: none!important;
+			}
+			.mk-mobile-menu summary::-webkit-details-marker {
+				display: none!important;
+			}
+			.mk-mobile-menu[open] summary .fa:before {
+				content: "\f00d"!important;
+			}
+			.mk-mobile-nav {
+				position: absolute!important;
+				top: 58px!important;
+				right: 0!important;
+				display: flex!important;
+				width: 320px!important;
+				max-width: calc(100vw - 48px)!important;
+				max-height: calc(100vh - 130px)!important;
+				padding: 8px 18px 14px!important;
+				flex-direction: column!important;
+				overflow-y: auto!important;
+				border-top: 2px solid #ff7a00!important;
+				border-radius: 0 0 10px 10px!important;
+				background: #fff!important;
+				box-shadow: 0 18px 35px rgba(15,23,42,0.18)!important;
+			}
+			.mk-mobile-nav a {
+				position: relative!important;
+				display: block!important;
+				min-height: 48px!important;
+				padding: 0 8px!important;
+				border-bottom: 1px solid rgba(15,23,42,0.07)!important;
+				color: #1f2933!important;
+				font-size: 14px!important;
+				font-weight: 600!important;
+				line-height: 48px!important;
+				text-decoration: none!important;
+			}
+			.mk-mobile-nav a:last-child {
+				border-bottom: 0!important;
+			}
+			.mk-mobile-nav a.active,
+			.mk-mobile-nav a:hover {
+				color: #b95a00!important;
+			}
+			.mk-mobile-nav a.active:before {
+				content: ""!important;
+				position: absolute!important;
+				top: 13px!important;
+				left: -10px!important;
+				width: 3px!important;
+				height: 22px!important;
+				border-radius: 3px!important;
+				background: #ff7a00!important;
 			}
 			.mk-hero,
 			.mk-hero .container {
@@ -891,6 +966,44 @@ foreach ($result as $row)
 				min-height: 46px!important;
 				justify-content: space-between!important;
 				padding: 8px 0!important;
+			}
+			.mk-topbar-left {
+				min-width: 0!important;
+				gap: 10px!important;
+				overflow: visible!important;
+			}
+			.mk-topbar-menu-trigger {
+				gap: 4px!important;
+				font-size: 12px!important;
+			}
+			.mk-topbar-menu.has-dropdown .mk-topbar-dropdown {
+				display: none!important;
+			}
+			.mk-topbar-menu.has-dropdown.is-open .mk-topbar-dropdown {
+				display: block!important;
+			}
+			.mk-topbar-menu:last-child .mk-topbar-dropdown {
+				right: 0!important;
+				left: auto!important;
+			}
+			.mk-topbar-menu:last-child .mk-topbar-dropdown:before {
+				right: 18px!important;
+				left: auto!important;
+			}
+			.mk-topbar-right {
+				flex: 0 0 auto!important;
+			}
+			.mk-topbar-button,
+			.mk-topbar-button:hover,
+			.mk-topbar-button:focus {
+				width: 36px!important;
+				min-width: 36px!important;
+				padding: 0!important;
+				font-size: 0!important;
+			}
+			.mk-topbar-button i {
+				margin: 0!important;
+				font-size: 14px!important;
 			}
 			.page-wrapper,
 			.mk-header {
@@ -981,16 +1094,16 @@ foreach ($result as $row)
 						<div class="mk-topbar-menu">
 							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">MannaKampus</a>
 						</div>
-						<div class="mk-topbar-menu">
-							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">Mitra Bisnis</a>
+						<div class="mk-topbar-menu has-dropdown">
+							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Mitra Bisnis</a>
 							<div class="mk-topbar-dropdown">
 								<a href="#">Tenant</a>
 								<a href="#">Register New Supplier</a>
 								<a href="#">B2B</a>
 							</div>
 						</div>
-						<div class="mk-topbar-menu">
-							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">Our Brands</a>
+						<div class="mk-topbar-menu has-dropdown">
+							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Our Brands</a>
 							<div class="mk-topbar-dropdown">
 								<a target="_blank" href="#">Lega Legi Kopi & Resto </a>
 								<a target="_blank" href="#">ROEMI Xtraordinary Ice Cream</a>
@@ -1011,7 +1124,7 @@ foreach ($result as $row)
 			<div class="container">
 				<div class="mk-navbar">
 					<a href="<?php echo BASE_URL; ?>" class="mk-brand"><img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus"></a>
-					<nav class="mk-nav">
+					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
 						<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
 						<a href="#">About Us</a>
 						<a href="#">Promo</a>
@@ -1020,7 +1133,58 @@ foreach ($result as $row)
 						<a href="#">Join Us</a>
 						<a href="#">Career</a>
 					</nav>
+					<details class="mk-mobile-menu">
+						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
+						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
+							<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
+							<a href="#">About Us</a>
+							<a href="#">Promo</a>
+							<a href="#">Blog</a>
+							<a href="#">Corporate</a>
+							<a href="#">Join Us</a>
+							<a href="#">Career</a>
+						</nav>
+					</details>
 				</div>
 			</div>
 		</header>
+		<script>
+		(function() {
+			var dropdownMenus = document.querySelectorAll('.mk-topbar-menu.has-dropdown');
+
+			function closeTopbarDropdowns(exceptMenu) {
+				for (var i = 0; i < dropdownMenus.length; i++) {
+					if (dropdownMenus[i] !== exceptMenu) {
+						dropdownMenus[i].classList.remove('is-open');
+						dropdownMenus[i].querySelector('.mk-topbar-menu-trigger').setAttribute('aria-expanded', 'false');
+					}
+				}
+			}
+
+			for (var i = 0; i < dropdownMenus.length; i++) {
+				(function(menu) {
+					var trigger = menu.querySelector('.mk-topbar-menu-trigger');
+					trigger.addEventListener('click', function(event) {
+						event.preventDefault();
+						var willOpen = !menu.classList.contains('is-open');
+						closeTopbarDropdowns(menu);
+						menu.classList.toggle('is-open', willOpen);
+						trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+					});
+				})(dropdownMenus[i]);
+			}
+
+			document.addEventListener('click', function(event) {
+				if (!event.target.closest('.mk-topbar-menu.has-dropdown')) {
+					closeTopbarDropdowns();
+				}
+			});
+
+			document.addEventListener('keydown', function(event) {
+				if (event.key === 'Escape') {
+					closeTopbarDropdowns();
+				}
+			});
+		})();
+		</script>
 		<!-- Header End -->
