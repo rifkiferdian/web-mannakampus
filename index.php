@@ -158,6 +158,8 @@ function home_promo_event_date($start_date, $end_date) {
 <?php if($home_promo_events): ?>
 <!-- Promo & Event Start -->
 <section class="promo-events" id="promo-events">
+	<img class="promo-event-decoration promo-event-decoration-left" src="<?php echo BASE_URL; ?>assets/images/promo-event-shopper-left.webp" alt="" aria-hidden="true">
+	<img class="promo-event-decoration promo-event-decoration-right" src="<?php echo BASE_URL; ?>assets/images/promo-event-shopper-right.webp" alt="" aria-hidden="true">
 	<div class="container">
 		<div class="promo-events-head">
 			<div>
@@ -199,11 +201,18 @@ function home_promo_event_date($start_date, $end_date) {
 
 			<?php if(count($home_promo_events) > 1): ?>
 			<div class="promo-event-navigation">
-				<ol class="carousel-indicators">
-					<?php foreach($home_promo_events as $promo_index => $promo_event): ?>
-					<li data-target="#promo-event-carousel" data-slide-to="<?php echo $promo_index; ?>"<?php if($promo_index === 0) { echo ' class="active"'; } ?>></li>
-					<?php endforeach; ?>
-				</ol>
+				<div class="promo-event-progress">
+					<div class="promo-event-counter">
+						<strong class="promo-event-current">01</strong>
+						<span>/</span>
+						<span><?php echo str_pad(count($home_promo_events), 2, '0', STR_PAD_LEFT); ?></span>
+					</div>
+					<ol class="carousel-indicators">
+						<?php foreach($home_promo_events as $promo_index => $promo_event): ?>
+						<li data-target="#promo-event-carousel" data-slide-to="<?php echo $promo_index; ?>" aria-label="Tampilkan promo <?php echo $promo_index + 1; ?>"<?php if($promo_index === 0) { echo ' class="active"'; } ?>></li>
+						<?php endforeach; ?>
+					</ol>
+				</div>
 				<div class="promo-event-arrows">
 					<a href="#promo-event-carousel" role="button" data-slide="prev" aria-label="Promo sebelumnya"><i class="fa fa-angle-left"></i></a>
 					<a href="#promo-event-carousel" role="button" data-slide="next" aria-label="Promo berikutnya"><i class="fa fa-angle-right"></i></a>

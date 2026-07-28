@@ -62,6 +62,11 @@
 			}
 		});
 
+		$('#promo-event-carousel').on('slide.bs.carousel', function(event) {
+			var nextIndex = $(event.relatedTarget).index() + 1;
+			$(this).find('.promo-event-current').text(('0' + nextIndex).slice(-2));
+		});
+
 		// Carousel - Atorney
 		$('.team-member-carousel').owlCarousel({
 	    	loop: true,

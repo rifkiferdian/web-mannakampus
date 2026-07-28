@@ -185,7 +185,7 @@ foreach ($result as $row)
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery.bxslider.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/hover.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/magnific-popup.css">
-	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260728-14">
+	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260728-20">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/responsive.css?v=mk-home-20260711-17">
 
 	<script src="<?php echo BASE_URL; ?>assets/js/modernizr.min.js"></script>
