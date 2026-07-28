@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Designation</h1>
+		<h1>Kategori Penghargaan</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="designation-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -23,7 +23,7 @@
 			<thead>
 			    <tr>
 			        <th>SL</th>
-			        <th>Designation Name</th>
+			        <th>Nama Kategori</th>
 			        <th>Action</th>
 			    </tr>
 			</thead>

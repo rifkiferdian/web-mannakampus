@@ -32,7 +32,7 @@ if(isset($_POST['form1'])) {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Add Designation</h1>
+		<h1>Tambah Kategori Penghargaan</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="designation.php" class="btn btn-primary btn-sm">View All</a>
@@ -66,7 +66,7 @@ if(isset($_POST['form1'])) {
 				<div class="box box-info">
 					<div class="box-body">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Designation Name <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Nama Kategori <span>*</span></label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" name="designation_name" autocomplete="off">
 							</div>

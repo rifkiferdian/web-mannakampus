@@ -46,6 +46,7 @@
 	                    <td><?php echo $row['page_layout']; ?></td>
 	                    <td><?php echo $row['status']; ?></td>
 	                    <td>
+	                        <a href="<?php echo BASE_URL; ?>page.php?slug=<?php echo rawurlencode($row['page_slug']); ?>" class="btn btn-info btn-xs" target="_blank" rel="noopener noreferrer">View Page</a>
 	                        <a href="page-edit.php?id=<?php echo $row['page_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
 	                        <a href="#" class="btn btn-danger btn-xs" data-href="page-delete.php?id=<?php echo $row['page_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>

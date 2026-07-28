@@ -158,7 +158,7 @@ foreach ($result as $row) {
 
 
 <?php if($home_status_team_member == 'Show'): ?>
-<!-- Team Member Start -->
+<!-- Penghargaan MannaKampus Start -->
 <section class="team-member-v1">
 	<div class="container">
 		<div class="row">
@@ -172,7 +172,7 @@ foreach ($result as $row) {
 		<div class="row">
 			<div class="col-md-12">
 				
-				<!-- Team Member Carousel Start -->
+				<!-- Penghargaan Carousel Start -->
 				<div class="team-member-carousel">
 					<?php
 					$statement = $pdo->prepare("SELECT 
@@ -247,13 +247,13 @@ foreach ($result as $row) {
 					}
 					?>					
 				</div>
-				<!-- Team Member Carousel End -->
+				<!-- Penghargaan Carousel End -->
 
 			</div>
 		</div>
 	</div>
 </section>
-<!-- Team Members End -->
+<!-- Penghargaan MannaKampus End -->
 <?php endif; ?>
 
 

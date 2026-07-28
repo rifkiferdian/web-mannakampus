@@ -209,14 +209,14 @@ $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+
 					<li class="treeview <?php if( ($cur_page == 'designation-add.php')||($cur_page == 'designation.php')||($cur_page == 'designation-edit.php') || ($cur_page == 'team-member-add.php')||($cur_page == 'team-member.php')||($cur_page == 'team-member-edit.php') ) {echo 'active';} ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
-							<span>Team Member</span>
+							<span>Penghargaan MannaKampus</span>
 							<span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
 						<ul class="treeview-menu">
-							<li><a href="designation.php"><i class="fa fa-circle-o"></i> Designation</a></li>
-							<li><a href="team-member.php"><i class="fa fa-circle-o"></i> Team Member</a></li>
+							<li><a href="designation.php"><i class="fa fa-circle-o"></i> Kategori Penghargaan</a></li>
+							<li><a href="team-member.php"><i class="fa fa-circle-o"></i> Data Penghargaan</a></li>
 						</ul>
 					</li>
 

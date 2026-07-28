@@ -56,7 +56,7 @@ if(!isset($_REQUEST['id'])) {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Edit Designation</h1>
+		<h1>Edit Kategori Penghargaan</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="designation.php" class="btn btn-primary btn-sm">View All</a>
@@ -92,7 +92,7 @@ foreach ($result as $row) {
 	        <div class="box box-info">
 	            <div class="box-body">
 	                <div class="form-group">
-	                    <label for="" class="col-sm-2 control-label">Designation Name <span>*</span></label>
+	                    <label for="" class="col-sm-2 control-label">Nama Kategori <span>*</span></label>
 	                    <div class="col-sm-4">
 	                        <input type="text" class="form-control" name="designation_name" value="<?php echo $designation_name; ?>" autocomplete="off">
 	                    </div>

@@ -647,7 +647,7 @@ if(isset($_POST['form_contact']))
 		<div class="row">
 			<div class="col-md-12">
 				
-				<!-- Team Member Container Start -->
+				<!-- Penghargaan MannaKampus Container Start -->
 				<div class="team-member-inner">
 					
 					<?php
@@ -727,7 +727,7 @@ if(isset($_POST['form_contact']))
 									<h3><a href="<?php echo BASE_URL.URL_TEAM.$row['slug']; ?>"><?php echo $row['name']; ?></a></h3>
 									<h4><?php echo $row['designation_name']; ?></h4>
 									<p class="button">
-										<a href="<?php echo BASE_URL.URL_TEAM.$row['slug']; ?>"><?php echo SEE_FULL_PROFILE; ?></a>
+										<a href="<?php echo BASE_URL.URL_TEAM.$row['slug']; ?>">Lihat Detail Penghargaan</a>
 									</p>
 								</div>
 							</div>
@@ -737,7 +737,7 @@ if(isset($_POST['form_contact']))
 					?>
 					
 				</div>
-				<!-- Team Member Container End -->
+				<!-- Penghargaan MannaKampus Container End -->
 
 			</div>
 		</div>

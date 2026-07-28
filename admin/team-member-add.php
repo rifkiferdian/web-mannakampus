@@ -83,7 +83,7 @@ if(isset($_POST['form1'])) {
 		$statement = $pdo->prepare("INSERT INTO tbl_team_member (name,slug,designation_id,photo,banner,degree,detail,facebook,twitter,linkedin,youtube,google_plus,instagram,flickr,address,practice_location,phone,email,website,status,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
 			
-		$success_message = 'Team Member is added successfully!';
+	$success_message = 'Penghargaan berhasil ditambahkan!';
 
 		unset($_POST['name']);
 		unset($_POST['slug']);
@@ -110,7 +110,7 @@ if(isset($_POST['form1'])) {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Add Team Member</h1>
+		<h1>Tambah Penghargaan MannaKampus</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="team-member.php" class="btn btn-primary btn-sm">View All</a>
@@ -141,7 +141,7 @@ if(isset($_POST['form1'])) {
 				<div class="box box-info">
 					<div class="box-body">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Name <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Nama Penghargaan <span>*</span></label>
 							<div class="col-sm-6">
 								<input type="text" autocomplete="off" class="form-control" name="name" value="<?php if(isset($_POST['name'])){echo $_POST['name'];} ?>">
 							</div>
@@ -153,10 +153,10 @@ if(isset($_POST['form1'])) {
 							</div>
 						</div>
 						<div class="form-group">
-				            <label for="" class="col-sm-2 control-label">Select Designation <span>*</span></label>
+					            <label for="" class="col-sm-2 control-label">Kategori Penghargaan <span>*</span></label>
 				            <div class="col-sm-3">
 				            	<select class="form-control select2" name="designation_id" style="width:300px;">
-				            		<option value="">Select a designation</option>
+					            		<option value="">Pilih kategori</option>
 				            		<?php
 						            	$i=0;
 						            	$statement = $pdo->prepare("SELECT * FROM tbl_designation ORDER BY designation_name ASC");
@@ -172,7 +172,7 @@ if(isset($_POST['form1'])) {
 				            </div>
 				        </div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Photo <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Gambar Penghargaan <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
 								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
 							</div>
@@ -184,13 +184,13 @@ if(isset($_POST['form1'])) {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Degree </label>
+							<label for="" class="col-sm-2 control-label">Tahun / Keterangan Singkat </label>
 							<div class="col-sm-6">
 								<input type="text" autocomplete="off" class="form-control" name="degree" value="<?php if(isset($_POST['degree'])){echo $_POST['degree'];} ?>">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Detail </label>
+							<label for="" class="col-sm-2 control-label">Detail Penghargaan </label>
 							<div class="col-sm-9">
 								<textarea class="form-control editor" name="detail"><?php if(isset($_POST['detail'])){echo $_POST['detail'];} ?></textarea>
 							</div>

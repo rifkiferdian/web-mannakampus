@@ -98,7 +98,7 @@ if(isset($_POST['form1'])) {
     		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
 		}
 
-	    $success_message = 'Team Member is updated successfully!';
+	    $success_message = 'Penghargaan berhasil diperbarui!';
 	}
 }
 ?>
@@ -122,7 +122,7 @@ if(!isset($_REQUEST['id'])) {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Edit Team Member</h1>
+		<h1>Edit Penghargaan MannaKampus</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="team-member.php" class="btn btn-primary btn-sm">View All</a>
@@ -188,7 +188,7 @@ foreach ($result as $row) {
 				<div class="box box-info">
 					<div class="box-body">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Name <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Nama Penghargaan <span>*</span></label>
 							<div class="col-sm-6">
 								<input type="text" autocomplete="off" class="form-control" name="name" value="<?php echo $name; ?>">
 							</div>
@@ -200,7 +200,7 @@ foreach ($result as $row) {
 							</div>
 						</div>
 						<div class="form-group">
-				            <label for="" class="col-sm-2 control-label">Select Designation <span>*</span></label>
+					            <label for="" class="col-sm-2 control-label">Kategori Penghargaan <span>*</span></label>
 				            <div class="col-sm-3">
 				            	<select class="form-control select2" name="designation_id" style="width:300px;">
 								<?php
@@ -218,13 +218,13 @@ foreach ($result as $row) {
 				            </div>
 				        </div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Existing Photo</label>
+							<label for="" class="col-sm-2 control-label">Gambar Saat Ini</label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $photo; ?>" alt="Team Member Photo" style="width:200px;">
+								<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $photo; ?>" alt="Gambar Penghargaan" style="width:200px;">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Photo <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Ganti Gambar</label>
 							<div class="col-sm-9" style="padding-top:5px">
 								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
 							</div>
@@ -242,13 +242,13 @@ foreach ($result as $row) {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Degree </label>
+							<label for="" class="col-sm-2 control-label">Tahun / Keterangan Singkat </label>
 							<div class="col-sm-6">
 								<input type="text" autocomplete="off" class="form-control" name="degree" value="<?php echo $degree; ?>">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Detail </label>
+							<label for="" class="col-sm-2 control-label">Detail Penghargaan </label>
 							<div class="col-sm-9">
 								<textarea class="form-control editor" name="detail"><?php echo $detail; ?></textarea>
 							</div>

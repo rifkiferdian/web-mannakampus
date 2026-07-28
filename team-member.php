@@ -64,7 +64,7 @@ foreach ($result as $row)
 		<div class="row">
 			<div class="col-md-12">
 				<div class="banner-text">
-					<h1><?php echo TEAM_MEMBER_COLON; ?> <?php echo $name; ?></h1>
+					<h1>Penghargaan: <?php echo $name; ?></h1>
 				</div>
 			</div>
 		</div>
@@ -73,7 +73,7 @@ foreach ($result as $row)
 <!-- Banner End -->
 
 
-<!-- Team Member Start -->
+<!-- Penghargaan MannaKampus Start -->
 <section class="team-member-detail">
 	<div class="container">
 		<div class="row">
@@ -130,7 +130,7 @@ foreach ($result as $row)
 				<!-- Team Member Detail Tab Start -->
 				<div class="team-member-detail-tab">
 					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="true"><?php echo ABOUT; ?></a></li>
+						<li class="active"><a href="#tab1" data-toggle="tab" aria-expanded="true">Detail Penghargaan</a></li>
 						<li class=""><a href="#tab2" data-toggle="tab" aria-expanded="false"><?php echo CONTACT; ?></a></li>
 					</ul>
 					
@@ -225,7 +225,7 @@ foreach ($result as $row)
 		</div>
 	</div>
 </section>
-<!-- Team Member End -->
+<!-- Penghargaan MannaKampus End -->
 
 
 <?php require_once('footer.php'); ?>

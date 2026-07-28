@@ -2,10 +2,10 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Team Members</h1>
+		<h1>Data Penghargaan MannaKampus</h1>
 	</div>
 	<div class="content-header-right">
-		<a href="team-member-add.php" class="btn btn-primary btn-sm">Add Team Member</a>
+		<a href="team-member-add.php" class="btn btn-primary btn-sm">Tambah Penghargaan</a>
 	</div>
 </section>
 
@@ -18,9 +18,9 @@
 						<thead>
 							<tr>
 								<th>SL</th>
-								<th>Photo</th>
-								<th width="180">Name</th>
-								<th width="240">Designation</th>
+								<th>Gambar</th>
+								<th width="180">Nama Penghargaan</th>
+								<th width="240">Kategori</th>
 								<th>Status</th>
 								<th width="140">Action</th>
 							</tr>
