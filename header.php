@@ -105,6 +105,21 @@ foreach ($result as $row)
 		}
 	}
 
+	if($cur_page == 'promo-event.php')
+	{
+		$statement = $pdo->prepare("SELECT * FROM tbl_promo_event WHERE slug=? AND status=?");
+		$statement->execute(array(isset($_REQUEST['slug']) ? $_REQUEST['slug'] : '', 'Active'));
+		$row = $statement->fetch(PDO::FETCH_ASSOC);
+		if($row)
+		{
+			echo '<meta name="description" content="'.htmlspecialchars($row['short_description'], ENT_QUOTES, 'UTF-8').'">';
+			echo '<title>'.htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8').' - Manna Kampus</title>';
+			echo '<meta property="og:title" content="'.htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8').'">';
+			echo '<meta property="og:description" content="'.htmlspecialchars($row['short_description'], ENT_QUOTES, 'UTF-8').'">';
+			echo '<meta property="og:image" content="'.BASE_URL.'assets/uploads/'.rawurlencode($row['image']).'">';
+		}
+	}
+
 	if($cur_page == 'category.php')
 	{
 		$statement = $pdo->prepare("SELECT * FROM tbl_category WHERE category_slug=?");
@@ -170,7 +185,7 @@ foreach ($result as $row)
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery.bxslider.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/hover.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/magnific-popup.css">
-	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260711-17">
+	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260728-6">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/responsive.css?v=mk-home-20260711-17">
 
 	<script src="<?php echo BASE_URL; ?>assets/js/modernizr.min.js"></script>
@@ -1071,6 +1086,30 @@ foreach ($result as $row)
 			}
 		}
 
+		/* Keep Promo & Event banners at their final size during every carousel state. */
+		#promo-event-carousel .carousel-inner > .item,
+		#promo-event-carousel .carousel-inner > .item.active,
+		#promo-event-carousel .carousel-inner > .item.next,
+		#promo-event-carousel .carousel-inner > .item.prev,
+		#promo-event-carousel .carousel-inner > .item.left,
+		#promo-event-carousel .carousel-inner > .item.right {
+			left: 0!important;
+			opacity: 1!important;
+			-webkit-transform: none!important;
+			transform: none!important;
+			-webkit-transition: none!important;
+			transition: none!important;
+		}
+		#promo-event-carousel .promo-event-visual img {
+			width: 100%!important;
+			max-width: none!important;
+			height: 100%!important;
+			-webkit-transform: none!important;
+			transform: none!important;
+			-webkit-transition: none!important;
+			transition: none!important;
+		}
+
 	</style>
 
 
@@ -1142,7 +1181,7 @@ foreach ($result as $row)
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
 						<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
 						<a href="#">About Us</a>
-						<a href="#">Promo</a>
+						<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
 						<a href="#">Blog</a>
 						<a href="#">Corporate</a>
 						<a href="#">Join Us</a>
@@ -1153,7 +1192,7 @@ foreach ($result as $row)
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
 							<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
 							<a href="#">About Us</a>
-							<a href="#">Promo</a>
+							<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
 							<a href="#">Blog</a>
 							<a href="#">Corporate</a>
 							<a href="#">Join Us</a>

@@ -38,4 +38,6 @@ DEADJOE
 *.rar
 
 # Upload scratch files
-assets/uploads/
+assets/uploads/*
+!assets/uploads/promo-event-gebyar-undian-2026.webp
+!assets/uploads/promo-event-opening-condongcatur.webp

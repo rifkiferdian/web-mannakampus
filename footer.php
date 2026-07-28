@@ -167,16 +167,8 @@ This link will be active only for 24 hours.
 					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInRight">
 						<h3><?php echo "Links"; ?></h3>
 						<ul class="footer-link-list">
-							<li><a href="http://jurnal.stieww.ac.id">STIE Widya Wiwaha Journal</a></li>
-							<li><a href="http://eprint.stieww.ac.id">STIE Widya Wiwaha Repository</a></li>
-							<li><a href="http://library.stieww.ac.id">STIE Widya Wiwaha Library</a></li>
-							<li><a href="https://stieww.ac.id/buku/PanduanAkademikS1.pdf">Undergraduate Academic Guidance</a></li>
-							<li><a href="https://stieww.ac.id/buku/PanduanSkripsi.pdf">Undergraduate Thesis Guidance</a></li>
-							<li><a href="https://stieww.ac.id/buku/PedomanAkademikMM.pdf">Master of Management Academic Guidance</a></li>
-							<li><a href="https://stieww.ac.id/buku/PedomanTesis.pdf">Master Thesis Guidance</a></li>
-							<li><a href="https://stieww.ac.id/tracer">Alumni Tracer</a></li>
-							<li><a href="https://stieww.ac.id/page/download-logo">Logo Download</a></li>
-							<li><a href="https://stieww.ac.id/page/scan-akreditasi">Scan Akreditasi</a></li>
+							<li><a href="http://mannakampus.com">mannakampus</a></li>
+							
 						</ul>
 					</div>
 					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInRight">

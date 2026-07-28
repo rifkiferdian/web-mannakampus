@@ -20,6 +20,498 @@
 	outline: none;
 }
 
+/* Promo & Event */
+.promo-events {
+    padding: 76px 0;
+    background: #fff8f1;
+}
+
+.promo-events .container,
+.promo-event-detail .container {
+    width: 100% !important;
+    max-width: 1180px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-right: 28px !important;
+    padding-left: 28px !important;
+}
+
+.promo-events-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.promo-events-eyebrow {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #e86600;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.promo-events-head h2 {
+    margin: 0 0 8px;
+    color: #111827;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.promo-events-head p {
+    margin: 0;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.promo-event-carousel {
+    position: relative;
+}
+
+.promo-event-instant .carousel-inner > .item {
+    left: 0 !important;
+    opacity: 1 !important;
+    -webkit-transform: none !important;
+    transform: none !important;
+    -webkit-transition: none !important;
+    transition: none !important;
+}
+
+.promo-event-card {
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 20px 55px rgba(133, 72, 17, 0.12);
+}
+
+.promo-event-visual {
+    position: relative;
+    display: flex;
+    width: 100%;
+    aspect-ratio: 9 / 4;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff9a00, #ff7300);
+}
+
+.promo-event-visual::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -35%;
+    width: 24%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.30), transparent);
+    content: "";
+    pointer-events: none;
+    opacity: 0;
+    -webkit-transform: skewX(-16deg);
+    transform: skewX(-16deg);
+}
+
+.promo-event-instant .item.active .promo-event-visual::after {
+    -webkit-animation: promoEventShine 0.72s ease-out both;
+    animation: promoEventShine 0.72s ease-out both;
+}
+
+@-webkit-keyframes promoEventShine {
+    0% { left: -35%; opacity: 0; }
+    20% { opacity: 1; }
+    100% { left: 115%; opacity: 0; }
+}
+
+@keyframes promoEventShine {
+    0% { left: -35%; opacity: 0; }
+    20% { opacity: 1; }
+    100% { left: 115%; opacity: 0; }
+}
+
+.promo-event-visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.promo-event-instant .item.active .promo-event-visual img {
+    -webkit-animation: promoEventImageIn 0.65s ease-out both !important;
+    animation: promoEventImageIn 0.65s ease-out both !important;
+}
+
+@-webkit-keyframes promoEventImageIn {
+    0% {
+        opacity: 0.25;
+        -webkit-filter: brightness(0.72);
+        filter: brightness(0.72);
+    }
+    100% {
+        opacity: 1;
+        -webkit-filter: brightness(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes promoEventImageIn {
+    0% {
+        opacity: 0.25;
+        -webkit-filter: brightness(0.72);
+        filter: brightness(0.72);
+    }
+    100% {
+        opacity: 1;
+        -webkit-filter: brightness(1);
+        filter: brightness(1);
+    }
+}
+
+.promo-event-info {
+    display: flex;
+    min-height: 178px;
+    padding: 28px 32px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    opacity: 0;
+    -webkit-transform: translateY(16px);
+    transform: translateY(16px);
+    -webkit-transition: opacity 0.55s ease 0.2s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+    transition: opacity 0.55s ease 0.2s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+
+.promo-event-instant .active .promo-event-info {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-animation: promoEventInfoIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+    animation: promoEventInfoIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+@-webkit-keyframes promoEventInfoIn {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(14px);
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes promoEventInfoIn {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(14px);
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+.promo-event-copy {
+    min-width: 0;
+}
+
+.promo-event-type {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #fff0df;
+    color: #d95f00;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.promo-event-copy h3 {
+    margin: 0 0 9px;
+    color: #111827;
+    font-size: 25px;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.promo-event-copy > p {
+    max-width: 760px;
+    margin: 0 0 13px;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.promo-event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 20px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.promo-event-meta i {
+    width: 16px;
+    color: #ff7a00;
+}
+
+.promo-event-button,
+.promo-event-button:hover,
+.promo-event-button:focus {
+    display: inline-flex;
+    min-width: 170px;
+    height: 52px;
+    padding: 0 22px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 5px;
+    background: #ff7a00;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.promo-event-button:hover {
+    background: #dc6500;
+}
+
+.promo-event-navigation {
+    display: flex;
+    min-height: 52px;
+    padding-top: 18px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.promo-event-navigation .carousel-indicators {
+    position: static;
+    width: auto;
+    margin: 0;
+    text-align: left;
+}
+
+.promo-event-navigation .carousel-indicators li {
+    width: 9px;
+    height: 9px;
+    margin: 0 4px;
+    border: 1px solid #ff7a00;
+    background: #fff;
+}
+
+.promo-event-navigation .carousel-indicators li.active {
+    width: 26px;
+    height: 9px;
+    margin: 0 4px;
+    border-radius: 10px;
+    background: #ff7a00;
+}
+
+.promo-event-arrows {
+    display: flex;
+    gap: 8px;
+}
+
+.promo-event-arrows a {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 122, 0, 0.25);
+    border-radius: 50%;
+    background: #fff;
+    color: #d95f00;
+    font-size: 22px;
+    text-decoration: none;
+}
+
+.promo-event-arrows a:hover {
+    border-color: #ff7a00;
+    background: #ff7a00;
+    color: #fff;
+}
+
+.promo-event-detail {
+    padding: 64px 0 80px;
+    background: #fff;
+}
+
+.promo-event-detail-card {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+}
+
+.promo-event-detail-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.promo-event-detail-content {
+    padding: 34px 0 0;
+}
+
+.promo-event-detail-content h1 {
+    margin: 10px 0 14px;
+    color: #111827;
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.22;
+}
+
+.promo-event-detail-lead {
+    color: #475569;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.promo-event-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin: 22px 0;
+    padding: 18px 0;
+    border: 0;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.promo-event-detail-meta i {
+    margin-right: 7px;
+    color: #ff7a00;
+}
+
+.promo-event-detail-body {
+    color: #334155;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.promo-event-back,
+.promo-event-back:hover,
+.promo-event-back:focus {
+    display: inline-flex;
+    margin-top: 24px;
+    align-items: center;
+    gap: 8px;
+    color: #d95f00;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 767px) {
+    .promo-events {
+        padding: 54px 0;
+    }
+
+    .promo-events .container,
+    .promo-event-detail .container {
+        padding-right: 24px !important;
+        padding-left: 24px !important;
+    }
+
+    .promo-events-head h2 {
+        font-size: 27px;
+    }
+
+    .promo-event-card {
+        border-radius: 10px;
+    }
+
+    .promo-event-visual {
+        aspect-ratio: 9 / 4;
+    }
+
+    .promo-event-info {
+        display: block;
+        min-height: 0;
+        padding: 23px 22px 25px;
+    }
+
+    .promo-event-copy h3 {
+        font-size: 22px;
+    }
+
+    .promo-event-copy > p {
+        font-size: 14px;
+    }
+
+    .promo-event-meta {
+        display: block;
+    }
+
+    .promo-event-meta span {
+        display: block;
+        margin-top: 8px;
+    }
+
+    .promo-event-button {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .promo-event-detail {
+        padding: 40px 0 60px;
+    }
+
+    .promo-event-detail-content {
+        padding: 25px 0 0;
+    }
+
+    .promo-event-detail-content h1 {
+        font-size: 27px;
+    }
+
+    .promo-event-detail-lead,
+    .promo-event-detail-body {
+        font-size: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .promo-event-instant .carousel-inner > .item,
+    .promo-event-visual img,
+    .promo-event-info {
+        -webkit-transition: none !important;
+        transition: none !important;
+    }
+
+    .promo-event-instant .carousel-inner > .active,
+    .promo-event-instant .active .promo-event-info {
+        opacity: 1 !important;
+        -webkit-transform: none !important;
+        transform: none !important;
+    }
+
+    .promo-event-instant .item.active .promo-event-visual::after {
+        -webkit-animation: none !important;
+        animation: none !important;
+    }
+
+    .promo-event-instant .item.active .promo-event-visual img,
+    .promo-event-instant .active .promo-event-info {
+        -webkit-animation: none !important;
+        animation: none !important;
+    }
+}
+
 html, html a {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
