@@ -23,7 +23,7 @@ function promo_event_valid_date($value) {
 }
 
 function promo_event_allowed_types() {
-	return array('Promo', 'Store Opening', 'Gebyar Undian');
+	return array('Promo', 'Store Opening', 'Gebyar Undian', 'Promo Pembayaran');
 }
 
 function promo_event_allowed_statuses() {

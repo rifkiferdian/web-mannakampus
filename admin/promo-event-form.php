@@ -54,7 +54,7 @@
 							<label class="col-sm-2 control-label">Tipe <span>*</span></label>
 							<div class="col-sm-4">
 								<select class="form-control" name="type" required>
-									<?php foreach(array('Promo', 'Store Opening', 'Gebyar Undian') as $type): ?>
+									<?php foreach(promo_event_allowed_types() as $type): ?>
 									<option value="<?php echo $type; ?>" <?php if($form_data['type'] === $type) { echo 'selected'; } ?>><?php echo $type; ?></option>
 									<?php endforeach; ?>
 								</select>

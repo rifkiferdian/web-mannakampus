@@ -31,6 +31,37 @@
 		// Mix It Up
 		$("#mix-container").mixItUp();
 
+		// Carousel - Payment Promotions
+		$('.payment-promo-carousel').owlCarousel({
+			loop: true,
+			autoplay: true,
+			autoplayTimeout: 6500,
+			autoplayHoverPause: true,
+			smartSpeed: 650,
+			margin: 24,
+			dots: true,
+			nav: true,
+			responsiveClass: true,
+			navText: [
+				'<i class="fa fa-angle-left"></i>',
+				'<i class="fa fa-angle-right"></i>'
+			],
+			responsive: {
+				0: {
+					items: 1,
+					margin: 16
+				},
+				600: {
+					items: 2,
+					margin: 20
+				},
+				992: {
+					items: 3,
+					margin: 24
+				}
+			}
+		});
+
 		// Carousel - Atorney
 		$('.team-member-carousel').owlCarousel({
 	    	loop: true,
@@ -229,6 +260,17 @@
 		$('.gallery-photo').magnificPopup({
 			type: 'image'
 			// other options
+		});
+
+		$('.payment-promo-image-popup').magnificPopup({
+			type: 'image',
+			closeOnContentClick: true,
+			mainClass: 'mfp-fade',
+			removalDelay: 180,
+			image: {
+				verticalFit: true,
+				titleSrc: false
+			}
 		});
 
 		// Slider - bxslider

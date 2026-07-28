@@ -249,7 +249,7 @@ window.cookieconsent.initialise({
 	<script src="<?php echo BASE_URL; ?>assets/js/jquery.magnific-popup.min.js"></script>
 	<script src="<?php echo BASE_URL; ?>assets/js/waypoints.min.js"></script>
 	<script src="<?php echo BASE_URL; ?>assets/js/jquery.counterup.min.js"></script>
-	<script src="<?php echo BASE_URL; ?>assets/js/custom.js"></script>
+	<script src="<?php echo BASE_URL; ?>assets/js/custom.js?v=mk-payment-promo-20260728-2"></script>
 	
 </body>
 </html>

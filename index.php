@@ -56,10 +56,17 @@ if(!$home_sliders) {
 
 $statement = $pdo->prepare("SELECT *
 							FROM tbl_promo_event
-							WHERE status=? AND is_featured=1 AND end_date>=CURDATE()
+							WHERE status=? AND is_featured=1 AND end_date>=CURDATE() AND type<>?
 							ORDER BY display_order ASC, start_date ASC, id DESC");
-$statement->execute(array('Active'));
+$statement->execute(array('Active', 'Promo Pembayaran'));
 $home_promo_events = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+$statement = $pdo->prepare("SELECT *
+							FROM tbl_promo_event
+							WHERE status=? AND is_featured=1 AND end_date>=CURDATE() AND type=?
+							ORDER BY display_order ASC, start_date ASC, id DESC");
+$statement->execute(array('Active', 'Promo Pembayaran'));
+$home_payment_promos = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 function home_promo_event_url($url, $slug) {
 	$url = trim($url);
@@ -207,6 +214,29 @@ function home_promo_event_date($start_date, $end_date) {
 	</div>
 </section>
 <!-- Promo & Event End -->
+<?php endif; ?>
+
+<?php if($home_payment_promos): ?>
+<!-- Payment Promo Start -->
+<section class="payment-promos" id="payment-promos">
+	<div class="container">
+		<div class="payment-promos-head">
+			<h2>Promo Pembayaran</h2>
+		</div>
+
+		<div class="payment-promo-carousel owl-carousel">
+			<?php foreach($home_payment_promos as $payment_promo): ?>
+			<article class="payment-promo-card">
+				<a class="payment-promo-image payment-promo-image-popup" href="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($payment_promo['image'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="Perbesar <?php echo htmlspecialchars($payment_promo['title'], ENT_QUOTES, 'UTF-8'); ?>">
+					<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($payment_promo['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($payment_promo['title'], ENT_QUOTES, 'UTF-8'); ?>">
+					<span class="payment-promo-zoom"><i class="fa fa-search-plus"></i></span>
+				</a>
+			</article>
+			<?php endforeach; ?>
+		</div>
+	</div>
+</section>
+<!-- Payment Promo End -->
 <?php endif; ?>
 
 <!-- Weekly Offers Start -->
