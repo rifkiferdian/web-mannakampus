@@ -350,16 +350,18 @@ foreach ($result as $row)
 			margin: 0!important;
 			border-radius: 0!important;
 			background: #f5f5f3!important;
-			overflow: hidden!important;
+			overflow: visible!important;
 		}
 		.mk-topbar {
-			position: relative!important;
+			position: -webkit-sticky!important;
+			position: sticky!important;
+			top: 0!important;
 			width: 100%!important;
 			background: #e86600!important;
 			color: #fff!important;
 			font-size: 13px!important;
 			line-height: 1!important;
-			z-index: 21!important;
+			z-index: 1100!important;
 		}
 		.mk-topbar .container {
 			width: 100%!important;
@@ -532,8 +534,9 @@ foreach ($result as $row)
 		}
 		.mk-header,
 		.mk-header.sticky {
-			position: relative!important;
-			top: auto!important;
+			position: -webkit-sticky!important;
+			position: sticky!important;
+			top: 46px!important;
 			left: auto!important;
 			width: 100%!important;
 			height: 72px!important;
@@ -541,7 +544,8 @@ foreach ($result as $row)
 			background: #fff!important;
 			border: 0!important;
 			border-radius: 0!important;
-			z-index: 20!important;
+			box-shadow: 0 4px 18px rgba(15,23,42,0.08)!important;
+			z-index: 1000!important;
 		}
 		.mk-header .container,
 		.mk-hero .container {
@@ -751,26 +755,32 @@ foreach ($result as $row)
 		.mk-hero-position-right .hero-actions {
 			justify-content: flex-end!important;
 		}
-		.mk-hero-carousel .item.active .hero-eyebrow,
-		.mk-hero-carousel .item.active .hero-content h1,
-		.mk-hero-carousel .item.active .hero-content > p,
-		.mk-hero-carousel .item.active .hero-actions {
+		.mk-hero-carousel .item .hero-eyebrow,
+		.mk-hero-carousel .item .hero-content h1,
+		.mk-hero-carousel .item .hero-content > p,
+		.mk-hero-carousel .item .hero-actions {
+			opacity: 0;
+		}
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-eyebrow,
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content h1,
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content > p,
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-actions {
 			-webkit-animation: mkHeroTextIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 			animation: mkHeroTextIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 		}
-		.mk-hero-carousel .item.active .hero-eyebrow {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-eyebrow {
 			-webkit-animation-delay: 0.12s;
 			animation-delay: 0.12s;
 		}
-		.mk-hero-carousel .item.active .hero-content h1 {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content h1 {
 			-webkit-animation-delay: 0.25s;
 			animation-delay: 0.25s;
 		}
-		.mk-hero-carousel .item.active .hero-content > p {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content > p {
 			-webkit-animation-delay: 0.38s;
 			animation-delay: 0.38s;
 		}
-		.mk-hero-carousel .item.active .hero-actions {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-actions {
 			-webkit-animation-delay: 0.51s;
 			animation-delay: 0.51s;
 		}
@@ -962,6 +972,10 @@ foreach ($result as $row)
 			}
 		}
 		@media only screen and (max-width: 640px) {
+			.mk-header,
+			.mk-header.sticky {
+				top: 62px!important;
+			}
 			.mk-topbar-inner {
 				min-height: 46px!important;
 				justify-content: space-between!important;
@@ -1051,6 +1065,7 @@ foreach ($result as $row)
 			.mk-hero-carousel .item.active .hero-content h1,
 			.mk-hero-carousel .item.active .hero-content > p,
 			.mk-hero-carousel .item.active .hero-actions {
+				opacity: 1!important;
 				-webkit-animation: none!important;
 				animation: none!important;
 			}
