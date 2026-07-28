@@ -609,13 +609,99 @@ foreach ($result as $row)
 			position: relative!important;
 			min-height: 560px!important;
 			height: 560px!important;
+			overflow: hidden!important;
+		}
+		.mk-hero-carousel {
+			position: relative!important;
+			background: #f5f5f3!important;
+		}
+		.mk-hero-carousel .carousel-inner {
+			height: 560px!important;
+		}
+		.mk-hero-carousel.carousel-fade .carousel-inner .item {
+			left: 0!important;
+			opacity: 0;
+			-webkit-transform: translate3d(0, 0, 0)!important;
+			transform: translate3d(0, 0, 0)!important;
+			-webkit-transition: opacity 0.9s ease-in-out!important;
+			transition: opacity 0.9s ease-in-out!important;
+		}
+		.mk-hero-carousel.carousel-fade .carousel-inner .active,
+		.mk-hero-carousel.carousel-fade .carousel-inner .next.left,
+		.mk-hero-carousel.carousel-fade .carousel-inner .prev.right {
+			opacity: 1;
+		}
+		.mk-hero-carousel.carousel-fade .carousel-inner .active.left,
+		.mk-hero-carousel.carousel-fade .carousel-inner .active.right {
+			opacity: 0;
+		}
+		.mk-hero .hero-background {
+			position: absolute!important;
+			inset: -2%!important;
+			background-repeat: no-repeat!important;
 			background-size: cover!important;
 			background-position: center center!important;
+			-webkit-transform: scale(1)!important;
+			transform: scale(1)!important;
+			will-change: transform!important;
+		}
+		.mk-hero-carousel .item.active .hero-background {
+			-webkit-animation: mkHeroBackgroundZoom 6.8s ease-out both;
+			animation: mkHeroBackgroundZoom 6.8s ease-out both;
+		}
+		@-webkit-keyframes mkHeroBackgroundZoom {
+			from { -webkit-transform: scale(1); transform: scale(1); }
+			to { -webkit-transform: scale(1.07); transform: scale(1.07); }
+		}
+		@keyframes mkHeroBackgroundZoom {
+			from { -webkit-transform: scale(1); transform: scale(1); }
+			to { -webkit-transform: scale(1.07); transform: scale(1.07); }
+		}
+		.mk-hero-carousel .carousel-control {
+			width: 58px!important;
+			background: none!important;
+			opacity: 1!important;
+			text-shadow: none!important;
+			z-index: 10!important;
+		}
+		.mk-hero-carousel .carousel-control i {
+			position: absolute!important;
+			top: 50%!important;
+			left: 50%!important;
+			width: 42px!important;
+			height: 42px!important;
+			margin: -21px 0 0 -21px!important;
+			border-radius: 50%!important;
+			background: rgba(255,255,255,0.92)!important;
+			color: #d95f00!important;
+			font-size: 28px!important;
+			line-height: 42px!important;
+			box-shadow: 0 8px 24px rgba(15,23,42,0.15)!important;
+		}
+		.mk-hero-carousel .carousel-indicators {
+			bottom: 18px!important;
+			z-index: 12!important;
+		}
+		.mk-hero-carousel .carousel-indicators li {
+			width: 10px!important;
+			height: 10px!important;
+			margin: 0 4px!important;
+			border-color: #ff7a00!important;
+			background: #fff!important;
+		}
+		.mk-hero-carousel .carousel-indicators li.active {
+			background: #ff7a00!important;
 		}
 		.mk-hero .hero-overlay {
 			position: absolute!important;
 			inset: 0!important;
 			background: linear-gradient(90deg, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0.58) 42%, rgba(255,255,255,0.1) 100%)!important;
+		}
+		.mk-hero-position-center .hero-overlay {
+			background: rgba(255,255,255,0.58)!important;
+		}
+		.mk-hero-position-right .hero-overlay {
+			background: linear-gradient(270deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.6) 42%, rgba(255,255,255,0.08) 100%)!important;
 		}
 		.mk-hero .container {
 			position: relative!important;
@@ -626,9 +712,82 @@ foreach ($result as $row)
 			padding-left: 28px!important;
 			padding-right: 28px!important;
 		}
+		.mk-hero-position-center .container {
+			justify-content: center!important;
+		}
+		.mk-hero-position-right .container {
+			justify-content: flex-end!important;
+		}
 		.mk-hero .hero-content {
 			width: 500px!important;
 			min-width: 0!important;
+		}
+		.mk-hero-position-center .hero-content {
+			text-align: center!important;
+		}
+		.mk-hero-position-right .hero-content {
+			text-align: right!important;
+		}
+		.mk-hero-position-center .hero-content p,
+		.mk-hero-position-right .hero-content p {
+			margin-left: auto!important;
+			margin-right: auto!important;
+		}
+		.mk-hero-position-right .hero-content p {
+			margin-right: 0!important;
+		}
+		.mk-hero-position-center .hero-actions {
+			justify-content: center!important;
+		}
+		.mk-hero-position-right .hero-actions {
+			justify-content: flex-end!important;
+		}
+		.mk-hero-carousel .item.active .hero-eyebrow,
+		.mk-hero-carousel .item.active .hero-content h1,
+		.mk-hero-carousel .item.active .hero-content > p,
+		.mk-hero-carousel .item.active .hero-actions {
+			-webkit-animation: mkHeroTextIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+			animation: mkHeroTextIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+		}
+		.mk-hero-carousel .item.active .hero-eyebrow {
+			-webkit-animation-delay: 0.12s;
+			animation-delay: 0.12s;
+		}
+		.mk-hero-carousel .item.active .hero-content h1 {
+			-webkit-animation-delay: 0.25s;
+			animation-delay: 0.25s;
+		}
+		.mk-hero-carousel .item.active .hero-content > p {
+			-webkit-animation-delay: 0.38s;
+			animation-delay: 0.38s;
+		}
+		.mk-hero-carousel .item.active .hero-actions {
+			-webkit-animation-delay: 0.51s;
+			animation-delay: 0.51s;
+		}
+		@-webkit-keyframes mkHeroTextIn {
+			from {
+				opacity: 0;
+				-webkit-transform: translateY(28px);
+				transform: translateY(28px);
+			}
+			to {
+				opacity: 1;
+				-webkit-transform: translateY(0);
+				transform: translateY(0);
+			}
+		}
+		@keyframes mkHeroTextIn {
+			from {
+				opacity: 0;
+				-webkit-transform: translateY(28px);
+				transform: translateY(28px);
+			}
+			to {
+				opacity: 1;
+				-webkit-transform: translateY(0);
+				transform: translateY(0);
+			}
 		}
 		.mk-hero .hero-eyebrow {
 			display: inline-block!important;
@@ -720,6 +879,12 @@ foreach ($result as $row)
 				min-height: 520px!important;
 				height: auto!important;
 			}
+			.mk-hero-carousel .carousel-inner {
+				height: 520px!important;
+			}
+			.mk-hero-carousel .carousel-control {
+				width: 42px!important;
+			}
 		}
 		@media only screen and (max-width: 640px) {
 			.mk-topbar-inner {
@@ -742,6 +907,15 @@ foreach ($result as $row)
 			.mk-hero .hero-content {
 				width: 100%!important;
 			}
+			.mk-hero-position-right .hero-content {
+				text-align: left!important;
+			}
+			.mk-hero-position-right .hero-content p {
+				margin-left: 0!important;
+			}
+			.mk-hero-position-right .hero-actions {
+				justify-content: flex-start!important;
+			}
 			.mk-hero .hero-content h1 {
 				font-size: 34px!important;
 			}
@@ -752,6 +926,20 @@ foreach ($result as $row)
 				width: 100%!important;
 				min-width: 0!important;
 				margin-bottom: 10px!important;
+			}
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.mk-hero-carousel.carousel-fade .carousel-inner .item {
+				-webkit-transition: none!important;
+				transition: none!important;
+			}
+			.mk-hero-carousel .item.active .hero-background,
+			.mk-hero-carousel .item.active .hero-eyebrow,
+			.mk-hero-carousel .item.active .hero-content h1,
+			.mk-hero-carousel .item.active .hero-content > p,
+			.mk-hero-carousel .item.active .hero-actions {
+				-webkit-animation: none!important;
+				animation: none!important;
 			}
 		}
 

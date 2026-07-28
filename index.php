@@ -33,30 +33,88 @@ foreach ($result as $row) {
     $counter_photo               = $row['counter_photo'];
     $counter_status              = $row['counter_status'];
 }
+
+$statement = $pdo->prepare("SELECT photo, heading, content, button_text, button_url, position
+							FROM tbl_slider
+							WHERE status=?
+							ORDER BY id ASC");
+$statement->execute(array('Active'));
+$home_sliders = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+if(!$home_sliders) {
+	$home_sliders = array(
+		array(
+			'photo'       => 'manna-hero-market.png',
+			'heading'     => 'Rumah Belanja Terpercaya',
+			'content'     => 'Serving the community since 1985 with premium quality goods, professional service, and the warmest shopping experience in town.',
+			'button_text' => 'Shop Now',
+			'button_url'  => '#',
+			'position'    => 'Left'
+		)
+	);
+}
 ?>
 
 <!-- Hero Start -->
-<section class="hero-section mk-hero" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/manna-hero-market.png);">
-	<div class="hero-overlay"></div>
-	<div class="container">
-		<div class="hero-content">
-			<div class="hero-eyebrow">Trusted For Generations</div>
+<div id="home-hero-slider" class="carousel slide carousel-fade mk-hero-carousel" data-ride="carousel" data-interval="6000">
+	<?php if(count($home_sliders) > 1): ?>
+	<ol class="carousel-indicators">
+		<?php foreach ($home_sliders as $slider_index => $slider): ?>
+		<li data-target="#home-hero-slider" data-slide-to="<?php echo $slider_index; ?>"<?php if($slider_index == 0) { echo ' class="active"'; } ?>></li>
+		<?php endforeach; ?>
+	</ol>
+	<?php endif; ?>
 
-			<h1>
-				Rumah Belanja <span>Terpercaya</span>
-			</h1>
+	<div class="carousel-inner" role="listbox">
+		<?php foreach ($home_sliders as $slider_index => $slider): ?>
+		<?php
+		$slider_position = in_array($slider['position'], array('Left', 'Center', 'Right')) ? strtolower($slider['position']) : 'left';
+		$heading_words = preg_split('/\s+/u', trim($slider['heading']));
+		$heading_highlight = '';
+		if($heading_words && $heading_words[0] !== '') {
+			$heading_highlight = array_pop($heading_words);
+		}
+		?>
+		<section class="item hero-section mk-hero mk-hero-position-<?php echo $slider_position; ?><?php if($slider_index == 0) { echo ' active'; } ?>">
+			<div class="hero-background" style="background-image:url('<?php echo htmlspecialchars(BASE_URL.'assets/uploads/'.$slider['photo'], ENT_QUOTES, 'UTF-8'); ?>');"></div>
+			<div class="hero-overlay"></div>
+			<div class="container">
+				<div class="hero-content">
+					<div class="hero-eyebrow">Trusted For Generations</div>
 
-			<p>
-				Serving the community since 1985 with premium quality goods, professional service, and the warmest shopping experience in town.
-			</p>
+					<?php if($heading_highlight !== ''): ?>
+					<h1>
+						<?php echo htmlspecialchars(implode(' ', $heading_words), ENT_QUOTES, 'UTF-8'); ?>
+						<span><?php echo htmlspecialchars($heading_highlight, ENT_QUOTES, 'UTF-8'); ?></span>
+					</h1>
+					<?php endif; ?>
 
-			<div class="hero-actions">
-				<a href="#" class="btn btn-flat hero-btn-primary">Shop Now</a>
-				<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="btn btn-flat hero-btn-secondary">View Promo <i class="fa fa-line-chart"></i></a>
+					<?php if(trim($slider['content']) !== ''): ?>
+					<p><?php echo nl2br(htmlspecialchars($slider['content'], ENT_QUOTES, 'UTF-8')); ?></p>
+					<?php endif; ?>
+
+					<?php if(trim($slider['button_text']) !== ''): ?>
+					<div class="hero-actions">
+						<a href="<?php echo htmlspecialchars($slider['button_url'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-flat hero-btn-primary"><?php echo htmlspecialchars($slider['button_text'], ENT_QUOTES, 'UTF-8'); ?></a>
+					</div>
+					<?php endif; ?>
+				</div>
 			</div>
-		</div>
+		</section>
+		<?php endforeach; ?>
 	</div>
-</section>
+
+	<?php if(count($home_sliders) > 1): ?>
+	<a class="left carousel-control" href="#home-hero-slider" role="button" data-slide="prev">
+		<i class="fa fa-angle-left" aria-hidden="true"></i>
+		<span class="sr-only">Previous</span>
+	</a>
+	<a class="right carousel-control" href="#home-hero-slider" role="button" data-slide="next">
+		<i class="fa fa-angle-right" aria-hidden="true"></i>
+		<span class="sr-only">Next</span>
+	</a>
+	<?php endif; ?>
+</div>
 <!-- Hero End -->
 
 <!-- Weekly Offers Start -->
