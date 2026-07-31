@@ -23,7 +23,34 @@
 		$receive_email = $row['receive_email'];
 	}
 	?>
+<style>
+.footer-main .footer-brand .footer-logo{margin-bottom:35px;}
+.footer-main .footer-brand .footer-logo img{max-width:250px;width:100%;height:auto;display:block;}
 
+/*.footer-main .row{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:space-between;
+	gap:0;
+}
+.footer-main .footer-col{
+	flex:0 0 23% !important;
+	max-width:23% !important;
+	width:23% !important;
+	padding-left:15px !important;
+	padding-right:15px !important;
+}*/
+.footer-main .footer-brand p{margin-bottom: 0;}
+.footer-main .footer-brand-actions{display:flex;gap:10px;}
+.footer-main .footer-brand-actions .brand-icon{width:38px;height:38px;border-radius:8px;background: #f5f5f5;color: #5b2106;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;transition:all .2s;}
+.footer-main .footer-brand-actions .brand-icon:hover{background: #5b2106;color: #fff;}
+
+.footer-bottom{border-top:1px solid #af4a22;}
+.footer-bottom-inner{display:flex !important;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;width:100%;}
+.footer-bottom .copyright{margin:0;font-size:14px;font-weight:700;color:#333;}
+.payment-icons{display:flex !important;gap:10px;align-items:center;}
+.payment-icons i{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #5b2106;border-radius:8px;color:#5b2106;font-size:16px;box-sizing:border-box;}
+</style>
 
 	<?php if($newsletter_status=='Show'): ?>
 	<div class="newsletter-area" style="background-image: url(<?php echo BASE_URL; ?>assets/uploads/<?php echo $newsletter_photo; ?>);">
@@ -140,45 +167,40 @@ This link will be active only for 24 hours.
 		<section class="footer-main">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInLeft">
-						<h3><?php echo ABOUT_US; ?></h3>
-						<p>
-							<?php echo nl2br($footer_about); ?>
-						</p>
-					</div>
-					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInLeft">
-						<h3><?php echo LATEST_NEWS; ?></h3>
-						<?php
-						$i=0;
-						$statement = $pdo->prepare("SELECT * FROM tbl_news ORDER BY news_id DESC");
-						$statement->execute();
-						$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-						foreach ($result as $row) {
-							$i++;
-							if($i>$total_recent_news_footer) {break;}
-							?>
-							<div class="news-item">
-								<div class="news-title"><a href="<?php echo BASE_URL.URL_NEWS.$row['news_slug']; ?>"><?php echo $row['news_title']; ?></a></div>
-							</div>
-							<?php
-						}
-						?>
-					</div>
-					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInRight">
-						<h3><?php echo "Links"; ?></h3>
-						<ul class="footer-link-list">
-							<li><a href="http://jurnal.stieww.ac.id">STIE Widya Wiwaha Journal</a></li>
-							<li><a href="http://eprint.stieww.ac.id">STIE Widya Wiwaha Repository</a></li>
-							<li><a href="http://library.stieww.ac.id">STIE Widya Wiwaha Library</a></li>
-							<li><a href="https://stieww.ac.id/buku/PanduanAkademikS1.pdf">Undergraduate Academic Guidance</a></li>
-							<li><a href="https://stieww.ac.id/buku/PanduanSkripsi.pdf">Undergraduate Thesis Guidance</a></li>
-							<li><a href="https://stieww.ac.id/buku/PedomanAkademikMM.pdf">Master of Management Academic Guidance</a></li>
-							<li><a href="https://stieww.ac.id/buku/PedomanTesis.pdf">Master Thesis Guidance</a></li>
-							<li><a href="https://stieww.ac.id/tracer">Alumni Tracer</a></li>
-							<li><a href="https://stieww.ac.id/page/download-logo">Logo Download</a></li>
-							<li><a href="https://stieww.ac.id/page/scan-akreditasi">Scan Akreditasi</a></li>
-						</ul>
-					</div>
+					<div class="col-sm-6 col-md-3 col-lg-3 footer-col footer-brand wow fadeInLeft">
+    					<div class="footer-logo">
+        					<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus">
+    </div>
+    <p>
+        <?php echo nl2br($footer_about); ?>
+    </p>
+    <div class="footer-brand-actions">
+        <a href="#" class="brand-icon" title="QR Code"><i class="fa-solid fa-qrcode"></i></a>
+        <a href="#" class="brand-icon" title="Bagikan"><i class="fa-solid fa-share"></i></a>
+		<a href="https://www.youtube.com" class="brand-icon" title="YouTube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+		<a href="https://www.tiktok.com" class="brand-icon" title="TikTok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.facebook.com" class="brand-icon" title="Facebook" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+		<a href="https://www.instagram.com" class="brand-icon" title="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+</div>
+					<div class="col-sm-6 col-md-3 col-lg-3 footer-col footer-links-col wow fadeInLeft">
+	<h3>Perusahaan</h3>
+	<ul>
+		<li><a href="#">Tentang Kami</a></li>
+		<li><a href="#">Karir</a></li>
+		<li><a href="#">Hubungi Kami</a></li>
+	</ul>
+</div>
+
+<div class="col-sm-6 col-md-3 col-lg-3 footer-col footer-links-col wow fadeInRight">
+	<h3>Bantuan</h3>
+	<ul>
+		<li><a href="#">Layanan Pelanggan</a></li>
+		<li><a href="#">Kebijakan Privasi</a></li>
+		<li><a href="#">Syarat &amp; Ketentuan</a></li>
+		<li><a href="#">Pengiriman &amp; Pengembalian</a></li>
+	</ul>
+</div>
 					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInRight">
 						<h3><?php echo CONTACT_US; ?></h3>
 						<div class="contact-item">
@@ -203,18 +225,23 @@ This link will be active only for 24 hours.
 		</section>
 		<!-- Footer Main End -->
 
-		
 		<!-- Footer Bottom Start -->
 		<section class="footer-bottom">
 			<div class="container">
-				<div class="row">
-					<div class="col-md-12 copyright" style="text-align: center;">
+				<div class="footer-bottom-inner">
+					<div class="copyright">
 						<?php echo $footer_copyright; ?>
+					</div>
+					<div class="payment-icons">
+						<i class="fa-solid fa-money-check"></i>
+						<i class="fa-solid fa-credit-card"></i>
+						<i class="fa-solid fa-wallet"></i>
 					</div>
 				</div>
 			</div>
 		</section>
 		<!-- Footer Bottom End -->
+
 
 		<a href="#" class="scrollup">
 			<i class="fa fa-angle-up"></i>

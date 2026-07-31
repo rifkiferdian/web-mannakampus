@@ -1555,7 +1555,7 @@ header.sticky .sf-menu li li a {
 	font-size: 32px;
 	text-align: center;
 	font-weight: 700;
-	color: #ff7a00;
+	color: #13ba2c;
 	text-transform: uppercase;
 }
 
@@ -1780,12 +1780,12 @@ header.sticky .sf-menu li li a {
 	width: 100%;
 	height: auto;
 	padding: 50px 0 30px 0;
-	background: #333434;
+	background: #ffffff;
 }
 
 .footer-col h3	{
 	font-family: 'Roboto', sans-serif;
-	color: #ffffff;
+	color: #853018;
 	font-size: 22px;
 	text-transform: uppercase;
 	position: relative;
@@ -1805,14 +1805,14 @@ header.sticky .sf-menu li li a {
 }
 
 .footer-col p {
-	color: #b9b9b9;
+	color: #5b2106;
 	font-size: 14px;
 	line-height: 22px;
 }
 
 .footer-col ul li,
 .footer-col ul li a {
-	color: #b9b9b9;
+	color: #5b2106;
 	font-size: 14px;
 	line-height: 22px;
 	-webkit-transition: all 0.4s ease 0s;
@@ -1829,7 +1829,7 @@ header.sticky .sf-menu li li a {
 }
 
 .footer-col ul li:before {
-	color: #999;
+	color: #5b2106;
 	content: "\f0da";
 	font-family: "FontAwesome";
 	left: 0;
@@ -1838,7 +1838,7 @@ header.sticky .sf-menu li li a {
 }
 
 .footer-col ul li a:hover {
-	color: #fff;
+	color: #5b2106;
 }
 
 .footer-col .news-item {
@@ -1883,13 +1883,14 @@ header.sticky .sf-menu li li a {
 }
 
 .footer-col .contact-item {
-	color: #b9b9b9;
+	color: #5b2106;
 	font-size: 14px;
 	overflow: hidden;
 	margin-bottom: 10px;
 }
 
 .footer-col .contact-item .icon {
+	color: #5b2106;
 	float: left;
 	font-size: 16px;
 	margin-right: 10px;
@@ -1908,13 +1909,14 @@ header.sticky .sf-menu li li a {
 .footer-bottom {
 	width: 100%;
 	height: auto;
-	background: #272828;
+	background: #ffffff;
 	padding: 15px 0;
+	border-top: 1px solid #f56932;
 }
 
 .copyright {
 	font-size: 13px;
-	color: #999;
+	color: #000000;
 }
 
 .footer-menu {
@@ -1947,12 +1949,29 @@ header.sticky .sf-menu li li a {
 
 .footer-main .row {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
+	margin: 0;
+	gap: 40px;
 }
 
 .footer-main .footer-col {
 	float: none;
+	position: static;
+	width: 100%;
+	max-width: 100%;
+	flex: 1 1 0;
+	padding-left: 0;
+	padding-right: 0;
 	margin-bottom: 24px;
+	box-sizing: border-box;
+}
+
+.footer-main .footer-brand {
+	flex: 1.3 1 0;
+}
+
+.footer-main .footer-brand p {
+	max-width: 320px;
 }
 
 .footer-link-list {

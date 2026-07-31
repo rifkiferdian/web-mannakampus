@@ -62,7 +62,7 @@
 										<?php
 										if($row['photo'] == '')
 										{
-											echo '<img src="../assets/uploads/no-photo1.jpg" alt="" style="width:100px;">';
+											echo '<img src="../assets/uploads/no-photo1.jpg" alt="" style="width: 50px;">';
 										}
 										else
 										{

@@ -88,9 +88,14 @@ foreach ($result as $row)
 			$og_description = substr(strip_tags($row['news_content']),0,200).'...';
 			echo '<meta name="description" content="'.$row['meta_description'].'">';
 			echo '<meta name="keywords" content="'.$row['meta_keyword'].'">';
-			echo '<title>'.$row['meta_title'].'</title>';
+			echo '<title>Manna Kampus</title>';
 		}
 	}
+
+if($cur_page == 'blog.php')
+{
+    echo '<title>Manna Kampus</title>';
+}
 
 	if($cur_page == 'page.php')
 	{
@@ -170,6 +175,8 @@ foreach ($result as $row)
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery.bxslider.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/hover.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/magnific-popup.css">
+	<!-- Font Awesome 6.x CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260711-17">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/responsive.css?v=mk-home-20260711-17">
 
@@ -335,7 +342,6 @@ foreach ($result as $row)
 		.top-bar,
 		.cc-window,
 		.cc-revoke,
-		.whatsapp-float,
 		.st-sticky-share-buttons,
 		.st-sticky-share-buttons *,
 		#st-1,
@@ -1119,31 +1125,41 @@ foreach ($result as $row)
 			</div>
 		</div>
 
+		<?php
+  			$current_page = basename($_SERVER['PHP_SELF']);
+		?>
+
 		<!-- Header Start -->
 		<header class="mk-header">
 			<div class="container">
 				<div class="mk-navbar">
 					<a href="<?php echo BASE_URL; ?>" class="mk-brand"><img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus"></a>
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
-						<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
+						<a href="<?php echo BASE_URL; ?>"
+						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
 						<a href="#">About Us</a>
-						<a href="#">Promo</a>
-						<a href="#">Blog</a>
+						<a href="cblog.php"
+						class="<?php echo ($current_page == 'cblog.php' || $current_page == '') ? 'active' : ''; ?>">Promo</a>
+						<a href="blog.php" 
+							class="<?php echo ($current_page == 'blog.php' || $current_page == 'news.php') ? 'active' : ''; ?>">Blog</a>
 						<a href="#">Corporate</a>
 						<a href="#">Join Us</a>
 						<a href="#">Career</a>
 					</nav>
+
 					<details class="mk-mobile-menu">
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
-						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
-							<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
-							<a href="#">About Us</a>
-							<a href="#">Promo</a>
-							<a href="#">Blog</a>
-							<a href="#">Corporate</a>
-							<a href="#">Join Us</a>
-							<a href="#">Career</a>
-						</nav>
+						<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
+						<a href="<?php echo BASE_URL; ?>"
+						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
+						<a href="#">About Us</a>
+						<a href="#" >Promo</a>
+						<a href="blog.php" 
+							class="<?php echo ($current_page == 'blog.php') ? 'active' : ''; ?>">Blog</a>
+						<a href="#">Corporate</a>
+						<a href="#">Join Us</a>
+						<a href="#">Career</a>
+					</nav>
 					</details>
 				</div>
 			</div>
