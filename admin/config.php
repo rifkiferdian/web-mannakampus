@@ -21,7 +21,7 @@ $dbuser = 'root';
 $dbpass = '';
 
 // Defining base url
-define("BASE_URL", "http://localhost/web-mannakampus-develop/");
+define("BASE_URL", "http://localhost/web-mannakampus/");
 
 // Getting Admin url
 define("ADMIN_URL", BASE_URL . "admin" . "/");

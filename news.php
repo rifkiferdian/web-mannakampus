@@ -55,8 +55,13 @@ $statement = $pdo->prepare("UPDATE tbl_news SET total_view=? WHERE news_slug=?")
 $statement->execute(array($updated_total_view,$_REQUEST['slug']));
 ?>
 
-<!-- Style tambahan hanya untuk halaman ini, agar sesuai gambar referensi -->
+
 <style>
+.blog .container{
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 48px 24px;
+}
 
 .blog .status{list-style:none;display:flex;gap:22px;padding:0;margin:0 0 12px;font-size:14px;font-weight:500;color:#6b7280;}
 .blog .status li i{color:#f5821f;margin-right:6px;font-size:14px;}
@@ -77,7 +82,7 @@ $statement->execute(array($updated_total_view,$_REQUEST['slug']));
 <section class="blog">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-9">
+			<div class="col-md-8">
 				
 				<!-- Blog Classic Start -->
 				<div class="blog-grid">
@@ -119,7 +124,7 @@ $statement->execute(array($updated_total_view,$_REQUEST['slug']));
 				
 
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<?php require_once('sidebar.php'); ?>
 			</div>
 
