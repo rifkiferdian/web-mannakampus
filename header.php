@@ -1173,14 +1173,18 @@ foreach ($result as $row)
 			</div>
 		</div>
 
+        <?php
+  			$current_page = basename($_SERVER['PHP_SELF']);
+		?>
 		<!-- Header Start -->
 		<header class="mk-header">
 			<div class="container">
 				<div class="mk-navbar">
 					<a href="<?php echo BASE_URL; ?>" class="mk-brand"><img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus"></a>
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
-						<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
-						<a href="#">About Us</a>
+						<a href="<?php echo BASE_URL; ?>"
+						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
+						<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
 						<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
 						<a href="#">Blog</a>
 						<a href="#">Corporate</a>
@@ -1190,8 +1194,8 @@ foreach ($result as $row)
 					<details class="mk-mobile-menu">
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
-							<a href="<?php echo BASE_URL; ?>" class="active">Homepage</a>
-							<a href="#">About Us</a>
+							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
+							<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
 							<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
 							<a href="#">Blog</a>
 							<a href="#">Corporate</a>
