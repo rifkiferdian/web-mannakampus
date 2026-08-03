@@ -166,7 +166,14 @@ if($cur_page == 'blog.php')
 	{
 		echo '<title>Manna Kampus</title>';
 	}
+	
+	if($cur_page == 'community.php')
+	{
+		echo '<title>Manna Kampus</title>';
+	}
 	?>
+
+	
 
 	<!-- Favicon -->
 	<link href="<?php echo BASE_URL; ?>assets/uploads/<?php echo $favicon; ?>" rel="shortcut icon" type="image/png">
@@ -1143,12 +1150,10 @@ foreach ($result as $row)
 						<a href="<?php echo BASE_URL; ?>"
 						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
 						<a href="#">About Us</a>
-						<a href="coba_catalog.php"
-						class="<?php echo ($current_page == 'coba_catalog.php' || $current_page == '') ? 'active' : ''; ?>">Promo</a>
+						<a href="#">Promo</a>
 						<a href="blog.php" 
 							class="<?php echo ($current_page == 'blog.php' || $current_page == 'news.php') ? 'active' : ''; ?>">Blog</a>
-						<a href="contact_us.php" 
-							class="<?php echo ($current_page == 'contact_us.php' || $current_page == 'news.php') ? 'active' : ''; ?>">Corporate</a>
+						<a href="#">Corporate</a>
 						<a href="#">Join Us</a>
 						<a href="#">Career</a>
 					</nav>

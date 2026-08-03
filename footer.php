@@ -171,9 +171,8 @@ This link will be active only for 24 hours.
     					<div class="footer-logo">
         					<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus">
     </div>
-    <p>
-        <?php echo nl2br($footer_about); ?>
-    </p>
+   <?php echo $footer_about; ?>
+   
     <div class="footer-brand-actions">
         <a href="#" class="brand-icon" title="QR Code"><i class="fa-solid fa-qrcode"></i></a>
         <a href="#" class="brand-icon" title="Bagikan"><i class="fa-solid fa-share"></i></a>
