@@ -23,7 +23,34 @@
 		$receive_email = $row['receive_email'];
 	}
 	?>
+<style>
+.footer-main .footer-brand .footer-logo{margin-bottom:35px;}
+.footer-main .footer-brand .footer-logo img{max-width:250px;width:100%;height:auto;display:block;}
 
+/*.footer-main .row{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:space-between;
+	gap:0;
+}
+.footer-main .footer-col{
+	flex:0 0 23% !important;
+	max-width:23% !important;
+	width:23% !important;
+	padding-left:15px !important;
+	padding-right:15px !important;
+}*/
+.footer-main .footer-brand p{margin-bottom: 0;}
+.footer-main .footer-brand-actions{display:flex;gap:10px;}
+.footer-main .footer-brand-actions .brand-icon{width:38px;height:38px;border-radius:8px;background: #f5f5f5;color: #5b2106;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;transition:all .2s;}
+.footer-main .footer-brand-actions .brand-icon:hover{background: #5b2106;color: #fff;}
+
+.footer-bottom{border-top:1px solid #af4a22;}
+.footer-bottom-inner{display:flex !important;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;width:100%;}
+.footer-bottom .copyright{margin:0;font-size:14px;font-weight:700;color:#333;}
+.payment-icons{display:flex !important;gap:10px;align-items:center;}
+.payment-icons i{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #5b2106;border-radius:8px;color:#5b2106;font-size:16px;box-sizing:border-box;}
+</style>
 
 	<?php if($newsletter_status=='Show'): ?>
 	<div class="newsletter-area" style="background-image: url(<?php echo BASE_URL; ?>assets/uploads/<?php echo $newsletter_photo; ?>);">
@@ -195,18 +222,23 @@ This link will be active only for 24 hours.
 		</section>
 		<!-- Footer Main End -->
 
-		
 		<!-- Footer Bottom Start -->
 		<section class="footer-bottom">
 			<div class="container">
-				<div class="row">
-					<div class="col-md-12 copyright" style="text-align: center;">
+				<div class="footer-bottom-inner">
+					<div class="copyright">
 						<?php echo $footer_copyright; ?>
+					</div>
+					<div class="payment-icons">
+						<i class="fa-solid fa-money-check"></i>
+						<i class="fa-solid fa-credit-card"></i>
+						<i class="fa-solid fa-wallet"></i>
 					</div>
 				</div>
 			</div>
 		</section>
 		<!-- Footer Bottom End -->
+
 
 		<a href="#" class="scrollup">
 			<i class="fa fa-angle-up"></i>

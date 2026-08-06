@@ -88,9 +88,14 @@ foreach ($result as $row)
 			$og_description = substr(strip_tags($row['news_content']),0,200).'...';
 			echo '<meta name="description" content="'.$row['meta_description'].'">';
 			echo '<meta name="keywords" content="'.$row['meta_keyword'].'">';
-			echo '<title>'.$row['meta_title'].'</title>';
+			echo '<title>Manna Kampus</title>';
 		}
 	}
+
+if($cur_page == 'blog.php')
+{
+    echo '<title>Manna Kampus</title>';
+}
 
 	if($cur_page == 'page.php')
 	{
@@ -171,7 +176,14 @@ foreach ($result as $row)
 			echo '<title>'.$row['meta_title'].'</title>';
 		}
 	}
+
+	if(in_array($cur_page, array('contact_us.php', 'community.php', 'belanja_online.php', 'promo.php', 'kemitraan.php')))
+	{
+		echo '<title>Manna Kampus</title>';
+	}
 	?>
+
+	
 
 	<!-- Favicon -->
 	<link href="<?php echo BASE_URL; ?>assets/uploads/<?php echo $favicon; ?>" rel="shortcut icon" type="image/png">
@@ -350,7 +362,6 @@ foreach ($result as $row)
 		.top-bar,
 		.cc-window,
 		.cc-revoke,
-		.whatsapp-float,
 		.st-sticky-share-buttons,
 		.st-sticky-share-buttons *,
 		#st-1,
@@ -1188,9 +1199,11 @@ foreach ($result as $row)
 						<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
 						<a href="#">Blog</a>
 						<a href="#">Corporate</a>
-						<a href="#">Join Us</a>
+						<a href="join-us.php" 
+							class="<?php echo ($current_page == 'join-us.php') ? 'active' : ''; ?>">Join Us</a>
 						<a href="#">Career</a>
 					</nav>
+
 					<details class="mk-mobile-menu">
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
