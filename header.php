@@ -110,6 +110,21 @@ if($cur_page == 'blog.php')
 		}
 	}
 
+	if($cur_page == 'promo-event.php')
+	{
+		$statement = $pdo->prepare("SELECT * FROM tbl_promo_event WHERE slug=? AND status=?");
+		$statement->execute(array(isset($_REQUEST['slug']) ? $_REQUEST['slug'] : '', 'Active'));
+		$row = $statement->fetch(PDO::FETCH_ASSOC);
+		if($row)
+		{
+			echo '<meta name="description" content="'.htmlspecialchars($row['short_description'], ENT_QUOTES, 'UTF-8').'">';
+			echo '<title>'.htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8').' - Manna Kampus</title>';
+			echo '<meta property="og:title" content="'.htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8').'">';
+			echo '<meta property="og:description" content="'.htmlspecialchars($row['short_description'], ENT_QUOTES, 'UTF-8').'">';
+			echo '<meta property="og:image" content="'.BASE_URL.'assets/uploads/'.rawurlencode($row['image']).'">';
+		}
+	}
+
 	if($cur_page == 'category.php')
 	{
 		$statement = $pdo->prepare("SELECT * FROM tbl_category WHERE category_slug=?");
@@ -182,9 +197,7 @@ if($cur_page == 'blog.php')
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery.bxslider.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/hover.css">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/magnific-popup.css">
-	<!-- Font Awesome 6.x CDN -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260711-17">
+	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css?v=mk-home-20260728-20">
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/responsive.css?v=mk-home-20260711-17">
 
 	<script src="<?php echo BASE_URL; ?>assets/js/modernizr.min.js"></script>
@@ -363,16 +376,18 @@ if($cur_page == 'blog.php')
 			margin: 0!important;
 			border-radius: 0!important;
 			background: #f5f5f3!important;
-			overflow: hidden!important;
+			overflow: visible!important;
 		}
 		.mk-topbar {
-			position: relative!important;
+			position: -webkit-sticky!important;
+			position: sticky!important;
+			top: 0!important;
 			width: 100%!important;
 			background: #e86600!important;
 			color: #fff!important;
 			font-size: 13px!important;
 			line-height: 1!important;
-			z-index: 21!important;
+			z-index: 1100!important;
 		}
 		.mk-topbar .container {
 			width: 100%!important;
@@ -545,8 +560,9 @@ if($cur_page == 'blog.php')
 		}
 		.mk-header,
 		.mk-header.sticky {
-			position: relative!important;
-			top: auto!important;
+			position: -webkit-sticky!important;
+			position: sticky!important;
+			top: 46px!important;
 			left: auto!important;
 			width: 100%!important;
 			height: 72px!important;
@@ -554,7 +570,8 @@ if($cur_page == 'blog.php')
 			background: #fff!important;
 			border: 0!important;
 			border-radius: 0!important;
-			z-index: 20!important;
+			box-shadow: 0 4px 18px rgba(15,23,42,0.08)!important;
+			z-index: 1000!important;
 		}
 		.mk-header .container,
 		.mk-hero .container {
@@ -764,26 +781,32 @@ if($cur_page == 'blog.php')
 		.mk-hero-position-right .hero-actions {
 			justify-content: flex-end!important;
 		}
-		.mk-hero-carousel .item.active .hero-eyebrow,
-		.mk-hero-carousel .item.active .hero-content h1,
-		.mk-hero-carousel .item.active .hero-content > p,
-		.mk-hero-carousel .item.active .hero-actions {
+		.mk-hero-carousel .item .hero-eyebrow,
+		.mk-hero-carousel .item .hero-content h1,
+		.mk-hero-carousel .item .hero-content > p,
+		.mk-hero-carousel .item .hero-actions {
+			opacity: 0;
+		}
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-eyebrow,
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content h1,
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content > p,
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-actions {
 			-webkit-animation: mkHeroTextIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 			animation: mkHeroTextIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 		}
-		.mk-hero-carousel .item.active .hero-eyebrow {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-eyebrow {
 			-webkit-animation-delay: 0.12s;
 			animation-delay: 0.12s;
 		}
-		.mk-hero-carousel .item.active .hero-content h1 {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content h1 {
 			-webkit-animation-delay: 0.25s;
 			animation-delay: 0.25s;
 		}
-		.mk-hero-carousel .item.active .hero-content > p {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-content > p {
 			-webkit-animation-delay: 0.38s;
 			animation-delay: 0.38s;
 		}
-		.mk-hero-carousel .item.active .hero-actions {
+		.mk-hero-carousel .item.active:not(.left):not(.right) .hero-actions {
 			-webkit-animation-delay: 0.51s;
 			animation-delay: 0.51s;
 		}
@@ -975,6 +998,10 @@ if($cur_page == 'blog.php')
 			}
 		}
 		@media only screen and (max-width: 640px) {
+			.mk-header,
+			.mk-header.sticky {
+				top: 62px!important;
+			}
 			.mk-topbar-inner {
 				min-height: 46px!important;
 				justify-content: space-between!important;
@@ -1064,9 +1091,34 @@ if($cur_page == 'blog.php')
 			.mk-hero-carousel .item.active .hero-content h1,
 			.mk-hero-carousel .item.active .hero-content > p,
 			.mk-hero-carousel .item.active .hero-actions {
+				opacity: 1!important;
 				-webkit-animation: none!important;
 				animation: none!important;
 			}
+		}
+
+		/* Keep Promo & Event banners at their final size during every carousel state. */
+		#promo-event-carousel .carousel-inner > .item,
+		#promo-event-carousel .carousel-inner > .item.active,
+		#promo-event-carousel .carousel-inner > .item.next,
+		#promo-event-carousel .carousel-inner > .item.prev,
+		#promo-event-carousel .carousel-inner > .item.left,
+		#promo-event-carousel .carousel-inner > .item.right {
+			left: 0!important;
+			opacity: 1!important;
+			-webkit-transform: none!important;
+			transform: none!important;
+			-webkit-transition: none!important;
+			transition: none!important;
+		}
+		#promo-event-carousel .promo-event-visual img {
+			width: 100%!important;
+			max-width: none!important;
+			height: 100%!important;
+			-webkit-transform: none!important;
+			transform: none!important;
+			-webkit-transition: none!important;
+			transition: none!important;
 		}
 
 	</style>
@@ -1132,10 +1184,9 @@ foreach ($result as $row)
 			</div>
 		</div>
 
-		<?php
+        <?php
   			$current_page = basename($_SERVER['PHP_SELF']);
 		?>
-
 		<!-- Header Start -->
 		<header class="mk-header">
 			<div class="container">
@@ -1144,11 +1195,9 @@ foreach ($result as $row)
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
 						<a href="<?php echo BASE_URL; ?>"
 						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
-						<a href="#">About Us</a>
-						<a href="promo.php" 
-							class="<?php echo ($current_page == 'promo.php' || $current_page == '') ? 'active' : ''; ?>">Promo</a>
-						<a href="blog.php" 
-							class="<?php echo ($current_page == 'blog.php' || $current_page == 'news.php') ? 'active' : ''; ?>">Blog</a>
+						<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
+						<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
+						<a href="#">Blog</a>
 						<a href="#">Corporate</a>
 						<a href="join-us.php" 
 							class="<?php echo ($current_page == 'join-us.php') ? 'active' : ''; ?>">Join Us</a>
@@ -1157,19 +1206,15 @@ foreach ($result as $row)
 
 					<details class="mk-mobile-menu">
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
-						<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
-						<a href="<?php echo BASE_URL; ?>"
-						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
-						<a href="#">About Us</a>
-						<a href="promo.php" 
-							class="<?php echo ($current_page == 'promo.php' || $current_page == '') ? 'active' : ''; ?>">Promo</a>
-						<a href="blog.php" 
-							class="<?php echo ($current_page == 'blog.php') ? 'active' : ''; ?>">Blog</a>
-						<a href="#">Corporate</a>
-						<a href="join-us.php" 
-							class="<?php echo ($current_page == 'join-us.php') ? 'active' : ''; ?>">Join Us</a>
-						<a href="#">Career</a>
-					</nav>
+						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
+							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
+							<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
+							<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
+							<a href="#">Blog</a>
+							<a href="#">Corporate</a>
+							<a href="#">Join Us</a>
+							<a href="#">Career</a>
+						</nav>
 					</details>
 				</div>
 			</div>

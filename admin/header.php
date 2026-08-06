@@ -122,6 +122,12 @@ $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+
 			          </a>
 			        </li>
 
+					<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
+			          <a href="promo-event.php">
+			            <i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
+			          </a>
+			        </li>
+
 					<li class="treeview <?php if( ($cur_page == 'category-add.php')||($cur_page == 'category.php')||($cur_page == 'category-edit.php') || ($cur_page == 'news-add.php')||($cur_page == 'news.php')||($cur_page == 'news-edit.php') || ($cur_page == 'comment.php') ) {echo 'active';} ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
@@ -226,6 +232,12 @@ $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+
 					<li class="treeview <?php if( ($cur_page == 'slider-add.php')||($cur_page == 'slider.php')||($cur_page == 'slider-edit.php') ) {echo 'active';} ?>">
 			          <a href="slider.php">
 			            <i class="fa fa-hand-o-right"></i> <span>Slider</span>
+			          </a>
+			        </li>
+
+					<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
+			          <a href="promo-event.php">
+			            <i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
 			          </a>
 			        </li>
 

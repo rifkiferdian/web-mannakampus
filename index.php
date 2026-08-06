@@ -53,6 +53,44 @@ if(!$home_sliders) {
 		)
 	);
 }
+
+$statement = $pdo->prepare("SELECT *
+							FROM tbl_promo_event
+							WHERE status=? AND is_featured=1 AND end_date>=CURDATE() AND type<>?
+							ORDER BY display_order ASC, start_date ASC, id DESC");
+$statement->execute(array('Active', 'Promo Pembayaran'));
+$home_promo_events = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+$statement = $pdo->prepare("SELECT *
+							FROM tbl_promo_event
+							WHERE status=? AND is_featured=1 AND end_date>=CURDATE() AND type=?
+							ORDER BY display_order ASC, start_date ASC, id DESC");
+$statement->execute(array('Active', 'Promo Pembayaran'));
+$home_payment_promos = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+function home_promo_event_url($url, $slug) {
+	$url = trim($url);
+	if($url === '') {
+		return BASE_URL.'promo-event/'.rawurlencode($slug);
+	}
+	if(preg_match('#^(?:https?:)?//#i', $url) || substr($url, 0, 1) === '#' || substr($url, 0, 1) === '/') {
+		return $url;
+	}
+	return BASE_URL.ltrim($url, '/');
+}
+
+function home_promo_event_date($start_date, $end_date) {
+	$months = array(1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+	$start = new DateTime($start_date);
+	$end = new DateTime($end_date);
+	if($start_date === $end_date) {
+		return $start->format('j').' '.$months[(int)$start->format('n')].' '.$start->format('Y');
+	}
+	if($start->format('Y') === $end->format('Y')) {
+		return $start->format('j').' '.$months[(int)$start->format('n')].' – '.$end->format('j').' '.$months[(int)$end->format('n')].' '.$end->format('Y');
+	}
+	return $start->format('j').' '.$months[(int)$start->format('n')].' '.$start->format('Y').' – '.$end->format('j').' '.$months[(int)$end->format('n')].' '.$end->format('Y');
+}
 ?>
 
 <!-- Hero Start -->
@@ -116,6 +154,99 @@ if(!$home_sliders) {
 	<?php endif; ?>
 </div>
 <!-- Hero End -->
+
+<?php if($home_promo_events): ?>
+<!-- Promo & Event Start -->
+<section class="promo-events" id="promo-events">
+	<img class="promo-event-decoration promo-event-decoration-left" src="<?php echo BASE_URL; ?>assets/images/promo-event-shopper-left.webp" alt="" aria-hidden="true">
+	<img class="promo-event-decoration promo-event-decoration-right" src="<?php echo BASE_URL; ?>assets/images/promo-event-shopper-right.webp" alt="" aria-hidden="true">
+	<div class="container">
+		<div class="promo-events-head">
+			<div>
+				<span class="promo-events-eyebrow">Jangan Lewatkan</span>
+				<h2>Promo &amp; Event Utama</h2>
+				<p>Temukan program spesial dan kabar terbaru dari Manna Kampus.</p>
+			</div>
+		</div>
+
+		<div id="promo-event-carousel" class="carousel promo-event-carousel promo-event-instant" data-ride="carousel" data-interval="9000">
+			<div class="carousel-inner" role="listbox">
+				<?php foreach($home_promo_events as $promo_index => $promo_event): ?>
+				<?php $promo_url = home_promo_event_url($promo_event['button_url'], $promo_event['slug']); ?>
+				<article class="item<?php if($promo_index === 0) { echo ' active'; } ?>">
+					<div class="promo-event-card">
+						<a href="<?php echo htmlspecialchars($promo_url, ENT_QUOTES, 'UTF-8'); ?>" class="promo-event-visual" aria-label="<?php echo htmlspecialchars($promo_event['title'], ENT_QUOTES, 'UTF-8'); ?>">
+							<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($promo_event['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($promo_event['title'], ENT_QUOTES, 'UTF-8'); ?>">
+						</a>
+						<div class="promo-event-info">
+							<div class="promo-event-copy">
+								<span class="promo-event-type"><?php echo htmlspecialchars($promo_event['type'], ENT_QUOTES, 'UTF-8'); ?></span>
+								<h3><?php echo htmlspecialchars($promo_event['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+								<p><?php echo htmlspecialchars($promo_event['short_description'], ENT_QUOTES, 'UTF-8'); ?></p>
+								<div class="promo-event-meta">
+									<span><i class="fa fa-calendar"></i> <?php echo home_promo_event_date($promo_event['start_date'], $promo_event['end_date']); ?></span>
+									<?php if(trim($promo_event['location']) !== ''): ?>
+									<span><i class="fa fa-map-marker"></i> <?php echo htmlspecialchars($promo_event['location'], ENT_QUOTES, 'UTF-8'); ?></span>
+									<?php endif; ?>
+								</div>
+							</div>
+							<a href="<?php echo htmlspecialchars($promo_url, ENT_QUOTES, 'UTF-8'); ?>" class="promo-event-button">
+								<?php echo htmlspecialchars($promo_event['button_text'], ENT_QUOTES, 'UTF-8'); ?> <i class="fa fa-arrow-right"></i>
+							</a>
+						</div>
+					</div>
+				</article>
+				<?php endforeach; ?>
+			</div>
+
+			<?php if(count($home_promo_events) > 1): ?>
+			<div class="promo-event-navigation">
+				<div class="promo-event-progress">
+					<div class="promo-event-counter">
+						<strong class="promo-event-current">01</strong>
+						<span>/</span>
+						<span><?php echo str_pad(count($home_promo_events), 2, '0', STR_PAD_LEFT); ?></span>
+					</div>
+					<ol class="carousel-indicators">
+						<?php foreach($home_promo_events as $promo_index => $promo_event): ?>
+						<li data-target="#promo-event-carousel" data-slide-to="<?php echo $promo_index; ?>" aria-label="Tampilkan promo <?php echo $promo_index + 1; ?>"<?php if($promo_index === 0) { echo ' class="active"'; } ?>></li>
+						<?php endforeach; ?>
+					</ol>
+				</div>
+				<div class="promo-event-arrows">
+					<a href="#promo-event-carousel" role="button" data-slide="prev" aria-label="Promo sebelumnya"><i class="fa fa-angle-left"></i></a>
+					<a href="#promo-event-carousel" role="button" data-slide="next" aria-label="Promo berikutnya"><i class="fa fa-angle-right"></i></a>
+				</div>
+			</div>
+			<?php endif; ?>
+		</div>
+	</div>
+</section>
+<!-- Promo & Event End -->
+<?php endif; ?>
+
+<?php if($home_payment_promos): ?>
+<!-- Payment Promo Start -->
+<section class="payment-promos" id="payment-promos">
+	<div class="container">
+		<div class="payment-promos-head">
+			<h2>Promo Pembayaran</h2>
+		</div>
+
+		<div class="payment-promo-carousel owl-carousel">
+			<?php foreach($home_payment_promos as $payment_promo): ?>
+			<article class="payment-promo-card">
+				<a class="payment-promo-image payment-promo-image-popup" href="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($payment_promo['image'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="Perbesar <?php echo htmlspecialchars($payment_promo['title'], ENT_QUOTES, 'UTF-8'); ?>">
+					<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($payment_promo['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($payment_promo['title'], ENT_QUOTES, 'UTF-8'); ?>">
+					<span class="payment-promo-zoom"><i class="fa fa-search-plus"></i></span>
+				</a>
+			</article>
+			<?php endforeach; ?>
+		</div>
+	</div>
+</section>
+<!-- Payment Promo End -->
+<?php endif; ?>
 
 <!-- Weekly Offers Start -->
 <section class="weekly-offers">
