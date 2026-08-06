@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Local database configuration
+admin/config.php
+
 # Logs and runtime files
 *.log
 logs/
