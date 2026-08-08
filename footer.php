@@ -23,6 +23,10 @@
 		$receive_email = $row['receive_email'];
 	}
 	?>
+
+<!-- Font Awesome 6 - untuk ikon social/brands & payment (fa-solid, fa-brands) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <style>
 .footer-main .footer-brand .footer-logo{margin-bottom:35px;}
 .footer-main .footer-brand .footer-logo img{max-width:250px;width:100%;height:auto;display:block;}
@@ -167,13 +171,25 @@ This link will be active only for 24 hours.
 		<section class="footer-main">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInLeft">
-						<h3><?php echo ABOUT_US; ?></h3>
+					<div class="col-sm-6 col-md-3 col-lg-4 footer-col footer-brand wow fadeInLeft">
+						<div class="footer-logo">
+							<?php if(!empty($logo)): ?>
+							<img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus">
+							<?php endif; ?>
+						</div>
 						<p>
 							<?php echo nl2br($footer_about); ?>
 						</p>
+						<div class="footer-brand-actions">
+							<a href="#" class="brand-icon" title="QR Code"><i class="fa-solid fa-qrcode"></i></a>
+							<a href="#" class="brand-icon" title="Bagikan"><i class="fa-solid fa-share"></i></a>
+							<a href="https://www.youtube.com" class="brand-icon" title="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+							<a href="https://www.tiktok.com" class="brand-icon" title="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+							<a href="https://www.facebook.com" class="brand-icon" title="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i></a>
+							<a href="https://www.instagram.com" class="brand-icon" title="Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+						</div>
 					</div>
-					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInLeft">
+					<div class="col-sm-6 col-md-3 col-lg-2 footer-col wow fadeInLeft">
 						<h3><?php echo LATEST_NEWS; ?></h3>
 						<?php
 						$i=0;

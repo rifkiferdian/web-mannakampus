@@ -27,7 +27,14 @@ $statement = $pdo->prepare("SELECT
                            	ON t1.category_id = t2.category_id
                            	WHERE t1.news_slug=?");
 $statement->execute(array($_REQUEST['slug']));
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
+$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+// If the news article is not found, redirect back to homepage to avoid PHP warnings
+if(empty($result)) {
+	header('location: '.BASE_URL);
+	exit;
+}
+
 foreach ($result as $row) {
 	$news_title    = $row['news_title'];
 	$news_content  = $row['news_content'];

@@ -274,31 +274,8 @@
 			removalDelay: 180,
 			image: {
 				verticalFit: true,
-				titleSrc: false
-			}
-		});
-
-		// Slider - bxslider
-		$(".bxslider").bxSlider({
-			auto: true,
-			pager: false,
-			speed: 500,
-			pause: 6000,
-			easing: 'ease-in-out'
-		});
-
-		// Scroll to Top
-		//Check to see if the window is top if not then display button
-	    $(window).scroll(function(){
-	    	stickyHeader();
-	        if ($(this).scrollTop() > 100) {
-	            $('.scrollup').fadeIn();
-	        } else {
-	            $('.scrollup').fadeIn();
-	            // $('.scrollup').fadeOut();
-	        }
-	    });
-	    
+                titleSrc: 'title'
+            }
 	    //Click event to scroll to top
 	    $('.scrollup').on("click",function(){
 	        $('html, body').animate({scrollTop : 0},800);
