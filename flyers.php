@@ -4,13 +4,13 @@ require_once('admin/config.php');
 
 header('Content-Type: application/json');
 
-// Jika cabang_id tidak dikirim di URL, berikan default value 1 (Cabang 1)
-$cabang_id = isset($_GET['cabang_id']) && intval($_GET['cabang_id']) > 0 ? intval($_GET['cabang_id']) : 1;
+// Jika id_cabang tidak dikirim di URL, berikan default value 1 (Cabang 1)
+$id_cabang = isset($_GET['id_cabang']) && intval($_GET['id_cabang']) > 0 ? intval($_GET['id_cabang']) : 1;
 
 try {
     // Jalankan query penarikan flyer
-    $statement = $pdo->prepare("SELECT photo FROM tbl_flyer WHERE cabang_id = ? ORDER BY urutan ASC");
-    $statement->execute(array($cabang_id));
+    $statement = $pdo->prepare("SELECT photo FROM tbl_flyer WHERE id_cabang = ? ORDER BY urutan ASC");
+    $statement->execute(array($id_cabang));
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     $images = array();
