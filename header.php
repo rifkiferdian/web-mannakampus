@@ -1218,6 +1218,8 @@ foreach ($result as $row)
 						<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
 						<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
 						<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
+						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">social</a>
+						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 					</nav>
 
 					<details class="mk-mobile-menu">
