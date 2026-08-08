@@ -41,13 +41,20 @@
 .mk-select-arrow { color: #8A7F73; font-size: 0.85rem; margin-left: 10px; pointer-events: none; }
 .mk-flyer-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; border: none; background: transparent; padding: 12px 10px 12px 0; font-size: 1.3rem; font-weight: 700; color: #2E2620; cursor: pointer; outline: none; min-width: 240px; text-align: left; }
 .mk-flyer-select option { font-weight: 600; color: #2E2620; background: #FFFFFF; padding: 10px; }
-.mk-flyer-carousel-container { position: relative; max-width: 1100px; margin: 0 auto 20px; padding: 0 50px; }
+
+/* Pembatas Container Carousel agar tidak melebar & pas memuat 3 item */
+.mk-flyer-carousel-container { position: relative; max-width: 900px; margin: 0 auto 20px; padding: 0 50px; overflow: hidden; }
 .mk-flyer-slick-slider { display: block; width: 100%; }
 .mk-flyer-slick-slider .slick-list { overflow: visible !important; padding-top: 25px !important; padding-bottom: 25px !important; }
-.mk-flyer-slick-slider .slick-slide { padding: 10px !important; outline: none; transition: all 0.4s ease; transform: scale(0.85); opacity: 0.45; filter: blur(2px); }
-.mk-flyer-slick-slider .slick-slide img { width: 100%; max-width: 420px; height: auto; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: block; margin: 0 auto; cursor: zoom-in; }
-.mk-flyer-slick-slider .slick-center { transform: scale(1.1); opacity: 1; filter: blur(0px); z-index: 10; }
+
+/* Ukuran slide samping (blur & kecil) */
+.mk-flyer-slick-slider .slick-slide { padding: 10px !important; outline: none; transition: all 0.4s ease; transform: scale(0.8); opacity: 0.35; filter: blur(3px); }
+.mk-flyer-slick-slider .slick-slide img { width: 100%; max-width: 320px; height: auto; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: block; margin: 0 auto; cursor: zoom-in; }
+
+/* Ukuran slide tengah (utama & jelas) */
+.mk-flyer-slick-slider .slick-center { transform: scale(1.05); opacity: 1; filter: blur(0px); z-index: 10; }
 .mk-flyer-slick-slider .slick-center img { box-shadow: 0 12px 36px rgba(0,0,0,0.22); }
+
 .mk-arrow-btn { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 99 !important; width: 46px !important; height: 46px !important; background-color: #E8792E !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: none !important; filter: none !important; outline: none !important; border: none !important; cursor: pointer !important; transition: all 0.25s ease !important; }
 .mk-arrow-btn i { color: #FFFFFF !important; font-size: 1.2rem !important; line-height: 1 !important; margin: 0 !important; }
 .mk-arrow-btn:hover { background-color: #C9611F !important; transform: translateY(-50%) scale(1.1) !important; }
@@ -67,7 +74,7 @@
 .mk-overlay-prev { left: 30px; }
 .mk-overlay-next { right: 30px; }
 @media (max-width: 768px) { .mk-overlay-content img { height: auto !important; max-height: 90vh !important; width: 95vw !important; } .mk-overlay-prev { left: 10px; } .mk-overlay-next { right: 10px; } }
-@media (max-width: 768px) { .mk-flyer-carousel-container { padding: 0 10px; max-width: 100%; } .mk-flyer-slick-slider .slick-slide { transform: scale(0.95); opacity: 0.3; } }
+@media (max-width: 768px) { .mk-flyer-carousel-container { padding: 0 10px; max-width: 100%; overflow: visible; } .mk-flyer-slick-slider .slick-slide { transform: scale(0.95); opacity: 0.3; } }
 
 /* ---------------- Member Loyalty Section ---------------- */
 .mk-member-section { background: #FDF6EF; padding: 60px 24px; }
@@ -308,8 +315,8 @@ body.mk-no-scroll {
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
-<!-- Super Indo Style Overlay Lightbox -->
-<div id="mkSuperIndoOverlay" class="mk-overlay-container">
+<!-- Style Overlay Lightbox -->
+<div id="mkOverlay" class="mk-overlay-container">
     <button class="mk-overlay-close" id="closeOverlayBtn">&times;</button>
     <button class="mk-overlay-nav mk-overlay-prev" id="overlayPrevBtn"><i class="fa fa-chevron-left"></i></button>
     

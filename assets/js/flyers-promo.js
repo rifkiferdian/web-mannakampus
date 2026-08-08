@@ -29,18 +29,23 @@ function loadBranchFlyersFromDB(cabangId) {
                 wrapper.append('<div><img src="' + imgPath + '" alt="Flyer Promo Manna Kampus" data-index="' + index + '"></div>');
             });
 
-            wrapper.slick({
+           wrapper.slick({
                 centerMode: true,
-                centerPadding: '320px',
-                slidesToShow: 1,
-                infinite: false,
+                centerPadding: '0px',
+                slidesToShow: 3,       // Harus angka 3
+                infinite: true,
                 speed: 400,
                 prevArrow: $('#flyerPrevBtn'),
                 nextArrow: $('#flyerNextBtn'),
                 responsive: [
-                    { breakpoint: 1200, settings: { centerPadding: '220px' } },
-                    { breakpoint: 992, settings: { centerPadding: '140px' } },
-                    { breakpoint: 768, settings: { centerPadding: '0px' } }
+                    { 
+                        breakpoint: 768, 
+                        settings: { 
+                            slidesToShow: 1, 
+                            centerMode: true,
+                            centerPadding: '0px'
+                        } 
+                    }
                 ]
             });
 
@@ -78,14 +83,14 @@ function openOverlay(index) {
     currentFlyerIndex = index;
     const imgPath = window.baseUrl + currentFlyerImages[currentFlyerIndex];
     $('#mkOverlayImage').attr('src', imgPath);
-    $('#mkSuperIndoOverlay').addClass('active');
+    $('#mkOverlay').addClass('active');
     
     // Kunci scroll body
     $('body').addClass('mk-no-scroll');
 }
 
 function closeOverlay() {
-    $('#mkSuperIndoOverlay').removeClass('active');
+    $('#mkOverlay').removeClass('active');
     
     // Lepas kuncian scroll body
     $('body').removeClass('mk-no-scroll');
@@ -97,7 +102,7 @@ $(document).on('click', '#closeOverlayBtn', function(e) {
     closeOverlay();
 });
 
-$(document).on('click', '#mkSuperIndoOverlay', function(e) {
+$(document).on('click', '#mkOverlay', function(e) {
     if ($(e.target).is('#mkSuperIndoOverlay') || $(e.target).hasClass('mk-overlay-content')) {
         closeOverlay();
     }

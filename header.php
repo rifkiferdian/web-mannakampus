@@ -54,6 +54,20 @@ foreach ($result as $row)
 <html dir="ltr" lang="en">
 <head>
 
+	<!-- Slick CSS -->
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+
+
+
+<!-- jQuery & Slick JS -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-L1HKGJE7GT"></script>
 	<script>
@@ -212,7 +226,7 @@ if($cur_page == 'blog.php')
 
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/cookieconsent.min.css">
 	<script src="<?php echo BASE_URL; ?>assets/js/cookieconsent.min.js"></script>
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 	
 	<style>
 		.top-bar,
@@ -1198,17 +1212,14 @@ foreach ($result as $row)
 				<div class="mk-navbar">
 					<a href="<?php echo BASE_URL; ?>" class="mk-brand"><img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus"></a>
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
-						<a href="<?php echo BASE_URL; ?>"
-						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
+						<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
 						<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-					<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
-						<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">BLBMS</a>
-						<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Sosial</a>
-						<a href="#">Blog</a>
-						<a href="#">Corporate</a>
-						<a href="join-us.php"
-							class="<?php echo ($current_page == 'join-us.php') ? 'active' : ''; ?>">Join Us</a>
-						<a href="#">Career</a>
+						<a href="promo.php"class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo</a>
+						<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
+						<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
+						<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
+						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">social</a>
+						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 					</nav>
 
 					<details class="mk-mobile-menu">
@@ -1216,13 +1227,10 @@ foreach ($result as $row)
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
 							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
 							<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
-							<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">BLBMS</a>
-							<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Sosial</a>
-							<a href="#">Blog</a>
-							<a href="#">Corporate</a>
-							<a href="#">Join Us</a>
-							<a href="#">Career</a>
+							<a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo</a>
+							<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
+							<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
+							<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
 						</nav>
 					</details>
 				</div>
