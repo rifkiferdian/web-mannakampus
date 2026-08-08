@@ -177,7 +177,7 @@ if($cur_page == 'blog.php')
 		}
 	}
 
-	if(in_array($cur_page, array('contact_us.php', 'community.php', 'belanja_online.php', 'promo.php', 'kemitraan.php')))
+	if(in_array($cur_page, array('contact_us.php', 'community.php', 'belanja_online.php', 'promo.php', 'kemitraan.php', 'social.php')))
 	{
 		echo '<title>Manna Kampus</title>';
 	}
@@ -356,6 +356,11 @@ if($cur_page == 'blog.php')
 		body {
 			background-color: #fff!important;
 			background-image: none!important;
+		}
+		body {
+			overflow-x: hidden!important;
+			overflow-y: visible!important;
+			height: auto!important;
 		}
 		#preloader,
 		#status,
@@ -1196,10 +1201,12 @@ foreach ($result as $row)
 						<a href="<?php echo BASE_URL; ?>"
 						   class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
 						<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-						<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
+					<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
+						<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">BLBMS</a>
+						<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Sosial</a>
 						<a href="#">Blog</a>
 						<a href="#">Corporate</a>
-						<a href="join-us.php" 
+						<a href="join-us.php"
 							class="<?php echo ($current_page == 'join-us.php') ? 'active' : ''; ?>">Join Us</a>
 						<a href="#">Career</a>
 					</nav>
@@ -1209,7 +1216,9 @@ foreach ($result as $row)
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
 							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
 							<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-							<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
+<a href="<?php echo BASE_URL; ?>#promo-events">Promo</a>
+							<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">BLBMS</a>
+							<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Sosial</a>
 							<a href="#">Blog</a>
 							<a href="#">Corporate</a>
 							<a href="#">Join Us</a>
