@@ -191,7 +191,7 @@ if($cur_page == 'blog.php')
 		}
 	}
 
-	if(in_array($cur_page, array('contact_us.php', 'community.php', 'belanja_online.php', 'promo.php', 'kemitraan.php')))
+	if(in_array($cur_page, array('contact_us.php', 'community.php', 'belanja_online.php', 'promo.php', 'kemitraan.php', 'social.php')))
 	{
 		echo '<title>Manna Kampus</title>';
 	}
@@ -370,6 +370,11 @@ if($cur_page == 'blog.php')
 		body {
 			background-color: #fff!important;
 			background-image: none!important;
+		}
+		body {
+			overflow-x: hidden!important;
+			overflow-y: visible!important;
+			height: auto!important;
 		}
 		#preloader,
 		#status,
