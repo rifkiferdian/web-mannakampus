@@ -66,7 +66,13 @@ if(isset($_SESSION['success_message'])) {
                         <td><?php echo $row['jam_operasional']; ?></td>
                         <td><?php echo $row['kontak']; ?></td>
                         <td><?php echo $row['badge_tipe']; ?></td>
-                        <td><?php echo $row['foto']; ?></td>
+                        <td>
+                            <?php if(!empty($row['foto'])): ?>
+                                <img src="../assets/uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="" style="max-width:120px;height:auto;object-fit:contain;background:#f5f5f5;">
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo $row['link_maps']; ?></td>
                         <td>
                             <a href="branch-info-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-xs">Edit</a>

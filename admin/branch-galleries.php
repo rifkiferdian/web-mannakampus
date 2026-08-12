@@ -51,7 +51,7 @@ if(isset($_SESSION['success_message'])) {
             <tbody>
                 <?php
                 $i=0;
-                $statement = $pdo->prepare("SELECT * FROM tbl_cabang_galeri ORDER BY id ASC");
+                $statement = $pdo->prepare("SELECT g.*, c.nama_cabang FROM tbl_cabang_galeri g LEFT JOIN tbl_cabang c ON g.id_cabang = c.id ORDER BY g.id ASC");
                 $statement->execute();
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -60,7 +60,7 @@ if(isset($_SESSION['success_message'])) {
                     ?>
                     <tr>
                         <td><?php echo $i; ?></td>
-                        <td><?php echo htmlspecialchars($row['id_cabang'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($row['nama_cabang'] ?? $row['id_cabang'] ?? ''); ?></td>
                         <td>
                             <?php if(!empty($row['foto'])): ?>
                                 <?php $img = htmlspecialchars($row['foto']); ?>

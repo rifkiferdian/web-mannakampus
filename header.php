@@ -1218,9 +1218,13 @@ foreach ($result as $row)
 						<a href="promo.php"class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo</a>
 						<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
 						<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
-						<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
+						<a href="coba.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
 						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
 						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
+						<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
+						<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
+						<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Kami</a>
+						<a href="contact-us.php"class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
 					</nav>
 
 					<details class="mk-mobile-menu">
@@ -1234,6 +1238,10 @@ foreach ($result as $row)
 							<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
 							<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
 							<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
+							<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
+							<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
+							<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Kami</a>
+							<a href="contact-us.php"class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
 						</nav>
 					</details>
 				</div>
