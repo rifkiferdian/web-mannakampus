@@ -82,7 +82,7 @@ $first_map_location = !empty($result_cabang[0]['alamat']) ? $result_cabang[0]['a
 .mk-store-card-image img{ width:100%; height:100%; object-fit:cover; }
 
 /* Badge Dinamis: SUPERMARKET (Oren) vs MINIMARKET (Biru) */
-.mk-store-badge{ position:absolute; top:8px; right:8px; color:#FFFFFF; font-size:0.65rem; font-weight:800; letter-spacing:0.5px; padding:4px 8px; border-radius:4px; text-transform:uppercase; }
+.mk-store-badge{ position:absolute; top:8px; right:8px; color:#FFFFFF; font-size:1rem; font-weight:800; letter-spacing:0.5px; padding:4px 8px; border-radius:4px; text-transform:uppercase; }
 .mk-store-badge.supermarket{ background:#E8792E; }
 .mk-store-badge.minimarket{ background:#1E88E5; }
 

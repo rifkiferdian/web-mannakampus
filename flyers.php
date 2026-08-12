@@ -9,7 +9,7 @@ $id_cabang = isset($_GET['id_cabang']) && intval($_GET['id_cabang']) > 0 ? intva
 
 try {
     // Jalankan query penarikan flyer
-    $statement = $pdo->prepare("SELECT photo FROM tbl_flyer WHERE id_cabang = ? ORDER BY urutan ASC");
+    $statement = $pdo->prepare("SELECT photo FROM tbl_flyer WHERE id_cabang = ? ORDER BY id ASC");
     $statement->execute(array($id_cabang));
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 

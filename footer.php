@@ -205,7 +205,7 @@ This link will be active only for 24 hours.
 					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInRight">
 						<h3><?php echo CONTACT_US; ?></h3>
 						<div class="contact-item">
-							<div class="icon"><i class="fa fa-map-marker"></i></div>
+							<div class="icon"><i class="fa-solid fa-location-dot"></i></div>
 							<div class="text"><?php echo $contact_address; ?></div>
 						</div>
 						<div class="contact-item">
