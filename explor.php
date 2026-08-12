@@ -176,8 +176,8 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 
 /* Judul dan Subjudul diubah menjadi Rata Kiri */
 .mk-flyer-header { text-align: left !important; margin-bottom: 30px !important; width: 100%; }
-.mk-flyer-header h2 { margin: 0 0 6px 0 !important; font-size: 1.75rem; font-weight: 700; color: #2E2620; text-align: left !important; }
-.mk-flyer-header p { color: #8A7F73 !important; margin: 0 !important; font-size: 1.25rem; text-align: left !important; }
+.mk-flyer-header h2 { margin: 0 0 6px 0 !important; font-size: 1.75rem; font-weight: 700; color: #2E2620; text-align: center; !important; }
+.mk-flyer-header p { color: #8A7F73 !important; margin: 0 !important; font-size: 1.25rem; text-align: center; !important; }
 
 /* Memperbesar Lebar Kontainer Karusel Supaya Gambar Terlihat Lebih Besar */
 .mk-flyer-carousel-container { position: relative; max-width: 1100px !important; margin: 0 auto 20px !important; padding: 0 60px !important; box-sizing: border-box; overflow: hidden !important; }
