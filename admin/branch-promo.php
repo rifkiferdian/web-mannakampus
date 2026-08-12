@@ -39,7 +39,7 @@ if(isset($_SESSION['success_message'])) {
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th width="120">Branch</th>
+                    <th width="170">Branch</th>
                     <th width="120">Badge</th>
                     <th width="140">Category</th>
                     <th>Product Name</th>
@@ -52,7 +52,7 @@ if(isset($_SESSION['success_message'])) {
             <tbody>
                 <?php
                 $i=0;
-                $statement = $pdo->prepare("SELECT * FROM tbl_cabang_promo ORDER BY id ASC");
+                $statement = $pdo->prepare("SELECT p.*, c.nama_cabang FROM tbl_cabang_promo p LEFT JOIN tbl_cabang c ON p.id_cabang = c.id ORDER BY p.id ASC");
                 $statement->execute();
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -61,13 +61,19 @@ if(isset($_SESSION['success_message'])) {
                     ?>
                     <tr>
                         <td><?php echo $i; ?></td>
-                        <td><?php echo htmlspecialchars($row['id_cabang'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($row['nama_cabang'] ?? $row['id_cabang'] ?? ''); ?></td>
                         <td><?php echo !empty($row['badge']) ? htmlspecialchars($row['badge']) : '-'; ?></td>
                         <td><?php echo !empty($row['kategori']) ? htmlspecialchars($row['kategori']) : '-'; ?></td>
                         <td><?php echo htmlspecialchars($row['nama_produk'] ?? ''); ?></td>
                         <td><?php echo !empty($row['harga_coret']) ? htmlspecialchars($row['harga_coret']) : '-'; ?></td>
                         <td><?php echo htmlspecialchars($row['harga_promo'] ?? ''); ?></td>
-                        <td><?php echo !empty($row['foto']) ? htmlspecialchars($row['foto']) : '-'; ?></td>
+                        <td>
+                            <?php if(!empty($row['foto'])): ?>
+                                <img src="../assets/uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="" style="max-width:120px;height:auto;object-fit:contain;background:#f5f5f5;">
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
                         <td>
                             <a href="branch-promo-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-xs">Edit</a>
                             <a href="#" class="btn btn-danger btn-xs" data-href="branch-promo-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
