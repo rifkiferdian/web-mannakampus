@@ -19,6 +19,26 @@ if(!isset($_SESSION['user'])) {
 	exit;
 }
 
+// Kelompokkan semua file yang termasuk "keluarga" tiap submenu Outlet
+$branch_info_pages       = ['branch-info.php', 'branch-info-add.php', 'branch-info-edit.php'];
+$branch_videos_pages     = ['branch-videos.php', 'branch-videos-add.php', 'branch-videos-edit.php'];
+$branch_tenants_pages    = ['branch-tenants.php', 'branch-tenants-add.php', 'branch-tenants-edit.php'];
+$branch_katalog_pages    = ['branch-katalog.php', 'branch-katalog-add.php', 'branch-katalog-edit.php'];
+$branch_facilities_pages = ['branch-facilities.php', 'branch-facilities-add.php', 'branch-facilities-edit.php'];
+$branch_galleries_pages  = ['branch-galleries.php', 'branch-galleries-add.php', 'branch-galleries-edit.php'];
+$branch_promo_pages      = ['branch-promo.php', 'branch-promo-add.php', 'branch-promo-edit.php'];
+
+$outlet_pages = array_merge(
+    ['outlet.php'],
+    $branch_info_pages,
+    $branch_videos_pages,
+    $branch_tenants_pages,
+    $branch_katalog_pages,
+    $branch_facilities_pages,
+    $branch_galleries_pages,
+    $branch_promo_pages
+);
+
 // Getting data from the website settings table
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
 $statement->execute();
@@ -29,6 +49,9 @@ foreach ($result as $row) {
 
 // Current Page Access Level check for all pages
 $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
+
+// Cek apakah halaman sekarang termasuk salah satu "keluarga" Outlet
+$is_outlet_active = in_array($cur_page, $outlet_pages);
 ?>
 
 <!DOCTYPE html>
@@ -324,7 +347,40 @@ $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+
 						</ul>
 					</li>
 
-        
+
+					<?php $is_outlet_active = in_array($cur_page, $outlet_pages); ?>
+					<li class="treeview <?php echo $is_outlet_active ? 'active menu-open' : ''; ?>">
+						<a href="#">
+							<i class="fa fa-hand-o-right"></i>
+							<span>Outlet</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu" style="<?php echo $is_outlet_active ? 'display:block;' : ''; ?>">
+							<li class="<?php echo in_array($cur_page, $branch_info_pages) ? 'active' : ''; ?>">
+								<a href="branch-info.php"> <i class="fa fa-circle-o"></i> Branch Information</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $branch_videos_pages) ? 'active' : ''; ?>">
+								<a href="branch-videos.php"><i class="fa fa-circle-o"></i> Branch Videos</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $branch_tenants_pages) ? 'active' : ''; ?>">
+								<a href="branch-tenants.php"><i class="fa fa-circle-o"></i> Branch Tenants</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $branch_promo_pages) ? 'active' : ''; ?>">
+						<a href="branch-promo.php"><i class="fa fa-circle-o"></i> Branch Promo</a>
+					</li>
+					<li class="<?php echo in_array($cur_page, $branch_katalog_pages) ? 'active' : ''; ?>">
+								<a href="branch-katalog.php"><i class="fa fa-circle-o"></i> Branch Katalog</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $branch_facilities_pages) ? 'active' : ''; ?>">
+								<a href="branch-facilities.php"><i class="fa fa-circle-o"></i> Branch Facilities</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $branch_galleries_pages) ? 'active' : ''; ?>">
+								<a href="branch-galleries.php"><i class="fa fa-circle-o"></i> Branch Galleries</a>
+							</li>
+						</ul>
+					</li>
       			</ul>
     		</section>
 

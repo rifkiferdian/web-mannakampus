@@ -30,20 +30,19 @@ SET time_zone = "+00:00";
 CREATE TABLE `tbl_flyer` (
   `id` int(11) NOT NULL,
   `cabang_id` int(11) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `urutan` int(11) DEFAULT 1
+  `photo` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_flyer`
 --
 
-INSERT INTO `tbl_flyer` (`id`, `cabang_id`, `photo`, `urutan`) VALUES
-(1, 1, 'promo-1.jpg', 1),
-(2, 1, 'promo-2.jpg', 2),
-(3, 1, 'promo-3.jpg', 3),
-(4, 2, 'promo-1.jpg', 1),
-(5, 3, 'promo-2.jpg', 1);
+INSERT INTO `tbl_flyer` (`id`, `cabang_id`, `photo`) VALUES
+(1, 1, 'promo-1.jpg'),
+(2, 1, 'promo-2.jpg'),
+(3, 1, 'promo-3.jpg'),
+(4, 2, 'promo-1.jpg'),
+(5, 3, 'promo-2.jpg');
 
 --
 -- Indexes for dumped tables

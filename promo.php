@@ -1,4 +1,14 @@
-<?php require_once('header.php');?>
+<?php 
+require_once('header.php');
+
+$cabangList = [];
+$stmtCabangAll = $pdo->query("SELECT id, nama_cabang FROM tbl_cabang ORDER BY nama_cabang ASC");
+$cabangList = $stmtCabangAll->fetchAll(PDO::FETCH_ASSOC);
+ 
+// Cabang default yang tampil pertama kali (cabang pertama di list)
+$defaultCabangId = isset($cabangList[0]) ? $cabangList[0]['id'] : 0;
+$defaultCabangNama = isset($cabangList[0]) ? $cabangList[0]['nama_cabang'] : '';
+?>
 
 <style>
 .mk-blog-list{ --mk-orange:#E8792E; --mk-orange-dark:#C9611F; --mk-text:#2E2620; --mk-muted:#8A7F73; --mk-border:#EDE4D8; }
@@ -31,50 +41,79 @@
     .mk-shop-hero-card{ position:static; margin-top:20px; max-width:none; }
 }
 
-/* ---------------- Section: Promo Flyer ---------------- */
-.mk-flyer-section { padding: 40px 24px; background: #ffffff; text-align: center; }
-.mk-flyer-wrap { max-width: 1200px; margin: 0 auto; }
-.mk-flyer-select-wrap { margin-bottom: 24px; display: inline-block; position: relative; }
-.mk-select-box { position: relative; display: flex; align-items: center; background: #FFFFFF; border: 2px solid #F0E6DA; border-radius: 10px; padding: 0 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: all 0.3s ease; }
-.mk-select-box:hover, .mk-select-box:focus-within { border-color: #E8792E; box-shadow: 0 6px 20px rgba(232, 121, 46, 0.2); }
-.mk-select-icon { color: #E8792E; font-size: 1.1rem; margin-right: 10px; pointer-events: none; }
-.mk-select-arrow { color: #8A7F73; font-size: 0.85rem; margin-left: 10px; pointer-events: none; }
-.mk-flyer-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; border: none; background: transparent; padding: 12px 10px 12px 0; font-size: 1.3rem; font-weight: 700; color: #2E2620; cursor: pointer; outline: none; min-width: 240px; text-align: left; }
-.mk-flyer-select option { font-weight: 600; color: #2E2620; background: #FFFFFF; padding: 10px; }
+/* ---------------- Flyer Promo Section ---------------- */
+.mk-catalog-section{ background:#FFFFFF; padding:70px 24px; text-align:center; }
+.mk-catalog-section .container{ max-width:1180px; margin:0 auto; }
+.mk-catalog-title{ font-size:2.25rem; font-weight:800; color:var(--mk-text,#2E2620); margin:0 0 6px; }
+.mk-catalog-sub{ font-size:1.3rem; color:var(--mk-muted,#8A7F73); margin:0 0 20px; }
+.mk-catalog-divider{ width:60px; height:3px; background:var(--mk-orange,#E8792E); margin:0 auto 30px; border-radius:2px; }
+ 
+/* Dropdown cabang */
+.mk-catalog-select-wrap{ max-width:340px; margin:0 auto 36px; position:relative; }
+.mk-catalog-select-label{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
 
-/* Pembatas Container Carousel agar tidak melebar & pas memuat 3 item */
-.mk-flyer-carousel-container { position: relative; max-width: 900px; margin: 0 auto 20px; padding: 0 50px; overflow: hidden; }
-.mk-flyer-slick-slider { display: block; width: 100%; }
-.mk-flyer-slick-slider .slick-list { overflow: visible !important; padding-top: 25px !important; padding-bottom: 25px !important; }
+.mk-catalog-select-pin{ position:absolute; left:20px; top:50%; transform:translateY(-50%); color:var(--mk-orange,#E8792E); font-size:1.25rem; pointer-events:none; z-index:2; }
+.mk-catalog-select-chevron{ position:absolute; right:20px; top:50%; transform:translateY(-50%); color:var(--mk-text,#2E2620); font-size:0.95rem; pointer-events:none; z-index:2; }
 
-/* Ukuran slide samping (blur & kecil) */
-.mk-flyer-slick-slider .slick-slide { padding: 10px !important; outline: none; transition: all 0.4s ease; transform: scale(0.8); opacity: 0.35; filter: blur(3px); }
-.mk-flyer-slick-slider .slick-slide img { width: 100%; max-width: 320px; height: auto; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: block; margin: 0 auto; cursor: zoom-in; }
+.mk-catalog-select{
+    width:100%; padding:16px 46px; border:2px solid var(--mk-border,#EDE4D8); border-radius:999px;
+    font-size:1.15rem; font-weight:700; font-family:inherit; color:var(--mk-text,#2E2620);
+    background:#FFFFFF; cursor:pointer; box-sizing:border-box;
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    transition:border-color .2s ease, box-shadow .2s ease;
+}
+.mk-catalog-select:focus{ outline:none; border-color:var(--mk-orange,#E8792E); box-shadow:0 0 0 3px rgba(232,121,46,0.15); }
+.mk-catalog-select::-ms-expand{ display:none; }
 
-/* Ukuran slide tengah (utama & jelas) */
-.mk-flyer-slick-slider .slick-center { transform: scale(1.05); opacity: 1; filter: blur(0px); z-index: 10; }
-.mk-flyer-slick-slider .slick-center img { box-shadow: 0 12px 36px rgba(0,0,0,0.22); }
+.mk-catalog-carousel{ position:relative; max-width:920px; margin:0 auto; padding:20px 64px; }
 
-.mk-arrow-btn { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 99 !important; width: 46px !important; height: 46px !important; background-color: #E8792E !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: none !important; filter: none !important; outline: none !important; border: none !important; cursor: pointer !important; transition: all 0.25s ease !important; }
-.mk-arrow-btn i { color: #FFFFFF !important; font-size: 1.2rem !important; line-height: 1 !important; margin: 0 !important; }
-.mk-arrow-btn:hover { background-color: #C9611F !important; transform: translateY(-50%) scale(1.1) !important; }
-.mk-arrow-left { left: 0px !important; }
-.mk-arrow-right { right: 0px !important; }
-.mk-flyer-actions { display: flex; justify-content: center; gap: 16px; margin-top: 24px; }
-.mk-flyer-btn { display: inline-flex; align-items: center; gap: 8px; background: #E8792E; color: #FFFFFF !important; font-weight: 700; font-size: 1rem; padding: 10px 24px; border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 10px rgba(232,121,46,0.3); transition: background .2s ease; text-decoration: none; }
-.mk-flyer-btn:hover { background: #C9611F; }
-.mk-overlay-container { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.88); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(6px); }
-.mk-overlay-container.active { display: flex !important; }
-.mk-overlay-content { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; }
-.mk-overlay-content img { height: 96vh !important; width: auto !important; max-width: 90vw !important; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); display: block; margin: 0 auto; }
-.mk-overlay-close { position: absolute; top: 15px; right: 25px; background: rgba(232, 121, 46, 0.8); border: none; color: #FFFFFF; font-size: 2rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 100000; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-.mk-overlay-close:hover { background: #C9611F; transform: scale(1.1); }
-.mk-overlay-nav { position: absolute; top: 50%; transform: translateY(-50%); background: #E8792E; color: #FFFFFF; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; z-index: 100000; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-.mk-overlay-nav:hover { background: #C9611F; transform: translateY(-50%) scale(1.1); }
-.mk-overlay-prev { left: 30px; }
-.mk-overlay-next { right: 30px; }
-@media (max-width: 768px) { .mk-overlay-content img { height: auto !important; max-height: 90vh !important; width: 95vw !important; } .mk-overlay-prev { left: 10px; } .mk-overlay-next { right: 10px; } }
-@media (max-width: 768px) { .mk-flyer-carousel-container { padding: 0 10px; max-width: 100%; overflow: visible; } .mk-flyer-slick-slider .slick-slide { transform: scale(0.95); opacity: 0.3; } }
+.mk-catalog-modal{ position:fixed; inset:0; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:9999; padding:12px; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .3s ease, visibility .3s ease; }
+.mk-catalog-modal.active{ opacity:1; visibility:visible; pointer-events:auto; }
+.mk-catalog-modal img{ max-width:100vw; max-height:100vh; width:auto; height:75vh; border-radius:10px; box-shadow:0 25px 70px rgba(0,0,0,0.5); display:block; transform:scale(0.9); transition:transform .3s ease; }
+.mk-catalog-modal.active img{ transform:scale(1); }
+.mk-catalog-modal-close{ position:fixed; top:24px; right:24px; width:48px; height:48px; border-radius:50%; background:var(--mk-orange,#E8792E); color:#FFFFFF; border:none; font-size:1.4rem; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10000; opacity:0; transform:scale(0.8); transition:opacity .3s ease, transform .3s ease, background .2s ease; pointer-events:none; }
+.mk-catalog-modal.active .mk-catalog-modal-close{ opacity:1; transform:scale(1); pointer-events:auto; }
+.mk-catalog-modal-close:hover{ background:var(--mk-orange-dark,#C9611F); }
+.mk-catalog-viewport{ overflow:hidden; width:100%; }
+
+.mk-catalog-track{ display:flex; align-items:center; gap:24px; transition:transform .35s ease; will-change:transform; }
+
+.mk-catalog-card{ flex-shrink:0; width:220px; border-radius:14px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.08); filter:blur(3px) brightness(0.85); opacity:0.55; transform:scale(0.85); transition:all .35s ease; cursor:pointer; }
+.mk-catalog-card img{ width:100%; height:auto; display:block; }
+.mk-catalog-card.active{ width:320px; filter:none; opacity:1; transform:scale(1); box-shadow:0 14px 34px rgba(0,0,0,0.18); cursor:default; }
+
+.mk-catalog-arrow{ position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; background:var(--mk-orange,#E8792E); color:#FFFFFF; border:none; display:flex; align-items:center; justify-content:center; font-size:1.2rem; cursor:pointer; z-index:5; transition:background .2s ease; }
+.mk-catalog-arrow:hover{ background:var(--mk-orange-dark,#C9611F); }
+.mk-catalog-arrow:disabled{ opacity:0.4; cursor:not-allowed; }
+.mk-catalog-arrow-prev{ left:0; }
+.mk-catalog-arrow-next{ right:0; }
+
+.mk-catalog-actions{ display:flex; gap:14px; justify-content:center; margin-top:30px; }
+.mk-catalog-btn{ display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:1.1rem; padding:12px 22px; border-radius:8px; border:none; cursor:pointer; text-decoration:none; }
+.mk-catalog-btn-download{ background:var(--mk-orange,#E8792E); color:#FFFFFF !important; }
+.mk-catalog-btn-download:hover{ background:var(--mk-orange-dark,#C9611F); }
+.mk-catalog-btn-print{ background:var(--mk-orange,#E8792E); color:#FFFFFF !important; }
+.mk-catalog-btn-print:hover{ background:var(--mk-orange-dark,#C9611F); }
+ 
+.mk-catalog-empty, .mk-catalog-loading{ color:var(--mk-muted,#8A7F73); font-size:1.2rem; padding:40px 0; }
+ 
+
+@media (max-width:768px){
+    .mk-catalog-carousel{ padding:16px 44px; max-width:100%; }
+    .mk-catalog-card{ width:110px; }
+    .mk-catalog-card.active{ width:200px; }
+    .mk-catalog-arrow{ width:36px; height:36px; font-size:1rem; }
+    .mk-catalog-title{ font-size:1.5rem; padding:0 16px; }
+    .mk-catalog-sub{ font-size:1.1rem; padding:0 16px; }
+    .mk-catalog-select-wrap{ padding:0 16px; }
+}
+
+@media (max-width:600px){
+    .mk-catalog-modal{ padding:16px 12px; }
+    .mk-catalog-modal img{ max-width:100%; max-height:50vh; }
+    .mk-catalog-modal-close{ top:12px; right:12px; width:40px; height:40px; font-size:1.1rem; }
+}
 
 /* ---------------- Member Loyalty Section ---------------- */
 .mk-member-section { background: #FDF6EF; padding: 60px 24px; }
@@ -161,51 +200,36 @@ body.mk-no-scroll {
 </section>
 <!-- Hero Shop End -->
 
-<!-- Promo Flyer Section Start -->
-<section class="mk-flyer-section">
-    <div class="mk-flyer-wrap">
+<!-- Katalog Cabang Start -->
+<section class="mk-catalog-section">
+    <div class="container">
+        <h2 class="mk-catalog-title" id="mkCatalogTitle">Katalog Cabang  <?php echo htmlspecialchars($defaultCabangNama); ?></h2>
+        <p class="mk-catalog-sub" id="mkCatalogSub">Hanya berlaku di <?php echo htmlspecialchars($defaultCabangNama); ?></p>
+        <div class="mk-catalog-divider"></div>
+ 
+        <div class="mk-catalog-select-wrap">
+            <i class="fa fa-map-marker-alt mk-catalog-select-pin"></i>
+            <select id="mkCabangSelect" class="mk-catalog-select" aria-label="Pilih Cabang">
+                <?php foreach ($cabangList as $c): ?>
+                    <option value="<?php echo $c['id']; ?>" <?php echo ($c['id'] == $defaultCabangId) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($c['nama_cabang']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <i class="fa fa-chevron-down mk-catalog-select-chevron"></i>
+        </div>
         
-        <!-- Dropdown Cabang (Otomatis dari Database) -->
-        <div class="mk-flyer-select-wrap">
-            <div class="mk-select-box">
-                <i class="fa fa-map-marker mk-select-icon"></i>
-                <select class="mk-flyer-select" id="branchFlyerSelect">
-                    <?php
-                    $statement = $pdo->prepare("SELECT * FROM tbl_cabang ORDER BY id ASC");
-                    $statement->execute();
-                    $cabang_list = $statement->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($cabang_list as $cabang) {
-                        echo '<option value="' . $cabang['id'] . '">' . htmlspecialchars($cabang['nama_cabang'], ENT_QUOTES, 'UTF-8') . '</option>';
-                    }
-                    ?>
-                </select>
-                <i class="fa fa-chevron-down mk-select-arrow"></i>
-            </div>
+        <div id="mkCatalogBody">
+            <p class="mk-catalog-loading">Memuat katalog...</p>
         </div>
-
-        <!-- Carousel Container -->
-                <div class="mk-flyer-carousel-container">
-                    <div id="flyerSlidesWrapper" class="mk-flyer-slick-slider">
-                        <!-- Gambar promo akan dimuat oleh AJAX di sini -->
-                    </div>
-                    <!-- Tombol Navigasi Kiri & Kanan -->
-                    <button class="mk-arrow-btn mk-arrow-left" id="flyerPrevBtn"><i class="fa fa-chevron-left"></i></button>
-                    <button class="mk-arrow-btn mk-arrow-right" id="flyerNextBtn"><i class="fa fa-chevron-right"></i></button>
-                </div>
-
-        <!-- Tombol Download & Print -->
-        <div class="mk-flyer-actions">
-            <a id="downloadFlyerBtn" href="#" download class="mk-flyer-btn">
-                <i class="fa fa-download"></i> Download
-            </a>
-            <button onclick="printFlyer()" class="mk-flyer-btn">
-                <i class="fa fa-print"></i> Print
-            </button>
-        </div>
-
+        <!-- Modal Preview Katalog -->
+<div class="mk-catalog-modal" id="mkCatalogModal">
+    <button class="mk-catalog-modal-close" id="mkCatalogModalClose" aria-label="Tutup"><i class="fa fa-times"></i></button>
+    <img src="" alt="Katalog besar" id="mkCatalogModalImg">
+</div>
     </div>
 </section>
-<!-- Promo Flyer Section End -->
+<!-- Katalog Cabang End -->
 
 <!-- Member Loyalty Section Start -->
 <section class="mk-member-section">
@@ -308,27 +332,197 @@ body.mk-no-scroll {
 </section>
 <!-- Store Locator End -->
 
-
-
 <?php require_once('footer.php'); ?>
 
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-
-<!-- Style Overlay Lightbox -->
-<div id="mkOverlay" class="mk-overlay-container">
-    <button class="mk-overlay-close" id="closeOverlayBtn">&times;</button>
-    <button class="mk-overlay-nav mk-overlay-prev" id="overlayPrevBtn"><i class="fa fa-chevron-left"></i></button>
-    
-    <div class="mk-overlay-content">
-        <img id="mkOverlayImage" src="" alt="Zoom Promo Fullscreen">
-    </div>
-    
-    <button class="mk-overlay-nav mk-overlay-next" id="overlayNextBtn"><i class="fa fa-chevron-right"></i></button>
-</div>
-
-<!-- Script Pemanggil JS Flyer Promo -->
 <script>
-    window.baseUrl = "<?php echo BASE_URL; ?>assets/uploads/";
+(function(){
+    // TODO: sesuaikan path endpoint & folder foto jika berbeda
+    const AJAX_URL       = '<?php echo BASE_URL; ?>flyers.php';
+    const FLYER_BASE_PATH = '<?php echo BASE_URL; ?>assets/uploads/';
+ 
+    const select  = document.getElementById('mkCabangSelect');
+    const titleEl = document.getElementById('mkCatalogTitle');
+    const subEl   = document.getElementById('mkCatalogSub');
+    const bodyEl  = document.getElementById('mkCatalogBody');
+ 
+    const modal      = document.getElementById('mkCatalogModal');
+    const modalImg   = document.getElementById('mkCatalogModalImg');
+    const modalClose = document.getElementById('mkCatalogModalClose');
+
+    function openModal(src){
+        modalImg.setAttribute('src', src);
+        modal.classList.add('active');
+        document.body.classList.add('mk-no-scroll');
+    }
+
+    function closeModal(){
+        modal.classList.remove('active');
+        document.body.classList.remove('mk-no-scroll');
+        modalImg.setAttribute('src', '');
+    }
+
+    modalClose.addEventListener('click', closeModal);
+
+    // Tutup kalau klik area gelap di luar gambar (bukan gambarnya sendiri)
+    modal.addEventListener('click', function(e){
+        if (e.target === modal) closeModal();
+    });
+
+    // Tutup juga dengan tombol Escape (opsional tapi umum untuk lightbox)
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') closeModal();
+    });
+
+    function updateTitle(namaCabang){
+        titleEl.textContent = 'Katalog Cabang  ' + namaCabang;
+        subEl.textContent   = 'Hanya berlaku di  ' + namaCabang;
+    }
+ 
+    function loadKatalog(idCabang, namaCabang){
+        bodyEl.innerHTML = '<p class="mk-catalog-loading">Memuat katalog...</p>';
+        updateTitle(namaCabang);
+ 
+        fetch(AJAX_URL + '?id_cabang=' + encodeURIComponent(idCabang))
+            .then(res => res.json())
+            .then(data => {
+                // ajax-katalog.php mengembalikan array polos nama file,
+                // atau {error: "..."} jika terjadi kegagalan query
+                if (data && data.error) {
+                    bodyEl.innerHTML = '<p class="mk-catalog-empty">Gagal memuat katalog.</p>';
+                    return;
+                }
+ 
+                if (!Array.isArray(data) || data.length === 0) {
+                    bodyEl.innerHTML = '<p class="mk-catalog-empty">Belum ada katalog untuk cabang ini.</p>';
+                    return;
+                }
+ 
+                const flyers = data.map(function(filename){
+                    return FLYER_BASE_PATH + filename;
+                });
+ 
+                renderCarousel(flyers);
+            })
+            .catch(() => {
+                bodyEl.innerHTML = '<p class="mk-catalog-empty">Terjadi kesalahan saat memuat katalog.</p>';
+            });
+    }
+ 
+    function renderCarousel(flyerUrls){
+    let cardsHtml = '';
+    flyerUrls.forEach((src, idx) => {
+        cardsHtml += '<div class="mk-catalog-card" data-index="' + idx + '" data-src="' + src + '">' +
+                        '<img src="' + src + '" alt="Katalog promo ' + (idx + 1) + '">' +
+                     '</div>';
+    });
+
+    bodyEl.innerHTML =
+        '<div class="mk-catalog-carousel">' +
+            '<button class="mk-catalog-arrow mk-catalog-arrow-prev" id="mkCatalogPrev" aria-label="Sebelumnya"><i class="fa fa-chevron-left"></i></button>' +
+            '<div class="mk-catalog-viewport" id="mkCatalogViewport">' +
+                '<div class="mk-catalog-track" id="mkCatalogTrack">' + cardsHtml + '</div>' +
+            '</div>' +
+            '<button class="mk-catalog-arrow mk-catalog-arrow-next" id="mkCatalogNext" aria-label="Berikutnya"><i class="fa fa-chevron-right"></i></button>' +
+        '</div>' +
+        '<div class="mk-catalog-actions">' +
+            '<a href="#" id="mkCatalogDownload" class="mk-catalog-btn mk-catalog-btn-download" download><i class="fa fa-download"></i> Download</a>' +
+            '<button type="button" id="mkCatalogPrint" class="mk-catalog-btn mk-catalog-btn-print"><i class="fa fa-print"></i> Print</button>' +
+        '</div>';
+
+    initCarousel();
+}
+
+function initCarousel(){
+    const viewport = document.getElementById('mkCatalogViewport');
+    const track   = document.getElementById('mkCatalogTrack');
+    const cards   = Array.from(track.querySelectorAll('.mk-catalog-card'));
+    const prevBtn = document.getElementById('mkCatalogPrev');
+    const nextBtn = document.getElementById('mkCatalogNext');
+    const downloadBtn = document.getElementById('mkCatalogDownload');
+    const printBtn = document.getElementById('mkCatalogPrint');
+
+    let current = 0;
+
+    function centerActiveCard(){
+    const activeCard = cards[current];
+    if (!activeCard) return;
+
+    const viewportRect = viewport.getBoundingClientRect();
+    const cardRect = activeCard.getBoundingClientRect();
+
+    const cardCenter = cardRect.left + cardRect.width / 2;
+    const viewportCenter = viewportRect.left + viewportRect.width / 2;
+    const delta = cardCenter - viewportCenter;
+
+    const currentStyle = window.getComputedStyle(track);
+    const matrix = (currentStyle.transform && currentStyle.transform !== 'none')
+        ? new DOMMatrixReadOnly(currentStyle.transform)
+        : new DOMMatrixReadOnly();
+    const currentTranslateX = matrix.m41;
+
+    const newTranslateX = currentTranslateX - delta;
+    track.style.transform = 'translateX(' + newTranslateX + 'px)';
+}
+
+    function render(){
+        cards.forEach((card, idx) => card.classList.toggle('active', idx === current));
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === cards.length - 1;
+
+        const activeSrc = cards[current].dataset.src;
+        downloadBtn.setAttribute('href', activeSrc);
+        downloadBtn.setAttribute('download', activeSrc.split('/').pop());
+
+        centerActiveCard();
+    }
+
+    // Hitung ulang posisi tengah TEPAT saat animasi lebar kartu aktif selesai
+    track.addEventListener('transitionend', function(e){
+        if (e.propertyName === 'width') {
+            centerActiveCard();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => { if (current > 0){ current--; render(); } });
+    nextBtn.addEventListener('click', () => { if (current < cards.length - 1){ current++; render(); } });
+    cards.forEach((card, idx) => {
+        card.addEventListener('click', () => {
+            if (idx === current) {
+                openModal(card.dataset.src);
+            } else {
+                current = idx;
+                render();
+            }
+        });
+    });
+    printBtn.addEventListener('click', () => {
+        const src = cards[current].dataset.src;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(
+            '<html><head><title>Print Katalog</title></head>' +
+            '<body style="margin:0;display:flex;justify-content:center;align-items:center;">' +
+            '<img src="' + src + '" style="max-width:100%;" onload="window.print();window.close();">' +
+            '</body></html>'
+        );
+        printWindow.document.close();
+    });
+
+    window.addEventListener('resize', centerActiveCard);
+
+    render();
+}
+ 
+    // Ganti katalog saat dropdown dipilih -> ambil nama cabang dari teks opsi yang dipilih
+    select.addEventListener('change', function(){
+        const namaCabang = this.options[this.selectedIndex].text;
+        loadKatalog(this.value, namaCabang);
+    });
+ 
+    // Load katalog cabang default saat halaman pertama kali dibuka
+    <?php if ($defaultCabangId): ?>
+        loadKatalog(<?php echo $defaultCabangId; ?>, <?php echo json_encode($defaultCabangNama); ?>);
+    <?php else: ?>
+        bodyEl.innerHTML = '<p class="mk-catalog-empty">Belum ada data cabang.</p>';
+    <?php endif; ?>
+})();
 </script>
-<script src="<?php echo BASE_URL; ?>assets/js/flyers-promo.js"></script>

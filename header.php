@@ -59,7 +59,8 @@ foreach ($result as $row)
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 
 
 <!-- jQuery & Slick JS -->
@@ -1218,7 +1219,7 @@ foreach ($result as $row)
 						<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
 						<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
 						<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
-						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">social</a>
+						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
 						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 					</nav>
 
@@ -1231,6 +1232,8 @@ foreach ($result as $row)
 							<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
 							<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
 							<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
+							<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
+							<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 						</nav>
 					</details>
 				</div>

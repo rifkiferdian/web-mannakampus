@@ -49,6 +49,21 @@ $nama_cabang_pilihan = !empty($current_cabang['nama_cabang']) ? $current_cabang[
 $stmt_promo = $pdo->prepare("SELECT * FROM tbl_cabang_promo WHERE id_cabang = ? ORDER BY id DESC LIMIT 8");
 $stmt_promo->execute([$current_cabang['id']]);
 $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
+
+// G. Query Flyer
+$stmt_flyer = $pdo->prepare("SELECT * FROM tbl_flyer WHERE id_cabang = ? ORDER BY id ASC");
+$stmt_flyer->execute([$current_cabang['id']]);
+$result_flyers = $stmt_flyer->fetchAll(PDO::FETCH_ASSOC);
+
+// H. Query Fasilitas
+$stmt_fac = $pdo->prepare("SELECT * FROM tbl_cabang_fasilitas WHERE id_cabang = ? ORDER BY id ASC");
+$stmt_fac->execute([$current_cabang['id']]);
+$facilities = $stmt_fac->fetchAll(PDO::FETCH_ASSOC);
+
+// I. Query Galeri
+$stmt_galeri = $pdo->prepare("SELECT foto FROM tbl_cabang_galeri WHERE id_cabang = ? ORDER BY id ASC LIMIT 5");
+$stmt_galeri->execute([$current_cabang['id']]);
+$result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
 <style>
@@ -137,11 +152,12 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 
 /* ---------------- SECTION 4: PROMO EKSKLUSIF (Single-Line) ---------------- */
 .mk-sec-promo { background-color: #FFFFFF; padding: 60px 0; }
-.mk-promo-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+.mk-promo-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 30px; position: relative; min-height: 50px; }
 .mk-promo-title-box h2 { font-size: 1.75rem; font-weight: 800; color: #2E2620; margin: 0 0 6px 0; }
 .mk-promo-title-box p { font-size: 1.25rem; color: #8A7F73; margin: 0; }
-.mk-promo-link-all { font-size: 1.05rem; font-weight: 700; color: #E8792E; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+.mk-promo-link-all { font-size: 1.05rem; font-weight: 700; color: #E8792E; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; position: absolute; right: 0; bottom: 0; }
 .mk-promo-link-all:hover { color: #A04000; }
+.mk-promo-underline { width: 60px; height: 3px; background-color: #E8792E; margin: 20px auto; border-radius: 2px; }
 
 /* Product Grid & Card */
 .mk-promo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -178,7 +194,7 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 .mk-flyer-header { text-align: left !important; margin-bottom: 30px !important; width: 100%; }
 .mk-flyer-header h2 { margin: 0 0 6px 0 !important; font-size: 1.75rem; font-weight: 700; color: #2E2620; text-align: center; !important; }
 .mk-flyer-header p { color: #8A7F73 !important; margin: 0 !important; font-size: 1.25rem; text-align: center; !important; }
-
+.mk-flyer-underline { width: 60px; height: 3px; background-color: #E8792E; margin: 20px auto; border-radius: 2px; }
 /* Memperbesar Lebar Kontainer Karusel Supaya Gambar Terlihat Lebih Besar */
 .mk-flyer-carousel-container { position: relative; max-width: 1100px !important; margin: 0 auto 20px !important; padding: 0 60px !important; box-sizing: border-box; overflow: hidden !important; }
 .mk-flyer-slick-slider { display: block; width: 100%; }
@@ -202,10 +218,16 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 .mk-flyer-actions { display: flex; justify-content: center; gap: 16px; margin-top: 25px; }
 .mk-flyer-btn { display: inline-flex; align-items: center; gap: 8px; background: #E8792E; color: #FFFFFF !important; font-weight: 700; font-size: 1rem; padding: 10px 24px; border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase; text-decoration: none; transition: background .2s ease; }
 .mk-flyer-btn:hover { background: #C9611F; }
+
+/* Animasi halus saat modal muncul */
+#imageModal { animation: fadeIn 0.25s ease-in-out; }
+#imageModalImg { animation: zoomIn 0.25s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoomIn { from { transform: scale(0.8); } to { transform: scale(1); } }
 @media (max-width: 768px) { .mk-flyer-carousel-container { padding: 0 10px; max-width: 100%; } .mk-flyer-slick-slider .slick-slide { transform: scale(0.95); opacity: 0.3; filter: none; } .mk-arrow-btn { width: 38px !important; height: 38px !important; } .mk-arrow-left { left: 5px !important; } .mk-arrow-right { right: 5px !important; } }
 
-/* ---------------- SECTION FASILITAS & KENYAMANAN ---------------- */
-.mk-facility-section { padding: 60px 24px; background: #F4F4F4; text-align: center; width: 100%; box-sizing: border-box; }
+/* ---------------- SECTION 6 FASILITAS & KENYAMANAN ---------------- */
+.mk-facility-section { padding: 60px 24px; background: #ffffff; text-align: center; width: 100%; box-sizing: border-box; }
 .mk-facility-wrap { max-width: 1240px !important; margin: 0 auto !important; padding: 0 20px !important; box-sizing: border-box; }
 .mk-facility-header { text-align: center !important; margin-bottom: 35px !important; width: 100%; }
 .mk-facility-header h2 { margin: 0 0 10px 0 !important; font-size: 1.75rem; font-weight: 700; color: #2E2620; }
@@ -218,6 +240,22 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 .mk-facility-desc { font-size: 1.05rem; color: #8A7F73; margin: 0; }
 @media (max-width: 768px) { .mk-facility-grid { grid-template-columns: repeat(2, 1fr); } }
 
+/* ---------------- SECTION 7 GALERI FOTO CABANG ---------------- */
+.mk-gallery-section { padding: 80px 0; background: #fff; }
+.mk-gallery-section .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.mk-gallery-header-center { text-align: center; margin-bottom: 40px; position: relative; min-height: 50px; }
+.mk-gallery-header-center h2 { font-size: 1.75rem; font-weight: 800; color: #2E2620; margin: 0 0 12px; }
+.mk-gallery-header-center h2 span { color: #E8792E; }
+.mk-gallery-underline { width: 70px; height: 4px; background: #E8792E; margin: 0 auto; border-radius: 2px; }
+.mk-gallery-link-all { font-size: 1.05rem; font-weight: 700; color: #E8792E; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; position: absolute; right: 0; bottom: 0; }
+.mk-gallery-link-all:hover { color: #A04000; }
+.mk-gallery-grid-clean { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+.mk-gallery-card { overflow: hidden; border-radius: 12px; position: relative; cursor: zoom-in; background: #f8f9fa; box-shadow: 0 4px 12px rgba(0,0,0,0.06); transition: transform 0.3s ease, box-shadow 0.3s ease; display: block; }
+.mk-gallery-card img { width： 100%; height: 200px; display: block; object-fit: cover; transition: transform 0.4s ease; }
+.mk-gallery-card:hover { transform: translateY(-8px); box-shadow: 0 16px 30px rgba(0,0,0,0.12); }
+.mk-gallery-card:hover img { transform: scale(1.05); }
+@media (max-width: 991px) { .mk-gallery-grid-clean { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .mk-gallery-grid-clean { grid-template-columns: 1fr; } }
 </style>
 
 <div class="mk-explor-page">
@@ -266,7 +304,7 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
                             <div class="mk-info-icon"><i class="fa-regular fa-clock"></i></div>
                             <div class="mk-info-content">
                                 <label>Jam Operasional</label>
-                                <p><?php echo htmlspecialchars($current_cabang['jam_operasional'], ENT_QUOTES, 'UTF-8'); ?></p>
+                                <p>Buka <?php echo htmlspecialchars($current_cabang['jam_operasional'], ENT_QUOTES, 'UTF-8'); ?></p>
                                 <span style="color:#888; font-size: 1.15rem;">(Buka Setiap Hari)</span>
                             </div>
                         </div>
@@ -337,9 +375,9 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
                             ?>
                                 <div class="mk-video-list-card <?php echo $active_class; ?>" onclick="changeActiveVideo('<?php echo $video_source; ?>', this)">
                                     <h4 class="mk-video-card-heading">
-                                        <i class="fa fa-play-circle"></i> <?php echo htmlspecialchars($vid['judul_video'] ?? 'Video Profile', ENT_QUOTES, 'UTF-8'); ?>
+                                        <i class="fa fa-play-circle"></i> <?php echo htmlspecialchars($vid['judul_video'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                     </h4>
-                                    <p class="mk-video-card-desc"><?php echo htmlspecialchars($vid['deskripsi'] ?? 'Video tur area Manna Kampus.', ENT_QUOTES, 'UTF-8'); ?></p>
+                                    <p class="mk-video-card-desc"><?php echo htmlspecialchars($vid['deskripsi'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -403,6 +441,7 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
                     <div class="mk-promo-title-box">
                         <h2>Promo Exclusive Cabang <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
                         <p>Hanya berlaku di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></p>
+                        <div class="mk-promo-underline"></div>
                     </div>
                     <a href="promo.php?cabang=<?php echo $current_cabang['id']; ?>" class="mk-promo-link-all">
                         Lihat Semua <i class="fa-solid fa-chevron-right"></i>
@@ -460,6 +499,7 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
                     <div class="mk-flyer-header">
                         <h2>Katalog Cabang <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
                         <p>Hanya berlaku di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></p>
+                        <div class="mk-flyer-underline"></div>
                     </div>
 
                 <!-- Carousel Container -->
@@ -489,9 +529,12 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 
                                 $foto_flyer = BASE_URL . 'assets/uploads/' . $nama_file_foto;
                             ?>
-                                <div class="flyer-slide-item">
-                                    <img src="<?php echo $foto_flyer; ?>" alt="Promo Flyer Manna Kampus">
-                                </div>
+                            <div class="flyer-slide-item">
+                            <img src="<?php echo $foto_flyer; ?>" 
+                                alt="Promo Flyer Manna Kampus" 
+                                onclick="openImageModal(this.src)" 
+                                style="cursor: pointer;">
+                        </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="flyer-slide-item">
@@ -519,12 +562,13 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
         </section>
 
 
+        
         <!-- SECTION 6 : FASILITAS & KENYAMANAN -->
         <section class="mk-facility-section">
             <div class="mk-facility-wrap">
                 
                 <div class="mk-facility-header">
-                    <h2>Fasilitas & Kenyamanan</h2>
+                    <h2>Fasilitas & Kenyamanan <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
                     <div class="mk-facility-underline"></div>
                 </div>
 
@@ -554,6 +598,34 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </section>
 
+        <!-- SECTION 7 : GALERI CLEAN GRID -->
+        <section class="mk-gallery-section">
+            <div class="container">
+                
+                <div class="mk-gallery-header-center">
+                    <h2>Galeri <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                    <div class="mk-gallery-underline"></div>
+                    <a href="gallery-all.php?id=<?php echo $current_cabang['id']; ?>" class="mk-gallery-link-all">
+                        Lihat Semua <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+                
+                <?php if (!empty($result_galeri)): ?>
+                    <div class="mk-gallery-grid-clean">
+                        <?php foreach ($result_galeri as $foto): 
+                            $foto_url = BASE_URL . 'assets/uploads/' . htmlspecialchars($foto, ENT_QUOTES, 'UTF-8');
+                        ?>
+                            <div class="mk-gallery-card" onclick="openImageModal('<?php echo $foto_url; ?>')">
+                                <img src="<?php echo $foto_url; ?>" alt="Galeri Manna Kampus">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p style="text-align: center; color: #8A7F73; padding: 30px;">Belum ada dokumentasi galeri untuk cabang ini.</p>
+                <?php endif; ?>
+            </div>
+        </section>
+
     <?php else: ?>
         <section class="mk-sec-info">
             <div class="mk-container">
@@ -562,8 +634,45 @@ $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
         </section>
     <?php endif; ?>
 
-<!-- Script Switcher Video -->
+<!-- ========================================== -->
+<!-- 1. HTML MODAL POP-UP (Perbesar & Silang Oranye) -->
+<!-- ========================================== -->
+<div id="imageModal" style="display:none; position:fixed; z-index:9999999; left:0; top:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.88); justify-content:center; align-items:center;" onclick="closeImageModal(event)">
+    
+    <span style="position:absolute; top:25px; right:30px; background-color:#D65A18; color:#fff; width:45px; height:45px; border-radius:50%; font-size:24px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:10000001;" onclick="closeImageModal(event)">&times;</span>
+    
+    <img id="imageModalImg" style="max-width:95vw; max-height:95vh; width:auto; height:75vh; margin:auto; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.5); object-fit:contain;" onclick="event.stopPropagation()">
+</div>
+
+<!-- ========================================== -->
+<!-- 2. SCRIPT JAVASCRIPT LENGKAP               -->
+<!-- ========================================== -->
 <script>
+// Fungsi untuk Membuka & Menutup Modal Perbesar Gambar
+function openImageModal(src) {
+    document.getElementById('imageModalImg').src = src;
+    document.getElementById('imageModal').style.display = 'flex';
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+
+// Update link download sesuai flyer yang sedang aktif di tengah carousel
+function updateDownloadLink() {
+    var $centerSlide = $('.mk-flyer-slick-slider .slick-center img');
+    var $downloadBtn = $('#downloadFlyerBtn');
+
+    if ($centerSlide.length > 0 && $downloadBtn.length > 0) {
+        var imgSrc = $centerSlide.attr('src');
+        $downloadBtn.attr('href', imgSrc);
+
+        // Ambil nama file asli dari URL untuk nama file download
+        var fileName = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
+        $downloadBtn.attr('download', fileName);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const videoPreview = document.getElementById('videoPreview');
     const videoTitle = document.getElementById('videoTitle');
@@ -584,15 +693,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-}); // <--- Tutup DOMContentLoaded di sini
+});
 
-// Letakkan changeActiveVideo di luar agar bersifat GLOBAL (bisa dipanggil onclick)
+// Change Active Video
 function changeActiveVideo(videoUrl, element) {
-    // Ubah status aktif card
     $('.mk-video-list-card').removeClass('active');
     $(element).addClass('active');
 
-    // Ubah sumber video di iframe sebelah kanan
     var $player = $('#mainVideoPlayer');
     if($player.length > 0) {
         $player.attr('src', videoUrl);
@@ -602,7 +709,6 @@ function changeActiveVideo(videoUrl, element) {
 
 <script type="text/javascript">
 (function($) {
-    // Pastikan dokumen benar-benar siap dan plugin slick sudah ada
     $(window).on('load', function() {
         var $slider = $('#flyerSlidesWrapper');
         
@@ -626,10 +732,19 @@ function changeActiveVideo(videoUrl, element) {
                         breakpoint: 768,
                         settings: {
                             slidesToShow: 1,
+                            centerPadding: '0px',
                             centerMode: true
                         }
                     }
                 ]
+            });
+
+            // Set link download awal setelah slider siap
+            setTimeout(updateDownloadLink, 100);
+
+            // Update link download tiap kali slide berubah (klik panah/geser)
+            $slider.on('afterChange', function(event, slick, currentSlide) {
+                updateDownloadLink();
             });
         }
     });
