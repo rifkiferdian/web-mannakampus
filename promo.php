@@ -2,12 +2,13 @@
 require_once('header.php');
 
 $cabangList = [];
-$stmtCabangAll = $pdo->query("SELECT id, nama_cabang FROM tbl_cabang ORDER BY nama_cabang ASC");
+$stmtCabangAll = $pdo->query("SELECT * FROM tbl_cabang ORDER BY id ASC");
 $cabangList = $stmtCabangAll->fetchAll(PDO::FETCH_ASSOC);
- 
+
 // Cabang default yang tampil pertama kali (cabang pertama di list)
 $defaultCabangId = isset($cabangList[0]) ? $cabangList[0]['id'] : 0;
 $defaultCabangNama = isset($cabangList[0]) ? $cabangList[0]['nama_cabang'] : '';
+$first_map_location = !empty($cabangList[0]['alamat']) ? $cabangList[0]['alamat'] : 'Manna Kampus Yogyakarta';
 ?>
 
 <style>
@@ -284,46 +285,39 @@ body.mk-no-scroll {
 					<input type="text" placeholder="Cari cabang...">
 				</div>
 
-				<div class="mk-store-item active">
-					<div>
-						<p class="mk-store-name">Manna Kampus - C. Simanjuntak</p>
-						<p class="mk-store-address">Jl. C. Simanjuntak No.70, Terban, Yogyakarta</p>
-						<p class="mk-store-status">BUKA (Tutup 22:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
-
-				<div class="mk-store-item">
-					<div>
-						<p class="mk-store-name">Manna Kampus - Godean</p>
-						<p class="mk-store-address">Jl. Godean KM.5, Kokoban, Sleman</p>
-						<p class="mk-store-status">BUKA (Tutup 21:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
-
-				<div class="mk-store-item">
-					<div>
-						<p class="mk-store-name">Manna Kampus - Palagan</p>
-						<p class="mk-store-address">Jl. Palagan Tentara Pelajar No.77, Sleman</p>
-						<p class="mk-store-status">BUKA (Tutup 22:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
-
-				<div class="mk-store-item">
-					<div>
-						<p class="mk-store-name">Manna Kampus - Seturan</p>
-						<p class="mk-store-address">Jl. Seturan Raya No.4, Depok, Sleman</p>
-						<p class="mk-store-status">BUKA (Tutup 21:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
+				<?php if (!empty($cabangList)): ?>
+					<?php foreach ($cabangList as $index => $row): ?>
+						<?php
+						$active_class = ($index === 0) ? 'active' : '';
+						$alamat_cabang = !empty($row['alamat']) ? $row['alamat'] : $row['nama_cabang'];
+						$jam_op = !empty($row['jam_operasional']) ? $row['jam_operasional'] : 'Buka 08:00 - 21:00';
+						$nama_cabang = !empty($row['nama_cabang']) ? $row['nama_cabang'] : 'Manna Kampus';
+						$escaped_address = addslashes($alamat_cabang);
+						$display_status = 'BUKA';
+						if (!empty($row['jam_operasional'])) {
+							$display_status .= ' (' . htmlspecialchars($jam_op) . ')';
+						} else {
+							$display_status .= ' (Tutup 21:00)';
+						}
+						?>
+						<div class="mk-store-item <?php echo $active_class; ?>" onclick="changeMapLocation('<?php echo $escaped_address; ?>', this)">
+							<div>
+								<p class="mk-store-name"><?php echo htmlspecialchars($nama_cabang); ?></p>
+								<p class="mk-store-address"><?php echo htmlspecialchars($alamat_cabang); ?></p>
+								<p class="mk-store-status"><?php echo htmlspecialchars($display_status); ?></p>
+							</div>
+							<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
+						</div>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<p class="mk-catalog-empty">Belum ada data cabang.</p>
+				<?php endif; ?>
 			</div>
 
 			<div class="mk-store-map">
 				<iframe
-					src="https://maps.google.com/maps?q=Manna%20Kampus%20Yogyakarta&t=&z=14&ie=UTF8&iwloc=&output=embed"
+					id="storeMapIframe"
+					src="https://maps.google.com/maps?q=<?php echo urlencode($first_map_location); ?>&t=&z=16&ie=UTF8&iwloc=&output=embed"
 					allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
 				</iframe>
 			</div>
@@ -331,6 +325,17 @@ body.mk-no-scroll {
 	</div>
 </section>
 <!-- Store Locator End -->
+
+<script>
+function changeMapLocation(searchQuery, element) {
+    const cards = document.querySelectorAll('.mk-store-item');
+    cards.forEach(card => card.classList.remove('active'));
+    element.classList.add('active');
+
+    const iframe = document.getElementById('storeMapIframe');
+    iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(searchQuery)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+}
+</script>
 
 <?php require_once('footer.php'); ?>
 
