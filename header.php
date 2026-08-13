@@ -1220,6 +1220,7 @@ foreach ($result as $row)
 						<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
 						<a href="coba.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
 						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
+						<a href="member.php"class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Membership</a>
 						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 						<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
 						<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
@@ -1237,6 +1238,7 @@ foreach ($result as $row)
 							<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
 							<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
 							<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
+							<a href="member.php"class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Membership</a>
 							<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 							<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
 							<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
