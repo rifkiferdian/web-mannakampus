@@ -96,7 +96,7 @@ foreach ($result_cabang as $row) {
 .mk-retail-card-footer{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:24px; flex-wrap:wrap; }
 .mk-retail-card-type{ background:#FCE9D4; color:#E8792E; padding:10px 16px; border-radius:999px; font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
 .mk-retail-card-actions{ display:flex; gap:12px; flex-wrap:wrap; }
-.mk-retail-card-link, .mk-retail-card-map{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; border-radius:999px; font-size:1.25rem; font-weight:700; text-decoration:none; transition:all .2s ease; }
+.mk-retail-card-link, .mk-retail-card-map{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; border-radius:999px; font-size:1.10rem; font-weight:700; text-decoration:none; transition:all .2s ease; }
 .mk-retail-card-map{ background:#E8792E; color:#fff; }
 .mk-retail-card-link{ background:#F6F0E7; color:#7A3B0D; }
 .mk-retail-card-link:hover, .mk-retail-card-map:hover{ transform:translateY(-2px); }

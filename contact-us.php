@@ -5,6 +5,11 @@ $contact_jam_operasional = $contact_jam_operasional ?? 'Senin - Minggu, 08:00 - 
 $contact_form_message = $contact_form_message ?? '';
 
 require_once('header.php');
+
+$statement = $pdo->prepare("SELECT * FROM tbl_cabang ORDER BY id ASC");
+$statement->execute();
+$result_cabang = $statement->fetchAll(PDO::FETCH_ASSOC);
+$first_map_location = !empty($result_cabang[0]['alamat']) ? $result_cabang[0]['alamat'] : 'Manna Kampus Yogyakarta';
 ?>
 
 <style>
@@ -68,35 +73,29 @@ require_once('header.php');
 	.mk-form-row{ grid-template-columns:1fr; }
 }
 /* ---------------- Section: Cari Gerai Kami ---------------- */
-.mk-store-section{ padding:70px 24px; text-align:center; background: #F7F5F1; }
+.mk-store-section{ padding:70px 24px; text-align:center; background:#F8F9FA; }
 .mk-store-section .container{ max-width:1180px; margin:0 auto; }
-.mk-store-title{ font-size:2.5rem; font-weight:800; color:var(--mk-text,#2E2620); margin:0 0 10px; }
-.mk-store-sub{ font-size:1.5rem; color:var(--mk-muted,#8A7F73); max-width:520px; margin:0 auto 36px; line-height:1.6; }
-
-.mk-store-box{ display:grid; grid-template-columns:360px 1fr; background:#FFFFFF; border:1px solid var(--mk-border,#EDE4D8); border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.05); text-align:left; }
-
-/* Kolom kiri: search + list toko */
-.mk-store-list{ border-right:1px solid var(--mk-border,#EDE4D8); max-height:420px; overflow-y:auto; }
-.mk-store-search{ padding:16px; border-bottom:1px solid var(--mk-border,#EDE4D8); }
-.mk-store-search input{ width:100%; padding:10px 14px; border:1px solid var(--mk-border,#EDE4D8); border-radius:8px; font-size:1.2rem; box-sizing:border-box; font-family:inherit; }
-.mk-store-search input:focus{ outline:none; border-color:var(--mk-orange, #E8792E); }
-
-.mk-store-item{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:16px; border-bottom:1px solid var(--mk-border, #EDE4D8); cursor:pointer; transition:0.2s; }
+.mk-store-title{ font-size:2.5rem; font-weight:800; color:#2E2620; margin:0 0 10px; }
+.mk-store-sub{ font-size:1.5rem; color:#8A7F73; max-width:520px; margin:0 auto 36px; line-height:1.6; }
+.mk-store-box{ display:grid; grid-template-columns:360px 1fr; background:#FFFFFF; border:1px solid #EDE4D8; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.05); text-align:left; }
+.mk-store-list{ border-right:1px solid #EDE4D8; max-height:420px; overflow-y:auto; }
+.mk-store-search{ padding:16px; border-bottom:1px solid #EDE4D8; }
+.mk-store-search input{ width:100%; padding:10px 14px; border:1px solid #EDE4D8; border-radius:8px; font-size:1.3rem; box-sizing:border-box; font-family:inherit; }
+.mk-store-search input:focus{ outline:none; border-color:#E8792E; }
+.mk-store-item{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:16px; border-bottom:1px solid #EDE4D8; cursor:pointer; transition:0.2s; }
 .mk-store-item:last-child{ border-bottom:none; }
-.mk-store-item:hover{ background: #fad3a3; }
-.mk-store-item.active{ background: #ffc596;  }
-.mk-store-name{ font-weight:700; font-size:1.45rem; color:var(--mk-text, #2E2620); margin:0 0 4px; }
-.mk-store-address{ font-size:1.2rem; color:var(--mk-muted, #8A7F73); margin:0 0 6px; }
-.mk-store-status{ font-size:1.2rem; font-weight:600; color: #227A3E; }
-.mk-store-pin{ color:var(--mk-orange, #E8792E); font-size:1.1rem; flex-shrink:0; }
-
-/* Kolom kanan: map */
+.mk-store-item:hover{ background:#fad3a3; }
+.mk-store-item.active{ background:#ffc596; }
+.mk-store-name{ font-weight:700; font-size:1.45rem; color:#2E2620; margin:0 0 4px; }
+.mk-store-address{ font-size:1.2rem; color:#8A7F73; margin:0 0 6px; }
+.mk-store-status{ font-size:1.2rem; font-weight:600; color:#227A3E; }
+.mk-store-pin{ color:#E8792E; font-size:1.1rem; flex-shrink:0; }
 .mk-store-map{ min-height:420px; }
 .mk-store-map iframe{ width:100%; height:100%; min-height:420px; border:0; display:block; }
 
 @media (max-width:768px){
 	.mk-store-box{ grid-template-columns:1fr; }
-	.mk-store-list{ border-right:none; border-bottom:1px solid var(--mk-border,#EDE4D8); max-height:300px; }
+	.mk-store-list{ border-right:none; border-bottom:1px solid #EDE4D8; max-height:300px; }
 }
 
 /* ---------------- Section: Tetap Terhubung dengan Kami ---------------- */
@@ -222,49 +221,42 @@ require_once('header.php');
 		<div class="mk-store-box">
 			<div class="mk-store-list">
 				<div class="mk-store-search">
-					<input type="text" placeholder="Cari cabang...">
+					<input id="mkStoreSearchInput" type="text" placeholder="Cari cabang...">
 				</div>
 
-				<div class="mk-store-item active">
-					<div>
-						<p class="mk-store-name">Manna Kampus - C. Simanjuntak</p>
-						<p class="mk-store-address">Jl. C. Simanjuntak No.70, Terban, Yogyakarta</p>
-						<p class="mk-store-status">BUKA (Tutup 22:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
-
-				<div class="mk-store-item">
-					<div>
-						<p class="mk-store-name">Manna Kampus - Godean</p>
-						<p class="mk-store-address">Jl. Godean KM.5, Kokoban, Sleman</p>
-						<p class="mk-store-status">BUKA (Tutup 21:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
-
-				<div class="mk-store-item">
-					<div>
-						<p class="mk-store-name">Manna Kampus - Palagan</p>
-						<p class="mk-store-address">Jl. Palagan Tentara Pelajar No.77, Sleman</p>
-						<p class="mk-store-status">BUKA (Tutup 22:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
-
-				<div class="mk-store-item">
-					<div>
-						<p class="mk-store-name">Manna Kampus - Seturan</p>
-						<p class="mk-store-address">Jl. Seturan Raya No.4, Depok, Sleman</p>
-						<p class="mk-store-status">BUKA (Tutup 21:00)</p>
-					</div>
-					<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
-				</div>
+				<?php if (!empty($result_cabang)): ?>
+					<?php foreach ($result_cabang as $index => $row): ?>
+						<?php
+							$active_class = ($index === 0) ? 'active' : '';
+							$alamat_cabang = !empty($row['alamat']) ? $row['alamat'] : $row['nama_cabang'];
+							$jam_op = !empty($row['jam_operasional']) ? $row['jam_operasional'] : 'Buka 08:00 - 21:00';
+							$nama_cabang = !empty($row['nama_cabang']) ? $row['nama_cabang'] : 'Manna Kampus';
+							$escaped_address = addslashes($alamat_cabang);
+							$display_status = 'BUKA';
+							if (!empty($row['jam_operasional'])) {
+								$display_status .= ' (' . htmlspecialchars($jam_op) . ')';
+							} else {
+								$display_status .= ' (Tutup 21:00)';
+							}
+						?>
+						<div class="mk-store-item <?php echo $active_class; ?>" data-name="<?php echo htmlspecialchars($nama_cabang); ?>" data-address="<?php echo htmlspecialchars($alamat_cabang); ?>" onclick="changeMapLocation('<?php echo $escaped_address; ?>', this)">
+							<div>
+								<p class="mk-store-name"><?php echo htmlspecialchars($nama_cabang); ?></p>
+								<p class="mk-store-address"><?php echo htmlspecialchars($alamat_cabang); ?></p>
+								<p class="mk-store-status"><?php echo htmlspecialchars($display_status); ?></p>
+							</div>
+							<span class="mk-store-pin"><i class="fa fa-map-marker"></i></span>
+						</div>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<p class="mk-catalog-empty" style="padding:18px 16px; margin:0; color:#8A7F73;">Belum ada data cabang.</p>
+				<?php endif; ?>
 			</div>
 
 			<div class="mk-store-map">
 				<iframe
-					src="https://maps.google.com/maps?q=Manna%20Kampus%20Yogyakarta&t=&z=14&ie=UTF8&iwloc=&output=embed"
+					id="storeMapIframe"
+					src="https://maps.google.com/maps?q=<?php echo urlencode($first_map_location); ?>&t=&z=16&ie=UTF8&iwloc=&output=embed"
 					allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
 				</iframe>
 			</div>
@@ -288,3 +280,47 @@ require_once('header.php');
 <!-- Newsletter End -->
 
 <?php require_once('footer.php'); ?>
+
+<script>
+function changeMapLocation(searchQuery, element) {
+    const cards = document.querySelectorAll('.mk-store-item');
+    cards.forEach(card => card.classList.remove('active'));
+    if (element) {
+        element.classList.add('active');
+    }
+
+    const iframe = document.getElementById('storeMapIframe');
+    if (iframe) {
+        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(searchQuery)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+    }
+}
+
+const storeSearchInput = document.getElementById('mkStoreSearchInput');
+if (storeSearchInput) {
+    storeSearchInput.addEventListener('input', function () {
+        const keyword = this.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.mk-store-item');
+        let foundActive = false;
+
+        cards.forEach((card) => {
+            const name = (card.dataset.name || '').toLowerCase();
+            const address = (card.dataset.address || '').toLowerCase();
+            const visible = !keyword || name.includes(keyword) || address.includes(keyword);
+            card.style.display = visible ? '' : 'none';
+
+            if (visible && !foundActive && card.classList.contains('active')) {
+                foundActive = true;
+            }
+        });
+
+        if (!keyword) {
+            const firstVisible = document.querySelector('.mk-store-item:not([style*="display: none"])');
+            if (firstVisible) {
+                firstVisible.classList.add('active');
+                const firstAddress = firstVisible.dataset.address || firstVisible.querySelector('.mk-store-address')?.textContent || '';
+                changeMapLocation(firstAddress, firstVisible);
+            }
+        }
+    });
+}
+</script>
