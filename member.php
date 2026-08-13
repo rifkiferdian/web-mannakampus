@@ -38,7 +38,7 @@
 
 /* Event Spotlight styles */
 .mb-event-section { background: #ffffff; padding: 40px 24px; }
-.mb-event-card { max-width: 1200px; margin: 0 auto; background: #ffffff; border: 1px solid #eef0f2; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); padding: 20px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: center; }
+.mb-event-card { max-width: 1200px; margin: 0 auto; background: #ffffff; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); padding: 20px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: center; }
 .mb-event-media { border-radius: 14px; overflow: hidden; }
 .mb-event-media a { display: block; line-height: 0; }
 .mb-event-media img { width: 100%; height: auto; display: block; border-radius: 14px; }
