@@ -744,12 +744,12 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
     </section>
     <!-- CTA Bottom Section -->
     <section class="social-cta mk-reveal">
-        <div class="social-container">
+        <div class="social-container"> 
             <h2>Mari Berkolaborasi untuk Kebaikan</h2>
             <p>Punya ide untuk kegiatan sosial atau ingin berkolaborasi dalam program pemberdayaan masyarakat? Kami sangat terbuka untuk mendengar saran Anda.</p>
             <div class="cta-actions">
                 <!-- Menggunakan fa-map-pin atau fas fa-map-marker-alt sebagai alternatif -->
-                <a href="#" class="btn-icon-white"><i class="fa fa-lightbulb-o"></i> Usulkan Kegiatan</a>
+                <a href="#" class="btn-icon-white"><i class="fa fa-lightbulb-o"></i> Usulkan Kegiatan.</a>
                 <a href="#" class="btn-icon-outline"><i class="fas fa-handshake"></i> Jadilah Mitra Sosial</a>
             </div>
         </div>
