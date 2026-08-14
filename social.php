@@ -5,11 +5,12 @@ require_once('header.php');
 // 1. QUERY UNTUK BERITA & KEGIATAN TERBARU (KATEGORI SOCIAL)
 // ==============================================================================
 $statement_news = $pdo->prepare("
-    SELECT t1.*, t2.category_name, t2.category_slug 
-    FROM tbl_news t1 
-    JOIN tbl_category t2 ON t1.category_id = t2.category_id 
-    WHERE t2.category_name LIKE '%Social%' OR t2.category_name LIKE '%Sosial%' 
-    ORDER BY t1.news_id DESC LIMIT 3
+    SELECT t1.news_id, t1.news_title, t1.news_slug, t1.news_content, t1.photo, t2.category_name, t2.category_slug
+    FROM tbl_news t1
+    JOIN tbl_category t2 ON t1.category_id = t2.category_id
+    WHERE t2.category_name IN ('Social', 'Sosial')
+    ORDER BY t1.news_id DESC
+    LIMIT 3
 ");
 $statement_news->execute();
 $news_social = $statement_news->fetchAll(PDO::FETCH_ASSOC);
@@ -18,12 +19,12 @@ $news_social = $statement_news->fetchAll(PDO::FETCH_ASSOC);
 // 2. QUERY UNTUK GALERI DAMPAK NYATA (KATEGORI SOCIAL)
 // ==============================================================================
 $statement_gallery = $pdo->prepare("
-    SELECT t1.* 
-    FROM tbl_photo t1 
-    JOIN tbl_category_photo t2 ON t1.p_category_id = t2.p_category_id 
-    WHERE t2.p_category_name LIKE '%Social%' OR t2.p_category_name LIKE '%Sosial%' 
-    GROUP BY t1.photo_name /* Menambahkan GROUP BY agar tidak ada nama file gambar yang ganda */
-    ORDER BY t1.photo_id DESC LIMIT 8
+    SELECT DISTINCT t1.photo_id, t1.photo_name
+    FROM tbl_photo t1
+    JOIN tbl_category_photo t2 ON t1.p_category_id = t2.p_category_id
+    WHERE t2.p_category_name IN ('Social', 'Sosial')
+    ORDER BY t1.photo_id DESC
+    LIMIT 8
 ");
 $statement_gallery->execute();
 $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
@@ -33,13 +34,27 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
     /* ==========================================================================
        GENERAL UTILITIES
        ========================================================================== */
+    html, body {
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
     .social-page {
         font-family: "Open Sans", sans-serif;
         color: #171717;
         background: #fff;
-        overflow-x: hidden;
+        overflow: visible !important;
+        max-width: 100%;
+        height: auto !important;
         font-size: 16px;
         line-height: 1.7;
+    }
+    .social-page *,
+    .social-page *::before,
+    .social-page *::after {
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .social-page h1,
@@ -62,14 +77,19 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
        ========================================================================== */
     .mk-reveal {
         opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        will-change: opacity, transform;
+        transform: translateY(18px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        will-change: auto;
     }
     .mk-reveal.mk-visible {
         opacity: 1;
         transform: translateY(0);
+    }
+    .social-card,
+    .social-stat,
+    .gallery-item {
+        content-visibility: auto;
+        contain: layout paint;
     }
     .mk-delay-1 { transition-delay: 0.15s; }
     .mk-delay-2 { transition-delay: 0.3s; }
@@ -133,78 +153,88 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
         min-height: 520px;
         display: flex;
         align-items: center;
-        background-color: #fff;
-        /* Menambahkan gradient putih di kiri agar teks terbaca, dan gambar di kanan */
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0.6) 60%, rgba(255, 255, 255, 0) 100%), url('assets/uploads/social6.png');
+        background-color: #111;
+        background-image: url('assets/uploads/social6.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        overflow: hidden;
+    }
+    .social-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.42);
+        z-index: 1;
     }
     .social-hero__content {
-        max-width: 600px;
+        position: relative;
+        z-index: 2;
+        max-width: 620px;
         padding: 80px 0;
     }
     .social-kicker {
         display: inline-block;
-        background: rgba(230, 126, 34, 0.15);
-        color: #e67e22;
-        padding: 6px 14px;
-        border-radius: 4px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1px;
+        background: #e87817;
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
         margin-bottom: 20px;
     }
-.social-hero h1 {
-        font-size: clamp(28px, 3vw, 36px);
+    .social-hero h1 {
+        font-size: clamp(2.4rem, 3vw, 3.4rem);
         font-weight: 800;
-        margin: 0 0 20px;
-        color: #111;
+        margin: 0 0 18px;
+        color: #fff;
         line-height: 1.2;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.4px;
         max-width: 620px;
         width: 100%;
     }
     .social-hero p {
-        font-size: clamp(16px, 2vw, 20px);
-        color: #555;
+        font-size: 1.35rem;
+        color: rgba(255,255,255,0.95);
         line-height: 1.6;
-        margin: 0 0 35px;
+        margin: 0 0 30px;
     }
     .social-actions {
         display: flex;
-        gap: 16px;
+        gap: 12px;
         flex-wrap: wrap;
     }
     .social-btn {
-        padding: 12px 26px;
-        font-size: 14px;
-        font-weight: 600;
-        border-radius: 4px;
+        padding: 12px 24px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        border-radius: 6px;
         text-decoration: none !important;
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
         display: inline-flex;
         align-items: center;
         justify-content: center;
     }
     .social-btn--primary {
-        background: #e67e22;
+        background: #e87817;
         color: #fff !important;
-        border: 2px solid #e67e22;
+        border: 1px solid #e87817;
     }
     .social-btn--primary:hover {
-        background: #d35400;
-        border-color: #d35400;
+        background: #d0650c;
+        border-color: #d0650c;
     }
     .social-btn--outline {
-        background: transparent;
-        color: #333 !important;
-        border: 1px solid #ddd;
+        background: rgba(255,255,255,0.12);
+        color: #fff !important;
+        border: 1px solid rgba(255,255,255,0.45);
+        backdrop-filter: blur(4px);
     }
     .social-btn--outline:hover {
-        border-color: #ccc;
-        background: #f9f9f9;
+        background: rgba(255,255,255,0.22);
+        border-color: rgba(255,255,255,0.8);
     }
 
     /* ==========================================================================
@@ -287,7 +317,7 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        transition: transform 0.3s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
         display: flex;
         flex-direction: column;
     }
@@ -590,7 +620,7 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
                     <?php foreach ($news_social as $news): ?>
                         <?php $card_i++; ?>
                         <article class="social-card mk-reveal mk-delay-<?php echo ((($card_i - 1) % 3) + 1); ?>">
-                            <img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $news['photo']; ?>" alt="<?php echo $news['news_title']; ?>" onerror="this.src='https://via.placeholder.com/800x600?text=No+Image'">
+                            <img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $news['photo']; ?>" alt="<?php echo $news['news_title']; ?>" loading="lazy" decoding="async" width="800" height="600" onerror="this.src='https://via.placeholder.com/800x600?text=No+Image'">
                             <div class="social-card__body">
                                 <div class="social-card__label">
                                     <i class="fa fa-tag"></i> <?php echo $news['category_name']; ?>
@@ -624,12 +654,12 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
                     <div class="gallery-item">
                         <?php if(isset($gallery_social[0])): ?>
                             <a class="gallery-photo payment-promo-image-popup" href="<?php echo BASE_URL; ?>assets/uploads/<?php echo $gallery_social[0]['photo_name']; ?>" title="Dampak Nyata - Dokumentasi kegiatan sosial">
-                                <img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $gallery_social[0]['photo_name']; ?>" alt="Galeri 1">
+                                <img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $gallery_social[0]['photo_name']; ?>" alt="Galeri 1" loading="lazy" decoding="async" width="400" height="400">
                                 <span class="gallery-zoom-icon"><i class="fa fa-search-plus"></i></span>
                             </a>
                         <?php else: ?>
                             <a class="gallery-photo payment-promo-image-popup" href="assets/uploads/social1.png" title="Dampak Nyata - Dokumentasi kegiatan sosial">
-                                <img src="assets/uploads/social1.png" alt="Galeri 1" onerror="this.src='https://via.placeholder.com/400x400?text=Gambar+1'">
+                                <img src="assets/uploads/social1.png" alt="Galeri 1" loading="lazy" decoding="async" width="400" height="400" onerror="this.src='https://via.placeholder.com/400x400?text=Gambar+1'">
                                 <span class="gallery-zoom-icon"><i class="fa fa-search-plus"></i></span>
                             </a>
                         <?php endif; ?>
@@ -744,12 +774,12 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
     </section>
     <!-- CTA Bottom Section -->
     <section class="social-cta mk-reveal">
-        <div class="social-container"> 
+        <div class="social-container">
             <h2>Mari Berkolaborasi untuk Kebaikan</h2>
             <p>Punya ide untuk kegiatan sosial atau ingin berkolaborasi dalam program pemberdayaan masyarakat? Kami sangat terbuka untuk mendengar saran Anda.</p>
             <div class="cta-actions">
                 <!-- Menggunakan fa-map-pin atau fas fa-map-marker-alt sebagai alternatif -->
-                <a href="#" class="btn-icon-white"><i class="fa fa-lightbulb-o"></i> Usulkan Kegiatan.</a>
+                <a href="#" class="btn-icon-white"><i class="fa fa-lightbulb-o"></i> Usulkan Kegiatan</a>
                 <a href="#" class="btn-icon-outline"><i class="fas fa-handshake"></i> Jadilah Mitra Sosial</a>
             </div>
         </div>
@@ -761,14 +791,14 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
 <script>
 (function() {
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var revealEls = document.querySelectorAll('.mk-reveal');
     if (reduceMotion || !('IntersectionObserver' in window)) {
-        var all = document.querySelectorAll('.mk-reveal');
-        for (var i = 0; i < all.length; i++) {
-            all[i].classList.add('mk-visible');
+        for (var i = 0; i < revealEls.length; i++) {
+            revealEls[i].classList.add('mk-visible');
         }
         return;
     }
-    var revealEls = document.querySelectorAll('.mk-reveal');
+
     var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
@@ -776,7 +806,8 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -10px 0px' });
+
     revealEls.forEach(function(el) {
         observer.observe(el);
     });
