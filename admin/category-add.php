@@ -50,7 +50,9 @@ if(isset($_POST['form1'])) {
 		$statement = $pdo->prepare("INSERT INTO tbl_category (category_name,category_slug,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?)");
 		$statement->execute(array($_POST['category_name'],$category_slug,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
 	
-    	$success_message = 'Category is added successfully.';
+	$_SESSION['success_message'] = 'Category is added successfully.';
+	header('Location: category.php');
+	exit;
     }
 }
 ?>

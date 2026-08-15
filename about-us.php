@@ -120,12 +120,15 @@
     /* ==========================================================================
        HERITAGE SECTION (PERBAIKAN TAMPILAN GAMBAR)
        ========================================================================== */
-    .heritage-section .eyebrow {
-        color: #ff7a00; text-transform: uppercase;
-        letter-spacing: 3px; font-size: 13px;
-        font-weight: 800; margin-bottom: 16px;
-        display: block;
-    }
+    #legacy .eyebrow {
+    color: #ff7a00;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    display: block;
+}
     .heritage-text-col { 
         padding-right: 50px; 
         justify-content: center;
@@ -233,6 +236,18 @@
     .card-orange i { color: #fff; }
     .card-orange h3 { color: #fff !important; }
     .card-orange p { color: rgba(255,255,255,0.9); }
+    .card-orange:has(.bento-img) {
+        padding-right: 45%;
+    }
+    .card-orange .bento-img {
+        position: absolute;
+        top: 24px; bottom: 24px; right: 24px;
+        width: 38%;
+        height: calc(100% - 48px);
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    }
     
     .card-white {
         background: #fff; border: 1px solid #f0f0f0; color: #222;
@@ -411,8 +426,10 @@
         .image-split-container { height: 400px; }
         .quote-box { right: 20px; bottom: -20px; width: 250px; }
         
-        .card-dark { padding-right: 40px; }
-        .card-dark .bento-img { display: none; }
+        .card-dark,
+        .card-orange:has(.bento-img) { padding-right: 40px; }
+        .card-dark .bento-img,
+        .card-orange .bento-img { display: none; }
         
         .bento-card { margin-bottom: 24px; }
         
@@ -459,14 +476,21 @@
             
             <!-- Left Text -->
             <div class="col-md-6 col-sm-12 flex-col-custom heritage-text-col wow fadeInLeft">
-                <span class="eyebrow">OUR HERITAGE</span>
-                <h2 class="section-title">Built on Foundation of Trust and Excellence</h2>
-                <p class="section-subtitle desc">Founded with a vision to revolutionize the shopping experience in Indonesia, Manna Kampus began as a small family venture dedicated to providing quality goods at fair prices. Over the decades, we have evolved into a national benchmark for retail excellence.</p>
-                <p class="section-subtitle desc">Our journey is marked by a deep understanding of Indonesian households. We don't just sell products; we create spaces where families feel at home. From our selection of fresh local produce to international luxury goods, every item on our shelves is a testament to our commitment to quality.</p>
-                
+                <span class="eyebrow">Tentang Perusahaan</span>
+                <h2 class="section-title">Sejarah Manna Kampus</h2>
+                <p class="section-subtitle desc">
+                Perjalanan kami dimulai pada tahun <strong>1980</strong>, saat <strong>Bapak Siswanto Hendro Sutikno</strong> selaku pemilik sekaligus Direktur Utama mendirikan sebuah rumah makan bernama 
+                <strong>Mirota Nayan</strong> di Jl. Solo Km 8, Yogyakarta. Nama <strong>"Mirota"</strong> sendiri menyimpan akronim yang unik yaitu <strong>Mi</strong>numan, <strong>Ro</strong>ti, dan 
+                <strong>Ta</strong>rt — sebuah identitas awal yang menjadi cikal bakal tumbuh kembang usaha kami.</p>
+
+                <p class="section-subtitle desc">
+                Seiring tingginya kepercayaan pelanggan, lokasi usaha kemudian berpindah ke kawasan yang lebih strategis di Jl. Solo Km 7, Babarsari, Caturtunggal, Sleman, Yogyakarta. Di tempat baru ini, 
+                Mirota Nayan terus bertransformasi tidak hanya menyajikan aneka makanan dan minuman, tetapi juga melengkapi kebutuhan masyarakat dengan menyediakan alat tulis. Dari sinilah semangat untuk terus 
+                melayani dan berkembang menjadi <strong>"Rumah Belanja Terpercaya"</strong> mulai diukir.
+                </p>
                 <div class="stats-row">
                     <div class="stats-box">
-                        <h3>35+</h3>
+                        <h3>46+</h3>
                         <p>Years of Service</p>
                     </div>
                     <div class="stats-box">
@@ -481,11 +505,11 @@
                 <div style="position: relative;">
                     <div class="image-split-container">
                         <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=1974&auto=format&fit=crop" alt="Manna Kampus History">
-                        <div class="year-label year-left">1988</div>
+                        <div class="year-label year-left">1980</div>
                         <div class="year-label year-right">2026</div>
                     </div>
                     <div class="quote-box">
-                        "Rooted in tradition, reaching for the future of retail."
+                        "Berakar dari Tradisi, Bertumbuh Menuju Masa Depan Ritel."
                     </div>
                 </div>
             </div>
@@ -508,15 +532,16 @@
             <div class="col-md-8 col-sm-12 flex-col-custom">
                 <div class="bento-card card-orange wow fadeInUp">
                     <i class="fa fa-eye"></i>
-                    <h3>Our Vision</h3>
-                    <p>To be the most trusted and preferred retail destination in Indonesia, enriching lives by delivering unparalleled value, convenience, and a sense of community to every household we serve.</p>
+                    <h3>Caring</h3>
+                    <p>Kepedulian terhadap suatu keadaan / kondisi / peristiwa yang membutuhkan tindakan yang berdasarkan empati dan kepekaan.</p>
+                    <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=600&auto=format&fit=crop" class="bento-img" alt="Community">
                 </div>
             </div>
             <div class="col-md-4 col-sm-12 flex-col-custom">
                 <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.2s">
                     <i class="fa fa-shield"></i>
-                    <h3>Integrity</h3>
-                    <p>Honesty in every transaction and transparency in every process is how we've built decades of trust with our customers.</p>
+                    <h3>Human Integrity</h3>
+                    <p>Karakter yang dimiliki dan diwujudkan oleh seluruh individu dalam bentuk konsistensi antara perkataan dan perbuatan, sikap dan perilaku.</p>
                 </div>
             </div>
         </div>
@@ -526,16 +551,51 @@
             <div class="col-md-4 col-sm-12 flex-col-custom">
                 <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.15s">
                     <i class="fa fa-rocket"></i>
-                    <h3>Innovation</h3>
-                    <p>Continuously evolving our retail technology and logistics to make shopping more seamless for the modern Indonesian family.</p>
+                    <h3>Ethical Communication</h3>
+                    <p>Komunikasi yang didasarkan pada sikap dan nilai tertentu (etika) seperti jujur, menghargai, dan bertanggungjawab.</p>
                 </div>
             </div>
             <div class="col-md-8 col-sm-12 flex-col-custom">
                 <div class="bento-card card-dark wow fadeInUp" data-wow-delay="0.3s">
                     <i class="fa fa-users"></i>
-                    <h3>Community First</h3>
-                    <p>We are more than a store; we are a community partner. Supporting local farmers, artisans, and MSMEs is at the heart of our sourcing strategy.</p>
-<img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=600&auto=format&fit=crop" class="bento-img" alt="Community">
+                    <h3>Adaptive</h3>
+                    <p>Suatu tindakan positif sebagai respon penyesauian diri terhadap perubahan situasi (lingkungan, ekonomi, busaya, politik, kesehatan, 
+                        sosial, dan keamanan), perkembangan teknologi dan isu - isu global lainnya.</p>
+                    <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=600&auto=format&fit=crop" class="bento-img" alt="Community">
+                </div>
+            </div>
+        </div>
+
+            <!-- Row 3 -->
+        <div class="flex-row-custom bento-row">
+            <div class="col-md-8 col-sm-12 flex-col-custom">
+                <div class="bento-card card-orange wow fadeInUp">
+                    <i class="fa fa-eye"></i>
+                    <h3>Profesional</h3>
+                    <p>Menjalankan tugas dengan mengerahkan semua kompetensi (softskill dan hardskill) yang dimiliki. Bertahan terhadap situasi yang tidak sesuai 
+                        harapan, dan mampu bangkit kembali (resilien)
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=600&auto=format&fit=crop" class="bento-img" alt="Community">
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 flex-col-custom">
+                <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.2s">
+                    <i class="fa fa-shield"></i>
+                    <h3>Excellent Service</h3>
+                    <p>Upaya memberikan layanan terbaik yangberorientasi pada kepuasan konsumen (internal dan eksternal).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="flex-row-custom bento-row">
+            <div class="col-md-12 col-sm-12 flex-col-custom">
+                <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.15s">
+                    <i class="fa fa-rocket"></i>
+                    <h3>Reputable & Profitability</h3>
+                    <p>Suatu upaya yang dilakukan secara berkesinambungan oleh perusahaan untuk menciptakan pandangan positif masyarakat
+                        atau stakeholder sehingga dapat mewujudkan pertumbuhan usaha dan laba yang optimal.
+                    </p>
                 </div>
             </div>
         </div>
@@ -549,8 +609,8 @@
         
         <div class="journey-header">
             <div>
-                <h2 class="section-title wow fadeInUp">A Journey of Growth</h2>
-                <p class="section-subtitle mb-0 wow fadeInUp" data-wow-delay="0.15s">Milestones that shaped our path from 1989 to today.</p>
+                <h2 class="section-title wow fadeInUp">Perjalanan Kami</h2>
+                <p class="section-subtitle mb-0 wow fadeInUp" data-wow-delay="0.15s">Momen dan pencapaian penting yang membentuk kami dari tahun 1980 hingga saat ini.</p>
             </div>
             <div class="journey-nav hidden-xs">
                 <button><i class="fa fa-angle-left"></i></button>
@@ -564,11 +624,12 @@
                 <div class="milestone-card">
                     <div class="milestone-img-wrap">
                         <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=600&auto=format&fit=crop" alt="1989">
-                        <span class="milestone-year-badge">1989</span>
+                        <span class="milestone-year-badge">1980</span>
                     </div>
                     <div class="milestone-body">
-                        <h4>The First Foundation</h4>
-                        <p>The doors to our flagship store opened, introducing a new standard of retail in the heart of the city.</p>
+                        <h4>Awal Mula Pendirian</h4>
+                        <p>Pada tahun <strong>1980</strong>, <strong>Bapak Siswanto Hendro Sutikno</strong> mendirikan rumah makan <strong>Mirota Nayan</strong> di Jl. Solo Km 8, Yogyakarta. 
+                            Usaha ini kemudian berpindah ke Jl. Solo Km 7 Babarsari dan merambah penjualan makanan, minuman, serta alat tulis.</p>
                     </div>
                 </div>
             </div>
@@ -577,11 +638,12 @@
                 <div class="milestone-card">
                     <div class="milestone-img-wrap">
                         <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=600&auto=format&fit=crop" alt="1998">
-                        <span class="milestone-year-badge">1998</span>
+                        <span class="milestone-year-badge">1983</span>
                     </div>
                     <div class="milestone-body">
-                        <h4>Expanding Horizons</h4>
-                        <p>Expanded our footprint across multiple provinces, doubling our logistics capacity to serve more communities.</p>
+                        <h4>Pengesahan Badan Hukum</h4>
+                        <p>Langkah profesional dimulai pada tahun <strong>1983</strong> dengan disahkannya badan hukum <strong>"PT. Mirota Nayan"</strong> oleh Notaris RM. Soeryanto 
+                            Partaningrat, SH, yang dipimpin oleh <strong>Bapak Siswanto HS</strong> sebagai Direktur Utama dan <strong>Bapak Nico Sukandar</strong> sebagai General Manager.</p>
                     </div>
                 </div>
             </div>
@@ -590,11 +652,13 @@
                 <div class="milestone-card">
                     <div class="milestone-img-wrap">
                         <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=600&auto=format&fit=crop" alt="2012">
-                        <span class="milestone-year-badge">2012</span>
+                        <span class="milestone-year-badge">1985</span>
                     </div>
                     <div class="milestone-body">
-                        <h4>Digital Evolution</h4>
-                        <p>Launched our first smart retail initiatives, integrating loyalty programs and modern payment systems.</p>
+                        <h4>Kiprah Awal Mirota Kampus</h4>
+                        <p>Pada <strong>13 Mei 1985</strong>, PT. Mirota Nayan membuka toko buku dan alat tulis di Jl. C. Simanjuntak No. 64C dengan nama Mirota Kampus. 
+                            Nama <strong>"Mirota"</strong> merupakan akronim <strong>Mi</strong>numan, <strong>Ro</strong>ti, dan <strong>Ta</strong>rt, sedangkan "Kampus" dipilih karena lokasinya yang berdekatan dengan UGM. 
+                            Tanggal ini pun resmi menjadi momen berdirinya Mirota Kampus.</p>
                     </div>
                 </div>
             </div>
@@ -603,11 +667,12 @@
                 <div class="milestone-card">
                     <div class="milestone-img-wrap">
                         <img src="https://images.unsplash.com/photo-1601599561096-f87c95fff1e9?q=80&w=600&auto=format&fit=crop" alt="Present">
-                        <span class="milestone-year-badge">Present</span>
+                        <span class="milestone-year-badge">2021 - Present</span>
                     </div>
                     <div class="milestone-body">
-                        <h4>Indonesia's Trusted Choice</h4>
-                        <p>Leading the market with 50+ stores, redefining what it means to be a "Rumah Belanja Terpercaya".</p>
+                        <h4>Era Baru Manna Kampus</h4>
+                        <p>Mirota Kampus resmi bertransformasi menjadi <strong>Manna Kampus</strong> sebagai bentuk semangat inovasi dan peningkatan kualitas layanan. Hingga saat ini, 
+                            Manna Kampus terus berkembang dengan <strong>10 outlet</strong> di Yogyakarta, Sleman, dan Bantul sebagai <strong>"Rumah Belanja Terpercaya"</strong>.</p>
                     </div>
                 </div>
             </div>
@@ -674,11 +739,11 @@
     <div class="container container-custom">
         <div class="cta-banner wow fadeInUp">
             <div class="cta-banner-content">
-                <h2 class="wow fadeInUp" data-wow-delay="0.1s">Want to be part of our story?</h2>
-                <p class="wow fadeInUp" data-wow-delay="0.2s">Explore career opportunities and corporate partnerships with Indonesia's most trusted retailer.</p>
+                <h2 class="wow fadeInUp" data-wow-delay="0.1s">Ingin menjadi bagian dari perjalanan kami?</h2>
+                <p class="wow fadeInUp" data-wow-delay="0.2s">Jelajahi peluang karier dan kemitraan korporat bersama peritel paling tepercaya di Indonesia.</p>
                 <div class="cta-actions wow fadeInUp" data-wow-delay="0.3s">
-                    <a href="#" class="btn btn-white">Join Our Team</a>
-                    <a href="#" class="btn btn-orange-outline">Corporate Inquiry</a>
+                    <a href="#" class="btn btn-white">Bergabung dengan Tim Kami</a>
+                    <a href="#" class="btn btn-orange-outline">Pertanyaan Korporat</a>
                 </div>
             </div>
         </div>

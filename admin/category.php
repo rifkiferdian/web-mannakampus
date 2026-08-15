@@ -1,5 +1,12 @@
 <?php require_once('header.php'); ?>
 
+<?php
+if(isset($_SESSION['success_message'])) {
+    $success_message = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
+}
+?>
+
 <section class="content-header">
 	<div class="content-header-left">
 		<h1>View Categories</h1>
@@ -15,6 +22,11 @@
   <div class="row">
     <div class="col-md-12">
 
+      <?php if(!empty($success_message)): ?>
+      <div class="callout callout-success">
+        <p><?php echo $success_message; ?></p>
+      </div>
+      <?php endif; ?>
 
       <div class="box box-info">
         

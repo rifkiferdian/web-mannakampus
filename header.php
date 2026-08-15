@@ -1224,7 +1224,7 @@ foreach ($result as $row)
 						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 						<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
 						<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
-						<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Kami</a>
+						<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Our Location</a>
 						<a href="contact-us.php"class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
 					</nav>
 
@@ -1242,7 +1242,7 @@ foreach ($result as $row)
 							<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
 							<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
 							<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
-							<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Kami</a>
+							<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Our Location</a>
 							<a href="contact-us.php"class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
 						</nav>
 					</details>
