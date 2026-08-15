@@ -1,5 +1,21 @@
 <?php require_once('header.php'); ?>
 
+<?php
+$about_growth_stmt = $pdo->prepare(
+    "SELECT news_title, news_slug, news_date, photo, news_content_short
+     FROM tbl_news
+     WHERE category_id = 1
+       AND (
+           news_title LIKE '%Cabang Manna Kampus%'
+           OR news_title LIKE '%Mini MK%'
+       )
+     ORDER BY STR_TO_DATE(news_date, '%d-%m-%Y') ASC
+     LIMIT 9"
+);
+$about_growth_stmt->execute();
+$about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <style>
     /* ==========================================================================
        GENERAL & UTILITIES (REVISED)
@@ -9,18 +25,30 @@
     .pb-0 { padding-bottom: 0 !important; }
     
     
-.section-title {
-        font-size: clamp(28px, 3.2vw, 36px);
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 16px;
-        color: #1a1a1a;
-        letter-spacing: -0.3px;
+.section-title,
+    h2.section-title,
+    .journey-header .section-title {
+        font-size: 40px !important;
+        font-weight: 800 !important;
+        line-height: 1.2 !important;
+        margin-bottom: 18px !important;
+        color: #1a1a1a !important;
+        letter-spacing: -0.3px !important;
     }
-    .section-subtitle {
-        font-size: 15px;
-        color: #666;
-        line-height: 1.7;
+    .section-subtitle,
+    p.section-subtitle,
+    .journey-header .section-subtitle {
+        font-size: 18px !important;
+        color: #666 !important;
+        line-height: 1.7 !important;
+    }
+    .about-hero .container-custom p,
+    .about-hero .container-custom h1,
+    .about-hero .container-custom a,
+    .cta-banner p,
+    .cta-banner h2,
+    .cta-actions .btn {
+        font-size: inherit;
     }
 
     /* Memastikan container tidak menabrak batas layar (selaras dengan pola index.php) */
@@ -51,70 +79,97 @@
        HERO SECTION
        ========================================================================== */
     .about-hero {
-        position: relative;
-        min-height: 560px;
-        padding: 160px 0 100px;
-        background-color: #111;
-        color: #fff;
-        display: flex;
-        align-items: center;
+        position: relative !important;
+        min-height: 520px !important;
+        display: flex !important;
+        align-items: center !important;
+        background-color: #111 !important;
+        color: #fff !important;
+        overflow: hidden !important;
+    }
+    .about-hero::before {
+        content: '' !important;
+        position: absolute !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.45) !important;
+        z-index: 1 !important;
     }
     .about-hero-bg {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        object-fit: cover;
-        opacity: 0.35;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        opacity: 0.6 !important;
     }
-    .about-hero .container-custom { position: relative; z-index: 2; }
-.about-hero h1 {
-        font-size: clamp(34px, 4vw, 48px);
-        font-weight: 900;
-        line-height: 1.15;
-        margin: 0 0 24px;
-        color: #fff;
-        letter-spacing: -0.5px;
+    .about-hero .container-custom {
+        position: relative !important;
+        z-index: 2 !important;
+    }
+    .about-hero .hero-badge {
+        display: inline-block !important;
+        background: #e87817 !important;
+        color: #fff !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+        padding: 7px 16px !important;
+        border-radius: 20px !important;
+        margin-bottom: 16px !important;
+    }
+    .about-hero h1 {
+        font-size: clamp(2.7rem, 3vw, 4rem) !important;
+        font-weight: 800 !important;
+        line-height: 1.15 !important;
+        margin: 0 0 16px !important;
+        color: #fff !important;
+        letter-spacing: -0.04em !important;
     }
     .about-hero p {
-        font-size: clamp(16px, 1.8vw, 20px);
-        max-width: 650px;
-        margin: 0 0 40px;
-        line-height: 1.7;
-        color: #f1f1f1;
+        font-size: 1.45rem !important;
+        max-width: 700px !important;
+        margin: 0 0 28px !important;
+        line-height: 1.6 !important;
+        color: rgba(255,255,255,0.95) !important;
     }
     .hero-actions {
-        display: flex; flex-wrap: wrap; gap: 15px;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
     }
-    
-    .btn-brand-orange, .btn-glass {
-        padding: 14px 36px;
-        font-size: 16px; 
-        font-weight: 700;
-        border-radius: 6px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none !important; 
-        transition: all 0.3s ease;
+    .btn-brand-orange,
+    .btn-glass {
+        padding: 12px 24px !important;
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-decoration: none !important;
+        transition: all 0.25s ease !important;
     }
     .btn-brand-orange {
-        background: linear-gradient(135deg, #ff9f1c 0%, #ff7a00 52%, #e65c00 100%);
+        background: #e87817 !important;
         color: #fff !important;
-        border: none;
-        box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3);
+        border: 1px solid #e87817 !important;
+        box-shadow: 0 4px 15px rgba(232, 120, 23, 0.25) !important;
     }
     .btn-brand-orange:hover {
-        background: linear-gradient(135deg, #e65c00 0%, #cc4a00 100%);
-        transform: translateY(-2px);
+        background: #d0650c !important;
+        transform: translateY(-2px) !important;
     }
     .btn-glass {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.12) !important;
         color: #fff !important;
-        border: 2px solid rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255,255,255,0.45) !important;
+        backdrop-filter: blur(4px) !important;
     }
     .btn-glass:hover {
-        background: #fff; color: #111 !important;
+        background: rgba(255, 255, 255, 0.22) !important;
+        border-color: rgba(255,255,255,0.9) !important;
     }
 
     /* ==========================================================================
@@ -277,36 +332,79 @@
        ========================================================================== */
     .journey-header {
         display: flex; justify-content: space-between; align-items: flex-end;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
+    }
+    .journey-slider {
+        overflow: hidden;
+        position: relative;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    .journey-track {
+        display: flex;
+        gap: 20px;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        transition: transform 0.35s ease;
+        will-change: transform;
     }
     .journey-nav button {
         background: #fff; border: 1px solid #e0e0e0;
-        width: 44px; height: 44px; border-radius: 50%;
-        font-size: 16px; color: #333; margin-left: 10px;
+        width: 52px; height: 52px; border-radius: 50%;
+        font-size: 24px; color: #333; margin-left: 14px;
         transition: 0.3s;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
     .journey-nav button:hover {
         border-color: #ff7a00; color: #fff; background: #ff7a00;
     }
     
     .milestone-card {
-        background: #fff;
+        background: transparent;
         padding: 0;
-        border-radius: 16px;
-        border: 1px solid #f0f0f0;
+        border-radius: 22px;
+        border: none;
+        box-shadow: none;
         height: 100%;
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.2s ease;
     }
     .milestone-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    .milestone-card .milestone-year-label {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 18px 18px 10px;
+    }
+    .milestone-card .milestone-year-label span {
+        font-size: 18px;
+        font-weight: 800;
+        color: #c26713;
+        letter-spacing: 0.2px;
+    }
+    .milestone-card .milestone-year-label::after {
+        content: '';
+        display: block;
+        width: 48px;
+        height: 3px;
+        margin-top: 8px;
+        background: #ff8c00;
+        border-radius: 2px;
     }
     .milestone-card .milestone-img-wrap {
         position: relative;
-        height: 200px;
+        height: 205px;
+        border-radius: 20px;
         overflow: hidden;
+        margin: 0 0 12px;
     }
     .milestone-card .milestone-img-wrap img {
         display: block;
@@ -316,35 +414,44 @@
         transition: transform 0.5s ease;
     }
     .milestone-card:hover .milestone-img-wrap img {
-        transform: scale(1.08);
-    }
-    .milestone-card .milestone-year-badge {
-        position: absolute;
-        top: 16px;
-        left: 16px;
-        background: #ff7a00;
-        color: #fff;
-        font-size: 18px;
-        font-weight: 800;
-        padding: 6px 16px;
-        border-radius: 6px;
-        line-height: 1.2;
-        box-shadow: 0 4px 12px rgba(255,122,0,0.4);
+        transform: scale(1.05);
     }
     .milestone-card .milestone-body {
-        padding: 24px 20px 28px;
+        padding: 0 18px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex: 1;
+        background: transparent;
     }
     .milestone-card h4 {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 800;
         margin: 0 0 10px;
         color: #222;
+        line-height: 1.3;
     }
     .milestone-card p {
-        font-size: 14px;
-        color: #666;
-        line-height: 1.7;
+        font-size: 15px;
+        color: #5e5e5e;
+        line-height: 1.75;
         margin: 0;
+    }
+    .milestone-col {
+        flex: 0 0 calc(25% - 15px);
+        max-width: calc(25% - 15px);
+        min-width: 0;
+        display: flex;
+        box-sizing: border-box;
+    }
+    .milestone-link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+    }
+    .milestone-link:hover {
+        color: inherit;
+        text-decoration: none;
     }
 
     /* ==========================================================================
@@ -436,6 +543,8 @@
         .journey-header { flex-direction: column; align-items: flex-start; }
         .journey-nav { margin-top: 20px; }
         .milestone-col { margin-bottom: 30px; }
+        .journey-track { flex-wrap: wrap; }
+        .milestone-col { flex: 0 0 calc(50% - 10px); max-width: calc(50% - 10px); }
     }
 
     @media only screen and (max-width: 767px) {
@@ -459,11 +568,12 @@
 <section class="about-hero">
     <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974&auto=format&fit=crop" class="about-hero-bg" alt="Hero Background">
     <div class="container container-custom">
+        <span class="hero-badge">Tentang Manna Kampus</span>
         <h1 class="wow fadeInUp">Rumah Belanja Terpercaya</h1>
-        <p class="wow fadeInUp" data-wow-delay="0.15s">Building Indonesia's retail legacy through trust, quality, and a commitment to serving every family since our very first store.</p>
+        <p class="wow fadeInUp" data-wow-delay="0.15s">Membangun warisan retail Indonesia melalui kepercayaan, kualitas, dan komitmen melayani setiap keluarga sejak toko pertama kami dibuka.</p>
         <div class="hero-actions wow fadeInUp" data-wow-delay="0.3s">
-            <a href="#legacy" class="btn-brand-orange">Our Legacy</a>
-            <a href="#vision" class="btn-glass">Vision & Mission</a>
+            <a href="#legacy" class="btn-brand-orange">Jejak Kami</a>
+            <a href="#vision" class="btn-glass">Visi & Misi</a>
         </div>
     </div>
 </section>
@@ -495,7 +605,7 @@
                     </div>
                     <div class="stats-box">
                         <h3>120k+</h3>
-                        <p>Daily Customers</p>
+                        <p>Pelanggan Harian</p>
                     </div>
                 </div>
             </div>
@@ -523,8 +633,8 @@
     <div class="container container-custom">
         
         <div class="text-center" style="margin-bottom: 60px;">
-            <h2 class="section-title wow fadeInUp">Our Core Values</h2>
-            <p class="section-subtitle wow fadeInUp" data-wow-delay="0.15s" style="max-width: 650px; margin: 0 auto;">The guiding principles that drive our growth and define our identity as <br> Rumah Belanja Terpercaya.</p>
+            <h2 class="section-title wow fadeInUp">Nilai-Nilai Inti Kami</h2>
+            <p class="section-subtitle wow fadeInUp" data-wow-delay="0.15s" style="max-width: 650px; margin: 0 auto;">Prinsip yang mendorong pertumbuhan kami dan membentuk identitas kami sebagai <br> Rumah Belanja Terpercaya.</p>
         </div>
 
         <!-- Row 1 -->
@@ -603,6 +713,59 @@
     </div>
 </section>
 
+<!-- Executive Leadership Section -->
+<section class="section-padding bg-white pb-0">
+    <div class="container container-custom text-center">
+        
+        <h2 class="section-title wow fadeInUp">Kepemimpinan Eksekutif Kami</h2>
+        <p class="section-subtitle mb-5 wow fadeInUp" data-wow-delay="0.15s" style="max-width: 650px; margin: 0 auto 60px;">Dipimpin oleh para pemimpin berpengalaman dengan semangat keunggulan dan pemahaman mendalam tentang lanskap konsumen Indonesia.</p>
+
+        <div class="flex-row-custom">
+            <!-- Leader 1 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp">
+                <div class="leader-card">
+                    <div class="leader-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&auto=format&fit=crop" alt="Bambang Setiawan">
+                    </div>
+                    <h4>Bambang Setiawan</h4>
+                    <p>Direktur Utama</p>
+                </div>
+            </div>
+            <!-- Leader 2 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp" data-wow-delay="0.15s">
+                <div class="leader-card">
+                    <div class="leader-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop" alt="Lina Kusuma">
+                    </div>
+                    <h4>Lina Kusuma</h4>
+                    <p>Direktur Operasional</p>
+                </div>
+            </div>
+            <!-- Leader 3 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp" data-wow-delay="0.3s">
+                <div class="leader-card">
+                    <div class="leader-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=400&auto=format&fit=crop" alt="Andi Wijaya">
+                    </div>
+                    <h4>Andi Wijaya</h4>
+                    <p>Direktur Teknologi</p>
+                </div>
+            </div>
+            <!-- Leader 4 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp" data-wow-delay="0.45s">
+                <div class="leader-card">
+                    <div class="leader-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop" alt="Sari Rahayu">
+                    </div>
+                    <h4>Sari Rahayu</h4>
+                    <p>Direktur Pemasaran</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- A Journey of Growth Section -->
 <section class="section-padding bg-light-gray">
     <div class="container container-custom">
@@ -613,8 +776,8 @@
                 <p class="section-subtitle mb-0 wow fadeInUp" data-wow-delay="0.15s">Momen dan pencapaian penting yang membentuk kami dari tahun 1980 hingga saat ini.</p>
             </div>
             <div class="journey-nav hidden-xs">
-                <button><i class="fa fa-angle-left"></i></button>
-                <button><i class="fa fa-angle-right"></i></button>
+                <button type="button" class="journey-scroll-btn journey-scroll-prev" aria-label="Gulir kiri"><i class="fa fa-angle-left"></i></button>
+                <button type="button" class="journey-scroll-btn journey-scroll-next" aria-label="Gulir kanan"><i class="fa fa-angle-right"></i></button>
             </div>
         </div>
 
@@ -678,56 +841,26 @@
             </div>
         </div>
 
-    </div>
-</section>
-
-<!-- Executive Leadership Section -->
-<section class="section-padding bg-white pb-0">
-    <div class="container container-custom text-center">
-        
-        <h2 class="section-title wow fadeInUp">Our Executive Leadership</h2>
-        <p class="section-subtitle mb-5 wow fadeInUp" data-wow-delay="0.15s" style="max-width: 650px; margin: 0 auto 60px;">Guided by industry veterans with a passion for excellence and a deep understanding of the Indonesian consumer landscape.</p>
-
-        <div class="flex-row-custom">
-            <!-- Leader 1 -->
-            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp">
-                <div class="leader-card">
-                    <div class="leader-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&auto=format&fit=crop" alt="Bambang Setiawan">
+                        <div class="col-md-3 col-sm-6 flex-col-custom milestone-col wow fadeInUp" data-wow-delay="<?php echo $index * 0.15; ?>s">
+                            <div class="milestone-card">
+                                <div class="milestone-year-label"><span><?php echo htmlspecialchars($milestone_year); ?></span></div>
+                                <a class="milestone-link" href="news.php?slug=<?php echo urlencode($news_item['news_slug']); ?>">
+                                    <div class="milestone-img-wrap">
+                                        <img src="<?php echo htmlspecialchars($milestone_photo); ?>" alt="<?php echo htmlspecialchars($milestone_title); ?>">
+                                    </div>
+                                    <div class="milestone-body">
+                                        <h4><?php echo htmlspecialchars($milestone_title); ?></h4>
+                                        <p><?php echo htmlspecialchars($milestone_excerpt); ?></p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <div class="col-md-12 text-center" style="padding-top:20px; color:#666;">
+                        Data milestone belum tersedia.
                     </div>
-                    <h4>Bambang Setiawan</h4>
-                    <p>President Director</p>
-                </div>
-            </div>
-            <!-- Leader 2 -->
-            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp" data-wow-delay="0.15s">
-                <div class="leader-card">
-                    <div class="leader-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop" alt="Lina Kusuma">
-                    </div>
-                    <h4>Lina Kusuma</h4>
-                    <p>Chief Operations Officer</p>
-                </div>
-            </div>
-            <!-- Leader 3 -->
-            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp" data-wow-delay="0.3s">
-                <div class="leader-card">
-                    <div class="leader-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=400&auto=format&fit=crop" alt="Andi Wijaya">
-                    </div>
-                    <h4>Andi Wijaya</h4>
-                    <p>Chief Technology Officer</p>
-                </div>
-            </div>
-            <!-- Leader 4 -->
-            <div class="col-md-3 col-sm-6 flex-col-custom wow fadeInUp" data-wow-delay="0.45s">
-                <div class="leader-card">
-                    <div class="leader-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop" alt="Sari Rahayu">
-                    </div>
-                    <h4>Sari Rahayu</h4>
-                    <p>Marketing Director</p>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -739,11 +872,11 @@
     <div class="container container-custom">
         <div class="cta-banner wow fadeInUp">
             <div class="cta-banner-content">
-                <h2 class="wow fadeInUp" data-wow-delay="0.1s">Ingin menjadi bagian dari perjalanan kami?</h2>
-                <p class="wow fadeInUp" data-wow-delay="0.2s">Jelajahi peluang karier dan kemitraan korporat bersama peritel paling tepercaya di Indonesia.</p>
+                <h2 class="wow fadeInUp" data-wow-delay="0.1s">Ingin menjadi bagian dari kisah kami?</h2>
+                <p class="wow fadeInUp" data-wow-delay="0.2s">Jelajahi peluang karier dan kemitraan korporat bersama retailer paling dipercaya di Indonesia.</p>
                 <div class="cta-actions wow fadeInUp" data-wow-delay="0.3s">
-                    <a href="#" class="btn btn-white">Bergabung dengan Tim Kami</a>
-                    <a href="#" class="btn btn-orange-outline">Pertanyaan Korporat</a>
+                    <a href="#" class="btn btn-white">Gabung Tim Kami</a>
+                    <a href="#" class="btn btn-orange-outline">Hubungi Korporat</a>
                 </div>
             </div>
         </div>
@@ -768,6 +901,51 @@
             target.src = fallback;
         }
     }, true);
+
+    var journeySlider = document.getElementById('journeySlider');
+    if (journeySlider) {
+        var track = journeySlider.querySelector('.journey-track');
+        var prevBtn = document.querySelector('.journey-scroll-prev');
+        var nextBtn = document.querySelector('.journey-scroll-next');
+
+        if (track) {
+            var scrollStep = function (direction) {
+                var firstCard = track.querySelector('.milestone-col');
+                if (!firstCard) return;
+                var trackStyles = window.getComputedStyle(track);
+                var gap = parseFloat(trackStyles.gap || trackStyles.columnGap || 20);
+                var cardWidth = firstCard.getBoundingClientRect().width + gap;
+                var visibleCards = 4;
+                var currentTranslate = parseFloat(track.dataset.currentTranslate || 0);
+                var nextTranslate = currentTranslate + (direction * cardWidth * visibleCards);
+                var maxTranslate = Math.max(0, track.scrollWidth - journeySlider.clientWidth);
+                nextTranslate = Math.max(0, Math.min(nextTranslate, maxTranslate));
+                track.style.transform = 'translateX(-' + nextTranslate + 'px)';
+                track.dataset.currentTranslate = nextTranslate;
+            };
+
+            var updateNavVisibility = function () {
+                var maxTranslate = Math.max(0, track.scrollWidth - journeySlider.clientWidth);
+                if (prevBtn) prevBtn.style.display = maxTranslate > 0 ? 'inline-flex' : 'none';
+                if (nextBtn) nextBtn.style.display = maxTranslate > 0 ? 'inline-flex' : 'none';
+            };
+
+            updateNavVisibility();
+            window.addEventListener('resize', updateNavVisibility);
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function () {
+                    scrollStep(-1);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function () {
+                    scrollStep(1);
+                });
+            }
+        }
+    }
 })();
 </script>
 
