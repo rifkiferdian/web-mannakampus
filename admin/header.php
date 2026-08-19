@@ -6,6 +6,12 @@ $error_message = '';
 $success_message = '';
 $error_message1 = '';
 $success_message1 = '';
+$flash_success_message = '';
+
+if(isset($_SESSION['success_message'])) {
+	$flash_success_message = $_SESSION['success_message'];
+	unset($_SESSION['success_message']);
+}
 
 // echo "<pre>". print_r($_SESSION,1) ."</pre>"; die();
 
@@ -39,6 +45,34 @@ $outlet_pages = array_merge(
     $branch_promo_pages
 );
 
+// Kelompokkan file untuk tiap submenu News
+$news_category_pages = ['category.php', 'category-add.php', 'category-edit.php', 'category-delete.php'];
+$news_content_pages  = ['news.php', 'news-add.php', 'news-edit.php', 'news-delete.php'];
+$news_comment_pages  = ['comment.php'];
+
+// Gabungkan semua file keluarga News ke dalam satu array induk
+$news_pages = array_merge(
+	['category.php'],
+    $news_category_pages,
+    $news_content_pages,
+    $news_comment_pages
+);
+
+// Kelompokkan file untuk menu FAQ, Photo and Video, serta Subscriber
+$faq_category_pages = ['faq-category.php', 'faq-category-add.php', 'faq-category-edit.php', 'faq-category-delete.php'];
+$faq_pages          = ['faq.php', 'faq-add.php', 'faq-edit.php', 'faq-delete.php'];
+$faq_menu_pages     = array_merge($faq_category_pages, $faq_pages);
+
+$photo_category_pages = ['photo-category.php', 'photo-category-add.php', 'photo-category-edit.php', 'photo-category-delete.php'];
+$photo_gallery_pages  = ['photo.php', 'photo-add.php', 'photo-edit.php', 'photo-delete.php'];
+$video_category_pages = ['video-category.php', 'video-category-add.php', 'video-category-edit.php', 'video-category-delete.php'];
+$video_pages          = ['video.php', 'video-add.php', 'video-edit.php', 'video-delete.php'];
+$photo_video_menu_pages = array_merge($photo_category_pages, $photo_gallery_pages, $video_category_pages, $video_pages);
+
+$subscriber_list_pages  = ['subscriber.php', 'subscriber-delete.php', 'subscriber-remove.php', 'subscriber-csv.php'];
+$subscriber_email_pages = ['subscriber-email.php'];
+$subscriber_menu_pages  = array_merge($subscriber_list_pages, $subscriber_email_pages);
+
 // Getting data from the website settings table
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
 $statement->execute();
@@ -52,6 +86,10 @@ $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+
 
 // Cek apakah halaman sekarang termasuk salah satu "keluarga" Outlet
 $is_outlet_active = in_array($cur_page, $outlet_pages);
+$is_news_active = in_array($cur_page, $news_pages);
+$is_faq_active = in_array($cur_page, $faq_menu_pages);
+$is_photo_video_active = in_array($cur_page, $photo_video_menu_pages);
+$is_subscriber_active = in_array($cur_page, $subscriber_menu_pages);
 ?>
 
 <!DOCTYPE html>
@@ -78,6 +116,10 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 	<link rel="stylesheet" href="css/on-off-switch.css">
 	<link rel="stylesheet" href="css/summernote.css">
 	<link rel="stylesheet" href="style.css">
+	<style>
+		.admin-success-toast { position:fixed; top:70px; right:24px; z-index:11000; max-width:420px; margin:0; border:0; border-left:4px solid #2e8b57; box-shadow:0 8px 24px rgba(0,0,0,.18); }
+		@media (max-width:767px) { .admin-success-toast { top:60px; right:12px; left:12px; max-width:none; } }
+	</style>
 
 
 </head>
@@ -151,7 +193,7 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 			          </a>
 			        </li>
 
-					<li class="treeview <?php if( ($cur_page == 'category-add.php')||($cur_page == 'category.php')||($cur_page == 'category-edit.php') || ($cur_page == 'news-add.php')||($cur_page == 'news.php')||($cur_page == 'news-edit.php') || ($cur_page == 'comment.php') ) {echo 'active';} ?>">
+					<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
 							<span>News</span>
@@ -159,19 +201,18 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="category.php"><i class="fa fa-circle-o"></i> Category</a></li>
-							<li><a href="news.php"><i class="fa fa-circle-o"></i> News</a></li>
-							<li><a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a></li>
+						<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
+							<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
+								<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
+								<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
+								<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
+							</li>
 						</ul>
 					</li>
-
-					<li class="treeview <?php if( ($cur_page == 'file-add.php')||($cur_page == 'file.php')||($cur_page == 'file-edit.php') ) {echo 'active';} ?>">
-			          <a href="file.php">
-			            <i class="fa fa-hand-o-right"></i> <span>File Upload (Media)</span>
-			          </a>
-			        </li>
-
        
       			</ul>
     		</section>
@@ -220,7 +261,7 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 			        </li>
 			        
 
-					<li class="treeview <?php if( ($cur_page == 'category-add.php')||($cur_page == 'category.php')||($cur_page == 'category-edit.php') || ($cur_page == 'news-add.php')||($cur_page == 'news.php')||($cur_page == 'news-edit.php') || ($cur_page == 'comment.php') ) {echo 'active';} ?>">
+					<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
 							<span>News</span>
@@ -228,10 +269,16 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="category.php"><i class="fa fa-circle-o"></i> Category</a></li>
-							<li><a href="news.php"><i class="fa fa-circle-o"></i> News</a></li>
-							<li><a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a></li>
+						<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
+							<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
+								<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
+								<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
+								<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
+							</li>
 						</ul>
 					</li>
 
@@ -284,7 +331,7 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 					
 
 
-					<li class="treeview <?php if( ($cur_page == 'faq-category-add.php')||($cur_page == 'faq-category.php')||($cur_page == 'faq-category-edit.php') || ($cur_page == 'faq-add.php')||($cur_page == 'faq.php')||($cur_page == 'faq-edit.php') ) {echo 'active';} ?>">
+					<li class="treeview <?php echo $is_faq_active ? 'active menu-open' : ''; ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
 							<span>FAQ</span>
@@ -292,14 +339,18 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="faq-category.php"><i class="fa fa-circle-o"></i> FAQ Category</a></li>
-							<li><a href="faq.php"><i class="fa fa-circle-o"></i> FAQ</a></li>
+						<ul class="treeview-menu" style="<?php echo $is_faq_active ? 'display:block;' : ''; ?>">
+							<li class="<?php echo in_array($cur_page, $faq_category_pages) ? 'active' : ''; ?>">
+								<a href="faq-category.php"><i class="fa fa-circle-o"></i> FAQ Category</a>
+							</li>
+							<li class="<?php echo in_array($cur_page, $faq_pages) ? 'active' : ''; ?>">
+								<a href="faq.php"><i class="fa fa-circle-o"></i> FAQ</a>
+							</li>
 						</ul>
 					</li>
 
 
-			        <li class="treeview <?php if( ($cur_page == 'photo-category-add.php')||($cur_page == 'photo-category.php')||($cur_page == 'photo-category-edit.php') || ($cur_page == 'photo-add.php')||($cur_page == 'photo.php')||($cur_page == 'photo-edit.php') || ($cur_page == 'video-category-add.php')||($cur_page == 'video-category.php')||($cur_page == 'video-category-edit.php') || ($cur_page == 'video-add.php')||($cur_page == 'video.php')||($cur_page == 'video-edit.php') ) {echo 'active';} ?>">
+			        <li class="treeview <?php echo $is_photo_video_active ? 'active menu-open' : ''; ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
 							<span>Photo and Video</span>
@@ -307,11 +358,11 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="photo-category.php"><i class="fa fa-circle-o"></i> Photo Category</a></li>
-							<li><a href="photo.php"><i class="fa fa-circle-o"></i> Photo Gallery</a></li>
-							<li><a href="video-category.php"><i class="fa fa-circle-o"></i> Video Category</a></li>
-							<li><a href="video.php"><i class="fa fa-circle-o"></i> Video</a></li>
+						<ul class="treeview-menu" style="<?php echo $is_photo_video_active ? 'display:block;' : ''; ?>">
+							<li class="<?php echo in_array($cur_page, $photo_category_pages) ? 'active' : ''; ?>"><a href="photo-category.php"><i class="fa fa-circle-o"></i> Photo Category</a></li>
+							<li class="<?php echo in_array($cur_page, $photo_gallery_pages) ? 'active' : ''; ?>"><a href="photo.php"><i class="fa fa-circle-o"></i> Photo Gallery</a></li>
+							<li class="<?php echo in_array($cur_page, $video_category_pages) ? 'active' : ''; ?>"><a href="video-category.php"><i class="fa fa-circle-o"></i> Video Category</a></li>
+							<li class="<?php echo in_array($cur_page, $video_pages) ? 'active' : ''; ?>"><a href="video.php"><i class="fa fa-circle-o"></i> Video</a></li>
 						</ul>
 					</li>
 
@@ -333,7 +384,7 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 			          </a>
 			        </li>
 
-			        <li class="treeview <?php if( ($cur_page == 'subscriber.php')||($cur_page == 'subscriber-email.php') ) {echo 'active';} ?>">
+			        <li class="treeview <?php echo $is_subscriber_active ? 'active menu-open' : ''; ?>">
 						<a href="#">
 							<i class="fa fa-hand-o-right"></i>
 							<span>Subscriber</span>
@@ -341,9 +392,9 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="subscriber.php"><i class="fa fa-circle-o"></i> All Subscribers</a></li>
-							<li><a href="subscriber-email.php"><i class="fa fa-circle-o"></i> Email to Subscribers</a></li>
+						<ul class="treeview-menu" style="<?php echo $is_subscriber_active ? 'display:block;' : ''; ?>">
+							<li class="<?php echo in_array($cur_page, $subscriber_list_pages) ? 'active' : ''; ?>"><a href="subscriber.php"><i class="fa fa-circle-o"></i> All Subscribers</a></li>
+							<li class="<?php echo in_array($cur_page, $subscriber_email_pages) ? 'active' : ''; ?>"><a href="subscriber-email.php"><i class="fa fa-circle-o"></i> Email to Subscribers</a></li>
 						</ul>
 					</li>
 
@@ -388,4 +439,11 @@ $is_outlet_active = in_array($cur_page, $outlet_pages);
 
   		</aside>
 
-  		<div class="content-wrapper">
+		<div class="content-wrapper">
+			<?php if($flash_success_message !== ''): ?>
+			<div id="admin-success-toast" class="alert alert-success alert-dismissible admin-success-toast">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<?php echo htmlspecialchars($flash_success_message, ENT_QUOTES, 'UTF-8'); ?>
+			</div>
+			<script>setTimeout(function(){ var toast = document.getElementById('admin-success-toast'); if(toast) { toast.style.display = 'none'; } }, 5000);</script>
+			<?php endif; ?>

@@ -1,3 +1,19 @@
+<?php
+if(!empty($success_message)) {
+	$current_file = basename($_SERVER['SCRIPT_NAME']);
+	if(preg_match('/^(.+)-(add|edit)\.php$/', $current_file, $matches)) {
+		$redirect_file = $matches[1].'.php';
+		if($redirect_file === 'profile.php') {
+			$redirect_file = 'profile-edit.php';
+		}
+		if(is_file(__DIR__.'/'.$redirect_file)) {
+			$_SESSION['success_message'] = $success_message;
+			header('Location: '.$redirect_file);
+			exit;
+		}
+	}
+}
+?>
 		</div>
 
 	</div>
@@ -18,6 +34,18 @@
 	<script src="js/jquery.slimscroll.min.js"></script>
 	<script src="js/jquery.fancybox.pack.js"></script>
 	<script src="js/app.min.js"></script>
+	<script>
+		$(function () {
+			var $sidebar = $('.sidebar');
+			var $activeMenu = $sidebar.find('.sidebar-menu > li.active').first();
+
+			if ($activeMenu.length && typeof $.fn.slimScroll !== 'undefined') {
+				$sidebar.slimScroll({
+					scrollTo: Math.max($activeMenu.position().top - 12, 0)
+				});
+			}
+		});
+	</script>
 	<script src="js/jscolor.js"></script>
 	<script src="js/on-off-switch.js"></script>
     <script src="js/on-off-switch-onload.js"></script>

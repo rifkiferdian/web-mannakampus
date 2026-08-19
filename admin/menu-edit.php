@@ -1,5 +1,28 @@
 <?php require_once('header.php'); ?>
 
+<style>
+.no-plus-icon::before {
+    display: none !important;
+}
+
+.no-plus-icon {
+    text-align: center;
+}
+
+.content-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.content-header h1{
+    margin: 0;
+}
+.content-header-right{
+    margin-left: auto;
+}
+</style>
+
 <?php
 if(isset($_POST['form_page'])) {
     $valid = 1;
@@ -96,9 +119,7 @@ foreach ($result as $row) {
 	<div class="content-header-left">
 		<h1>Edit Menu</h1>
 	</div>
-	<div class="content-header-right">
-		<a href="menu.php" class="btn btn-primary btn-sm">View All</a>
-	</div>
+    		<a href="menu.php" class="btn btn-primary btn-sm no-plus-icon"><i class="fa fa-arrow-left" style="text-align: center;"></i> View All</a>
 </section>
 
 

@@ -43,10 +43,10 @@ if(isset($_SESSION['success_message'])) {
                     <th width="220">Address</th>
                     <th>Operating Hours</th>
                     <th>Contact</th>
-                    <th>Badge Type</th>
+                    <th width="100">Badge Type</th>
                     <th>Image</th>
                     <th width="200">Maps Link</th>
-                    <th width="150">Action</th> <!-- Tambahkan th Action agar total jadi 9 kolom -->
+                    <th width="150">Action</th>
                 </tr>
             </thead>
             <tbody>

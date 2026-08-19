@@ -83,7 +83,8 @@ if(isset($_POST['form1'])) {
 				$button_text, $button_url, $form_data['is_featured'],
 				$form_data['display_order'], $form_data['status']
 			));
-			header('location: promo-event.php?added=1');
+			$_SESSION['success_message'] = 'Promo atau event berhasil ditambahkan.';
+			header('Location: promo-event.php');
 			exit;
 		}
 	}

@@ -1,6 +1,32 @@
 <?php require_once('header.php'); ?>
 
+<style>
+.no-plus-icon::before {
+    display: none !important;
+}
+
+.no-plus-icon {
+    text-align: center;
+}
+
+.content-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.content-header h1{
+    margin: 0;
+}
+.content-header-right{
+    margin-left: auto;
+}
+</style>
+
 <?php
+
+
+
 if(isset($_POST['form1'])) {
 	$valid = 1;
 
@@ -124,9 +150,7 @@ if(!isset($_REQUEST['id'])) {
 	<div class="content-header-left">
 		<h1>Edit Penghargaan MannaKampus</h1>
 	</div>
-	<div class="content-header-right">
-		<a href="team-member.php" class="btn btn-primary btn-sm">View All</a>
-	</div>
+		<a href="team-member.php" class="btn btn-primary btn-sm no-plus-icon"><i class="fa fa-arrow-left" style="text-align: center;"></i> View All</a>
 </section>
 
 <?php
@@ -206,7 +230,7 @@ foreach ($result as $row) {
 								<?php
 				            	$i=0;
 				            	$statement = $pdo->prepare("SELECT * FROM tbl_designation ORDER BY designation_name ASC");
-				            	$statement->execute(array('Active'));
+				            	$statement->execute();
 				            	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 				            	foreach ($result as $row) {
 									?>
