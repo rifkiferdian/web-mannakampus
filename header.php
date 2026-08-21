@@ -1319,8 +1319,8 @@ foreach ($result as $row)
         <?php
   			$current_page = basename($_SERVER['PHP_SELF']);
 			$is_about_menu = in_array($current_page, array('about-us.php', 'kemitraan.php', 'career.php', 'social.php', 'contact-us.php'));
-			$is_blbms_menu = in_array($current_page, array('klaim-hadiah.php', 'reward.php', 'winners,php'));
-			$is_shopping_menu = in_array($current_page, array('belanja-online.php', 'lokasi-outlet.php'));
+			$is_blbms_menu = in_array($current_page, array('klaim-hadiah.php', 'reward.php', 'winners.php', 'archive-all.php'));
+			$is_shopping_menu = in_array($current_page, array('belanja-online.php', 'lokasi-outlet.php', 'explor.php'));
 			$is_membership_menu = in_array($current_page, array('member.php', 'community.php'));
 			$is_promo_menu = in_array($current_page, array('promo.php', 'blog.php', 'news.php'));
 		?>

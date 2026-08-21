@@ -13,8 +13,6 @@ if(isset($_SESSION['success_message'])) {
 	unset($_SESSION['success_message']);
 }
 
-// echo "<pre>". print_r($_SESSION,1) ."</pre>"; die();
-
 require '../assets/mail/PHPMailer.php';
 require '../assets/mail/Exception.php';
 $mail = new PHPMailer\PHPMailer\PHPMailer();
@@ -24,6 +22,9 @@ if(!isset($_SESSION['user'])) {
 	header('location: login.php');
 	exit;
 }
+
+// Ambil nama halaman saat ini lebih awal agar tidak terjadi error pada in_array
+$cur_page = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], "/") + 1);
 
 // Kelompokkan semua file yang termasuk "keluarga" tiap submenu Outlet
 $branch_info_pages       = ['branch-info.php', 'branch-info-add.php', 'branch-info-edit.php'];
@@ -50,13 +51,27 @@ $news_category_pages = ['category.php', 'category-add.php', 'category-edit.php',
 $news_content_pages  = ['news.php', 'news-add.php', 'news-edit.php', 'news-delete.php'];
 $news_comment_pages  = ['comment.php'];
 
-// Gabungkan semua file keluarga News ke dalam satu array induk
 $news_pages = array_merge(
-	['category.php'],
     $news_category_pages,
     $news_content_pages,
     $news_comment_pages
 );
+
+// Kelompokkan file untuk tiap submenu prize_draw
+$prize_draw_program_pages = ['program.php', 'program-add.php', 'program-edit.php', 'program-delete.php'];
+$prize_draw_periode_pages = ['periode.php', 'periode-add.php', 'periode-edit.php', 'periode-delete.php'];
+$prize_draw_reward_pages  = ['reward.php', 'reward-add.php', 'reward-edit.php', 'reward-delete.php'];
+$prize_draw_winners_pages = ['winners.php', 'winners-add.php', 'winners-edit.php', 'winners-delete.php'];
+$prize_draw_sponsor_pages = ['sponsor.php', 'sponsor-add.php', 'sponsor-edit.php', 'sponsor-delete.php'];
+
+$prize_draw_pages = array_merge(
+    $prize_draw_program_pages,
+	$prize_draw_periode_pages,
+	$prize_draw_reward_pages,
+    $prize_draw_winners_pages,
+	$prize_draw_sponsor_pages
+);
+
 
 // Kelompokkan file untuk menu FAQ, Photo and Video, serta Subscriber
 $faq_category_pages = ['faq-category.php', 'faq-category-add.php', 'faq-category-edit.php', 'faq-category-delete.php'];
@@ -81,17 +96,14 @@ foreach ($result as $row) {
 	$receive_email = $row['receive_email'];
 }
 
-// Current Page Access Level check for all pages
-$cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
-
-// Cek apakah halaman sekarang termasuk salah satu "keluarga" Outlet
-$is_outlet_active = in_array($cur_page, $outlet_pages);
-$is_news_active = in_array($cur_page, $news_pages);
-$is_faq_active = in_array($cur_page, $faq_menu_pages);
+// Status aktif menu
+$is_prize_draw_active  = in_array($cur_page, $prize_draw_pages);
+$is_outlet_active      = in_array($cur_page, $outlet_pages);
+$is_news_active        = in_array($cur_page, $news_pages);
+$is_faq_active         = in_array($cur_page, $faq_menu_pages);
 $is_photo_video_active = in_array($cur_page, $photo_video_menu_pages);
-$is_subscriber_active = in_array($cur_page, $subscriber_menu_pages);
+$is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,7 +115,6 @@ $is_subscriber_active = in_array($cur_page, $subscriber_menu_pages);
 
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<!-- Font Awesome 6.x CDN -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="css/ionicons.min.css">
 	<link rel="stylesheet" href="css/datepicker3.css">
@@ -117,25 +128,43 @@ $is_subscriber_active = in_array($cur_page, $subscriber_menu_pages);
 	<link rel="stylesheet" href="css/summernote.css">
 	<link rel="stylesheet" href="style.css">
 	<style>
+	/* Mengatur ukuran gambar di tabel agar lebih besar & jelas */
+	.table img, 
+	table.dataTable tbody td img {
+		width: 100px !important;    /* Ubah sesuai selera (contoh: 100px atau 120px) */
+		height: auto !important;   /* Menjaga proporsi gambar agar tidak terdistorsi */
+		max-height: 100px !important;
+		object-fit: contain;      /* Gambar tetap rapi tanpa terpotong */
+		border-radius: 6px;        /* Bonus: bikin sudut gambar agak melengkung rapi */
+		padding: 2px;
+	}
+
+	/* Menyesuaikan posisi sel tabel agar sejajar di tengah secara vertikal */
+	.table tbody td {
+		vertical-align: middle !important;
+	}
 		.admin-success-toast { position:fixed; top:70px; right:24px; z-index:11000; max-width:420px; margin:0; border:0; border-left:4px solid #2e8b57; box-shadow:0 8px 24px rgba(0,0,0,.18); }
 		@media (max-width:767px) { .admin-success-toast { top:60px; right:12px; left:12px; max-width:none; } }
 	</style>
-
-
 </head>
+<script>
+    $(document).ready(function() {
+        // Memaksa scrollbar sidebar kembali ke paling atas
+        $('.main-sidebar, .sidebar').scrollTop(0);
+    });
+</script>
+
 
 <body class="hold-transition fixed skin-yellow sidebar-mini">
 
 	<div class="wrapper">
 
 		<header class="main-header">
-
 			<a href="index.php" class="logo">
 				<span class="logo-lg">Consultine</span>
 			</a>
 
 			<nav class="navbar navbar-static-top">
-				
 				<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
 					<span class="sr-only">Toggle navigation</span>
 				</a>
@@ -162,282 +191,284 @@ $is_subscriber_active = in_array($cur_page, $subscriber_menu_pages);
 						</li>
 					</ul>
 				</div>
-
 			</nav>
 		</header>
 
-  		<?php $cur_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1); ?>
+		<aside class="main-sidebar">
+			<?php if ($_SESSION['user']['role'] == 'News'): ?>
+				<section class="sidebar">
+					<ul class="sidebar-menu">
+						<li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
+							<a href="index.php">
+								<i class="fa fa-hand-o-right"></i> <span>Dashboard</span>
+							</a>
+						</li>
+						
+						<li class="treeview <?php if( ($cur_page == 'slider-add.php')||($cur_page == 'slider.php')||($cur_page == 'slider-edit.php') ) {echo 'active';} ?>">
+							<a href="slider.php">
+								<i class="fa fa-hand-o-right"></i> <span>Slider</span>
+							</a>
+						</li>
 
-  		<aside class="main-sidebar">
+						<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
+							<a href="promo-event.php">
+								<i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
+							</a>
+						</li>
 
-  			<?php if ($_SESSION['user']['role'] == 'News'): ?>
-  				<section class="sidebar">
-      
-      			<ul class="sidebar-menu">
+						<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>News</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
+									<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
+									<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
+									<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+			<?php else: ?>
+				<section class="sidebar">
+					<ul class="sidebar-menu">
+						<li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
+							<a href="index.php">
+								<i class="fa fa-hand-o-right"></i> <span>Dashboard</span>
+							</a>
+						</li>
 
-			        <li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
-			          <a href="index.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Dashboard</span>
-			          </a>
-			        </li>
-		        	
-		        	<li class="treeview <?php if( ($cur_page == 'slider-add.php')||($cur_page == 'slider.php')||($cur_page == 'slider-edit.php') ) {echo 'active';} ?>">
-			          <a href="slider.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Slider</span>
-			          </a>
-			        </li>
+						<li class="header">WEBSITE</li>
 
-					<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
-			          <a href="promo-event.php">
-			            <i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php if( ($cur_page == 'page-add.php')||($cur_page == 'page.php')||($cur_page == 'page-edit.php') ) {echo 'active';} ?>">
+							<a href="page.php">
+								<i class="fa fa-hand-o-right"></i> <span>Page</span>
+							</a>
+						</li>
 
-					<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>News</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
-							<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
-								<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
-								<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
-								<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
-							</li>
-						</ul>
-					</li>
-       
-      			</ul>
-    		</section>
+						<li class="treeview <?php if( ($cur_page == 'menu-add.php')||($cur_page == 'menu.php')||($cur_page == 'menu-edit.php') ) {echo 'active';} ?>">
+							<a href="menu.php">
+								<i class="fa fa-hand-o-right"></i> <span>Menu</span>
+							</a>
+						</li>
 
-  			<?php else: ?>
-  			
+						<li class="treeview <?php if( ($cur_page == 'language.php') ) {echo 'active';} ?>">
+							<a href="language.php">
+								<i class="fa fa-hand-o-right"></i> <span>Language</span>
+							</a>
+						</li>
 
-    		<section class="sidebar">
-      
-      			<ul class="sidebar-menu">
+						<li class="header">CONTENT</li>
 
-			        <li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
-			          <a href="index.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Dashboard</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>News</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
+									<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
+									<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
+									<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
+								</li>
+							</ul>
+						</li>
 
-					
+						<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
+							<a href="promo-event.php">
+								<i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
+							</a>
+						</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'settings.php') ) {echo 'active';} ?>">
-			          <a href="settings.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Settings</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php if( ($cur_page == 'designation-add.php')||($cur_page == 'designation.php')||($cur_page == 'designation-edit.php') || ($cur_page == 'team-member-add.php')||($cur_page == 'team-member.php')||($cur_page == 'team-member-edit.php') ) {echo 'active';} ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>Penghargaan MannaKampus</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu">
+								<li><a href="designation.php"><i class="fa fa-circle-o"></i> Kategori Penghargaan</a></li>
+								<li><a href="team-member.php"><i class="fa fa-circle-o"></i> Data Penghargaan</a></li>
+							</ul>
+						</li>
 
+						<li class="treeview <?php echo $is_prize_draw_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>Prize Draw</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_prize_draw_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $prize_draw_program_pages) ? 'active' : ''; ?>">
+									<a href="program.php"><i class="fa fa-circle-o"></i> Program</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $prize_draw_periode_pages) ? 'active' : ''; ?>">
+									<a href="periode.php"><i class="fa fa-circle-o"></i> Periode</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $prize_draw_reward_pages) ? 'active' : ''; ?>">
+									<a href="reward.php"><i class="fa fa-circle-o"></i> Reward</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $prize_draw_winners_pages) ? 'active' : ''; ?>">
+									<a href="winners.php"><i class="fa fa-circle-o"></i> Winners</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $prize_draw_sponsor_pages) ? 'active' : ''; ?>">
+									<a href="sponsor.php"><i class="fa fa-circle-o"></i> Sponsor</a>
+								</li>
+							</ul>
+						</li>
 
+						<li class="treeview <?php if( ($cur_page == 'testimonial-add.php')||($cur_page == 'testimonial.php')||($cur_page == 'testimonial-edit.php') ) {echo 'active';} ?>">
+							<a href="testimonial.php">
+								<i class="fa fa-hand-o-right"></i> <span>Testimonial</span>
+							</a>
+						</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'page-add.php')||($cur_page == 'page.php')||($cur_page == 'page-edit.php') ) {echo 'active';} ?>">
-			          <a href="page.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Page</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php if( ($cur_page == 'partner-add.php')||($cur_page == 'partner.php')||($cur_page == 'partner-edit.php') ) {echo 'active';} ?>">
+							<a href="partner.php">
+								<i class="fa fa-hand-o-right"></i> <span>Partner</span>
+							</a>
+						</li>
 
+						<li class="treeview <?php if( ($cur_page == 'service-add.php')||($cur_page == 'service.php')||($cur_page == 'service-edit.php') ) {echo 'active';} ?>">
+							<a href="service.php">
+								<i class="fa fa-hand-o-right"></i> <span>Service</span>
+							</a>
+						</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'menu-add.php')||($cur_page == 'menu.php')||($cur_page == 'menu-edit.php') ) {echo 'active';} ?>">
-			          <a href="menu.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Menu</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php echo $is_faq_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>FAQ</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_faq_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $faq_category_pages) ? 'active' : ''; ?>">
+									<a href="faq-category.php"><i class="fa fa-circle-o"></i> FAQ Category</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $faq_pages) ? 'active' : ''; ?>">
+									<a href="faq.php"><i class="fa fa-circle-o"></i> FAQ</a>
+								</li>
+							</ul>
+						</li>
 
+						<li class="treeview <?php echo $is_outlet_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>Outlet</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_outlet_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $branch_info_pages) ? 'active' : ''; ?>">
+									<a href="branch-info.php"><i class="fa fa-circle-o"></i> Branch Information</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_videos_pages) ? 'active' : ''; ?>">
+									<a href="branch-videos.php"><i class="fa fa-circle-o"></i> Branch Videos</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_tenants_pages) ? 'active' : ''; ?>">
+									<a href="branch-tenants.php"><i class="fa fa-circle-o"></i> Branch Tenants</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_promo_pages) ? 'active' : ''; ?>">
+									<a href="branch-promo.php"><i class="fa fa-circle-o"></i> Branch Promo</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_katalog_pages) ? 'active' : ''; ?>">
+									<a href="branch-katalog.php"><i class="fa fa-circle-o"></i> Branch Katalog</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_facilities_pages) ? 'active' : ''; ?>">
+									<a href="branch-facilities.php"><i class="fa fa-circle-o"></i> Branch Facilities</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_galleries_pages) ? 'active' : ''; ?>">
+									<a href="branch-galleries.php"><i class="fa fa-circle-o"></i> Branch Galleries</a>
+								</li>
+							</ul>
+						</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'language.php') ) {echo 'active';} ?>">
-			          <a href="language.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Language</span>
-			          </a>
-			        </li>
-			        
+						<li class="header">MEDIA</li>
 
-					<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>News</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
-							<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
-								<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
-								<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
-								<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
-							</li>
-						</ul>
-					</li>
+						<li class="treeview <?php if( ($cur_page == 'slider-add.php')||($cur_page == 'slider.php')||($cur_page == 'slider-edit.php') ) {echo 'active';} ?>">
+							<a href="slider.php">
+								<i class="fa fa-hand-o-right"></i> <span>Slider</span>
+							</a>
+						</li>
 
-										
+						<li class="treeview <?php echo $is_photo_video_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>Photo and Video</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_photo_video_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $photo_category_pages) ? 'active' : ''; ?>"><a href="photo-category.php"><i class="fa fa-circle-o"></i> Photo Category</a></li>
+								<li class="<?php echo in_array($cur_page, $photo_gallery_pages) ? 'active' : ''; ?>"><a href="photo.php"><i class="fa fa-circle-o"></i> Photo Gallery</a></li>
+								<li class="<?php echo in_array($cur_page, $video_category_pages) ? 'active' : ''; ?>"><a href="video-category.php"><i class="fa fa-circle-o"></i> Video Category</a></li>
+								<li class="<?php echo in_array($cur_page, $video_pages) ? 'active' : ''; ?>"><a href="video.php"><i class="fa fa-circle-o"></i> Video</a></li>
+							</ul>
+						</li>
 
-					<li class="treeview <?php if( ($cur_page == 'designation-add.php')||($cur_page == 'designation.php')||($cur_page == 'designation-edit.php') || ($cur_page == 'team-member-add.php')||($cur_page == 'team-member.php')||($cur_page == 'team-member-edit.php') ) {echo 'active';} ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>Penghargaan MannaKampus</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="designation.php"><i class="fa fa-circle-o"></i> Kategori Penghargaan</a></li>
-							<li><a href="team-member.php"><i class="fa fa-circle-o"></i> Data Penghargaan</a></li>
-						</ul>
-					</li>
+						<li class="treeview <?php if( ($cur_page == 'file-add.php')||($cur_page == 'file.php')||($cur_page == 'file-edit.php') ) {echo 'active';} ?>">
+							<a href="file.php">
+								<i class="fa fa-hand-o-right"></i> <span>File Upload (Media)</span>
+							</a>
+						</li>
 
-					
-					<li class="treeview <?php if( ($cur_page == 'slider-add.php')||($cur_page == 'slider.php')||($cur_page == 'slider-edit.php') ) {echo 'active';} ?>">
-			          <a href="slider.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Slider</span>
-			          </a>
-			        </li>
+						<li class="header">AUDIENCE</li>
 
-					<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
-			          <a href="promo-event.php">
-			            <i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php if( ($cur_page == 'social-media.php') ) {echo 'active';} ?>">
+							<a href="social-media.php">
+								<i class="fa fa-hand-o-right"></i> <span>Social Media</span>
+							</a>
+						</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'testimonial-add.php')||($cur_page == 'testimonial.php')||($cur_page == 'testimonial-edit.php') ) {echo 'active';} ?>">
-			          <a href="testimonial.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Testimonial</span>
-			          </a>
-			        </li>
+						<li class="treeview <?php echo $is_subscriber_active ? 'active menu-open' : ''; ?>">
+							<a href="#">
+								<i class="fa fa-hand-o-right"></i>
+								<span>Subscriber</span>
+								<span class="pull-right-container">
+									<i class="fa fa-angle-left pull-right"></i>
+								</span>
+							</a>
+							<ul class="treeview-menu" style="<?php echo $is_subscriber_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $subscriber_list_pages) ? 'active' : ''; ?>"><a href="subscriber.php"><i class="fa fa-circle-o"></i> All Subscribers</a></li>
+								<li class="<?php echo in_array($cur_page, $subscriber_email_pages) ? 'active' : ''; ?>"><a href="subscriber-email.php"><i class="fa fa-circle-o"></i> Email to Subscribers</a></li>
+							</ul>
+						</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'partner-add.php')||($cur_page == 'partner.php')||($cur_page == 'partner-edit.php') ) {echo 'active';} ?>">
-			          <a href="partner.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Partner</span>
-			          </a>
-			        </li>
+						<li class="header">SETTINGS</li>
 
-			        <li class="treeview <?php if( ($cur_page == 'service-add.php')||($cur_page == 'service.php')||($cur_page == 'service-edit.php') ) {echo 'active';} ?>">
-			          <a href="service.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Service</span>
-			          </a>
-			        </li>
-					
-
-
-					<li class="treeview <?php echo $is_faq_active ? 'active menu-open' : ''; ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>FAQ</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu" style="<?php echo $is_faq_active ? 'display:block;' : ''; ?>">
-							<li class="<?php echo in_array($cur_page, $faq_category_pages) ? 'active' : ''; ?>">
-								<a href="faq-category.php"><i class="fa fa-circle-o"></i> FAQ Category</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $faq_pages) ? 'active' : ''; ?>">
-								<a href="faq.php"><i class="fa fa-circle-o"></i> FAQ</a>
-							</li>
-						</ul>
-					</li>
-
-
-			        <li class="treeview <?php echo $is_photo_video_active ? 'active menu-open' : ''; ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>Photo and Video</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu" style="<?php echo $is_photo_video_active ? 'display:block;' : ''; ?>">
-							<li class="<?php echo in_array($cur_page, $photo_category_pages) ? 'active' : ''; ?>"><a href="photo-category.php"><i class="fa fa-circle-o"></i> Photo Category</a></li>
-							<li class="<?php echo in_array($cur_page, $photo_gallery_pages) ? 'active' : ''; ?>"><a href="photo.php"><i class="fa fa-circle-o"></i> Photo Gallery</a></li>
-							<li class="<?php echo in_array($cur_page, $video_category_pages) ? 'active' : ''; ?>"><a href="video-category.php"><i class="fa fa-circle-o"></i> Video Category</a></li>
-							<li class="<?php echo in_array($cur_page, $video_pages) ? 'active' : ''; ?>"><a href="video.php"><i class="fa fa-circle-o"></i> Video</a></li>
-						</ul>
-					</li>
-
-					
-					
-
-
-					<li class="treeview <?php if( ($cur_page == 'file-add.php')||($cur_page == 'file.php')||($cur_page == 'file-edit.php') ) {echo 'active';} ?>">
-			          <a href="file.php">
-			            <i class="fa fa-hand-o-right"></i> <span>File Upload (Media)</span>
-			          </a>
-			        </li>
-
-
-					
-			        <li class="treeview <?php if( ($cur_page == 'social-media.php') ) {echo 'active';} ?>">
-			          <a href="social-media.php">
-			            <i class="fa fa-hand-o-right"></i> <span>Social Media</span>
-			          </a>
-			        </li>
-
-			        <li class="treeview <?php echo $is_subscriber_active ? 'active menu-open' : ''; ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>Subscriber</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu" style="<?php echo $is_subscriber_active ? 'display:block;' : ''; ?>">
-							<li class="<?php echo in_array($cur_page, $subscriber_list_pages) ? 'active' : ''; ?>"><a href="subscriber.php"><i class="fa fa-circle-o"></i> All Subscribers</a></li>
-							<li class="<?php echo in_array($cur_page, $subscriber_email_pages) ? 'active' : ''; ?>"><a href="subscriber-email.php"><i class="fa fa-circle-o"></i> Email to Subscribers</a></li>
-						</ul>
-					</li>
-
-
-					<?php $is_outlet_active = in_array($cur_page, $outlet_pages); ?>
-					<li class="treeview <?php echo $is_outlet_active ? 'active menu-open' : ''; ?>">
-						<a href="#">
-							<i class="fa fa-hand-o-right"></i>
-							<span>Outlet</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu" style="<?php echo $is_outlet_active ? 'display:block;' : ''; ?>">
-							<li class="<?php echo in_array($cur_page, $branch_info_pages) ? 'active' : ''; ?>">
-								<a href="branch-info.php"> <i class="fa fa-circle-o"></i> Branch Information</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $branch_videos_pages) ? 'active' : ''; ?>">
-								<a href="branch-videos.php"><i class="fa fa-circle-o"></i> Branch Videos</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $branch_tenants_pages) ? 'active' : ''; ?>">
-								<a href="branch-tenants.php"><i class="fa fa-circle-o"></i> Branch Tenants</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $branch_promo_pages) ? 'active' : ''; ?>">
-						<a href="branch-promo.php"><i class="fa fa-circle-o"></i> Branch Promo</a>
-					</li>
-					<li class="<?php echo in_array($cur_page, $branch_katalog_pages) ? 'active' : ''; ?>">
-								<a href="branch-katalog.php"><i class="fa fa-circle-o"></i> Branch Katalog</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $branch_facilities_pages) ? 'active' : ''; ?>">
-								<a href="branch-facilities.php"><i class="fa fa-circle-o"></i> Branch Facilities</a>
-							</li>
-							<li class="<?php echo in_array($cur_page, $branch_galleries_pages) ? 'active' : ''; ?>">
-								<a href="branch-galleries.php"><i class="fa fa-circle-o"></i> Branch Galleries</a>
-							</li>
-						</ul>
-					</li>
-      			</ul>
-    		</section>
-
-    		<?php endif ?>
-
-  		</aside>
+						<li class="treeview <?php if( ($cur_page == 'settings.php') ) {echo 'active';} ?>">
+							<a href="settings.php">
+								<i class="fa fa-hand-o-right"></i> <span>Settings</span>
+							</a>
+						</li>
+					</ul>
+				</section>
+			<?php endif; ?>
+		</aside>
 
 		<div class="content-wrapper">
 			<?php if($flash_success_message !== ''): ?>

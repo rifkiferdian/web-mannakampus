@@ -1,5 +1,23 @@
-<?php require_once('header.php');
+<?php require_once('header.php');?>
 
+<?php if (!empty($_GET['pdf_error'])):?>
+<div class="mk-pdf-notif" id="mkPdfNotif">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span><?php echo htmlspecialchars($_GET['pdf_error']); ?></span>
+    <button type="button" onclick="document.getElementById('mkPdfNotif').remove()" aria-label="Tutup">&times;</button>
+</div>
+<?php endif; ?>
+<script>
+setTimeout(function () {
+    var notif = document.getElementById('mkPdfNotif');
+    if (notif) notif.remove();
+}, 5000); // hilang otomatis setelah 5 detik
+</script>
+<?php
 define('WINNER_PHOTO_PATH', 'assets/uploads/');
 
 /* ---------------------------------------------------------------------
@@ -300,11 +318,28 @@ try {
  * ------------------------------------------------------------------- */
 $data_galeri_pemenang = [];
 try {
-    $sql_galeri = "SELECT photo_name, photo_caption FROM tbl_photo WHERE p_category_id = 5 ORDER BY photo_id ASC LIMIT 6";
+    $sql_galeri = "SELECT photo_name, photo_caption FROM tbl_photo WHERE p_category_id = 5 ORDER BY photo_id ASC LIMIT 8";
     $stmt_galeri = $pdo->query($sql_galeri);
     $data_galeri_pemenang = $stmt_galeri->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $data_galeri_pemenang = [];
+}
+
+/* ---------------------------------------------------------------------
+ * 9. Ambil Data Sponsor Berdasarkan Program Aktif
+ * ------------------------------------------------------------------- */
+$data_sponsor = [];
+try {
+    $sql_sponsor = "SELECT s.sponsor_name, s.img 
+                    FROM tbl_sponsor s
+                    JOIN tbl_program p ON s.id_program = p.id
+                    WHERE p.year = :tahun
+                    ORDER BY s.id ASC";
+    $stmt_sponsor = $pdo->prepare($sql_sponsor);
+    $stmt_sponsor->execute([':tahun' => $tahun_aktif]);
+    $data_sponsor = $stmt_sponsor->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $data_sponsor = [];
 }
 ?>
 
@@ -958,11 +993,12 @@ try {
 
     /* Layout Grid Asimetris */
     .mk-winner-gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-auto-rows: 220px;
-        gap: 16px;
-    }
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: 16px;
+    grid-auto-flow: dense;
+}
     .mk-winner-gallery-item {
         border-radius: 14px;
         overflow: hidden;
@@ -1029,6 +1065,186 @@ try {
             grid-column: span 1;
         }
     }
+
+    /* ===================== Modal Preview Foto Galeri ================== */
+    .mk-photo-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease;
+        padding: 24px;
+        box-sizing: border-box;
+    }
+    .mk-photo-modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .mk-photo-modal-inner {
+        max-width: 900px;
+        max-height: 90vh;
+        width: 100%;
+        text-align: center;
+    }
+    .mk-photo-modal-inner img {
+        width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .mk-photo-modal-caption {
+        color: #fff;
+        font-size: 14px;
+        margin-top: 14px;
+        opacity: 0.85;
+    }
+    .mk-photo-modal-close {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--mk-reward-orange, #f47716);
+        border: none;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+        transition: transform 0.2s ease, background 0.2s ease;
+        z-index: 1000000;
+    }
+    .mk-photo-modal-close:hover {
+        background: #d9600f;
+        transform: scale(1.08);
+    }
+
+    @media (max-width: 600px) {
+        .mk-photo-modal-close { top: 16px; right: 16px; width: 38px; height: 38px; }
+    }
+
+/* ===================== Notifikasi PDF Error ================== */
+.mk-pdf-notif {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff3f0;
+    border: 1px solid #ffcdc0;
+    color: #b91c1c;
+    padding: 12px 18px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 1000001; /* di atas modal foto juga */
+    max-width: 90%;
+    animation: mkNotifSlideDown 0.3s ease;
+}
+.mk-pdf-notif svg {
+    flex-shrink: 0;
+    color: #dc2626;
+}
+.mk-pdf-notif button {
+    background: none;
+    border: none;
+    color: #b91c1c;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0 0 6px;
+    opacity: 0.6;
+}
+.mk-pdf-notif button:hover {
+    opacity: 1;
+}
+@keyframes mkNotifSlideDown {
+    from { opacity: 0; transform: translate(-50%, -12px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ===================== Section Sponsor / Partners ================== */
+.mk-sponsor-section {
+    background-color: #fdfbf7; /* Latar belakang cream soft sesuai gambar */
+    padding: 60px 24px;
+    text-align: center;
+}
+.mk-sponsor-container {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+.mk-sponsor-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f47716; /* Warna oranye */
+    margin: 0 0 10px;
+}
+.mk-sponsor-line {
+    width: 40px;
+    height: 3px;
+    background-color: #f47716;
+    margin: 0 auto 16px;
+    border-radius: 2px;
+}
+.mk-sponsor-subtitle {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0 0 40px;
+}
+.mk-sponsor-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.mk-sponsor-card {
+    background: #ffffff;
+    border-radius: 10px;
+    width: 180px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+.mk-sponsor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+.mk-sponsor-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(20%);
+    transition: filter 0.3s ease;
+}
+.mk-sponsor-card:hover img {
+    filter: grayscale(0%);
+}
+
+@media (max-width: 600px) {
+    .mk-sponsor-card {
+        width: 140px;
+        height: 80px;
+        padding: 10px;
+    }
+}
 </style>
 
 <!-- ===================== Section Hero Pemenang ================== -->
@@ -1076,8 +1292,7 @@ try {
 <?php endif; ?>
 
         <!-- Tombol Unduh PDF Lengkap -->
-        <a href="unduh-pemenang-periode-<?php echo (int) $periode_aktif; ?>.pdf" class="mk-pdf-download" target="_blank">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+   <a href="generate-pdf.php?periode=<?php echo (int) $periode_aktif; ?>" ...>            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -1390,7 +1605,7 @@ try {
         <div class="mk-winner-gallery-grid">
             <?php if (!empty($data_galeri_pemenang)): ?>
                 <?php foreach ($data_galeri_pemenang as $galeri): ?>
-                    <div class="mk-winner-gallery-item" onclick="openImageModal('<?php echo WINNER_PHOTO_PATH . htmlspecialchars($galeri['photo_name']); ?>')">
+                    <div class="mk-winner-gallery-item" onclick="openImageModal('<?php echo WINNER_PHOTO_PATH . htmlspecialchars($galeri['photo_name']); ?>', '<?php echo htmlspecialchars(addslashes($galeri['photo_caption'])); ?>')">
                         <img src="<?php echo WINNER_PHOTO_PATH . htmlspecialchars($galeri['photo_name']); ?>" 
                              alt="<?php echo htmlspecialchars($galeri['photo_caption']); ?>" 
                              onerror="this.src='https://placehold.co/600x400/333/666?text=Dokumentasi+Manna+Kampus'">
@@ -1409,5 +1624,76 @@ try {
         </div>
     </div>
 </section>
+
+<!-- ===================== Modal Preview Foto Galeri ==================
+     PENTING: modal ini SENGAJA ditaruh di sini, di luar section manapun
+     (langsung sebelum footer), supaya z-index-nya tidak terjebak di
+     dalam stacking context section/header manapun. ================== -->
+<div class="mk-photo-modal" id="mkPhotoModal">
+    <button type="button" class="mk-photo-modal-close" id="mkPhotoModalClose" aria-label="Tutup">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </button>
+    <div class="mk-photo-modal-inner">
+        <img src="" alt="" id="mkPhotoModalImg">
+        <p class="mk-photo-modal-caption" id="mkPhotoModalCaption"></p>
+    </div>
+</div>
+
+<!-- ===================== Section Sponsor / Our Partners ================== -->
+<section class="mk-sponsor-section">
+    <div class="mk-sponsor-container">
+        <h3 class="mk-sponsor-title">Our Sponsor</h3>
+        <div class="mk-sponsor-line"></div>
+        <p class="mk-sponsor-subtitle">All of our corporate sponsors are listed below.</p>
+
+        <div class="mk-sponsor-grid">
+            <?php if (!empty($data_sponsor)): ?>
+                <?php foreach ($data_sponsor as $sponsor): ?>
+                    <div class="mk-sponsor-card" title="<?php echo htmlspecialchars($sponsor['sponsor_name']); ?>">
+                        <img src="assets/uploads/<?php echo htmlspecialchars($sponsor['img']); ?>" 
+                             alt="<?php echo htmlspecialchars($sponsor['sponsor_name']); ?>"
+                             onerror="this.src='https://placehold.co/150x60/fff/ccc?text=<?php echo urlencode($sponsor['sponsor_name']); ?>'">
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div style="color: #888; font-size: 14px;">Belum ada sponsor untuk periode ini.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+<script>
+function openImageModal(src, caption) {
+    var modal = document.getElementById('mkPhotoModal');
+    var img = document.getElementById('mkPhotoModalImg');
+    var cap = document.getElementById('mkPhotoModalCaption');
+
+    img.src = src;
+    cap.textContent = caption || '';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // cegah scroll di belakang modal
+}
+
+function closeImageModal() {
+    var modal = document.getElementById('mkPhotoModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.getElementById('mkPhotoModalClose').addEventListener('click', closeImageModal);
+
+// Klik area gelap di luar foto juga menutup modal
+document.getElementById('mkPhotoModal').addEventListener('click', function (e) {
+    if (e.target === this) closeImageModal();
+});
+
+// Tombol ESC menutup modal
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeImageModal();
+});
+</script>
 
 <?php require_once('footer.php'); ?>
