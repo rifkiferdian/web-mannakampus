@@ -100,7 +100,9 @@ if(isset($_POST['form1'])) {
 			$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$final_name,$_POST['category_id'],$publisher,0,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
 		}
 	
-		$success_message = 'News is added successfully!';
+		$_SESSION['success_message'] = 'News is added successfully!';
+		header('Location: news.php');
+		exit;
 	}
 }
 ?>

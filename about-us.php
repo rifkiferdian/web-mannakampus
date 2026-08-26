@@ -101,35 +101,39 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        opacity: 0.6 !important;
+        opacity: 1 !important;
     }
     .about-hero .container-custom {
         position: relative !important;
         z-index: 2 !important;
+        width: 100% !important;
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        padding: 80px 24px !important;
     }
     .about-hero .hero-badge {
         display: inline-block !important;
         background: #e87817 !important;
         color: #fff !important;
-        font-size: 0.8rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.12em !important;
-        text-transform: uppercase !important;
-        padding: 7px 16px !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        letter-spacing: normal !important;
+        text-transform: none !important;
+        padding: 6px 16px !important;
         border-radius: 20px !important;
         margin-bottom: 16px !important;
     }
     .about-hero h1 {
-        font-size: clamp(2.7rem, 3vw, 4rem) !important;
+        font-size: 3.25rem !important;
         font-weight: 800 !important;
-        line-height: 1.15 !important;
+        line-height: 1.2 !important;
         margin: 0 0 16px !important;
         color: #fff !important;
-        letter-spacing: -0.04em !important;
+        letter-spacing: normal !important;
     }
     .about-hero p {
-        font-size: 1.45rem !important;
-        max-width: 700px !important;
+        font-size: 1.5rem !important;
+        max-width: 580px !important;
         margin: 0 0 28px !important;
         line-height: 1.6 !important;
         color: rgba(255,255,255,0.95) !important;
@@ -142,8 +146,8 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
     .btn-brand-orange,
     .btn-glass {
         padding: 12px 24px !important;
-        font-size: 1.05rem !important;
-        font-weight: 700 !important;
+        font-size: 1.25rem !important;
+        font-weight: 600 !important;
         border-radius: 6px !important;
         display: inline-flex !important;
         align-items: center !important;
@@ -175,12 +179,15 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
     /* ==========================================================================
        HERITAGE SECTION (PERBAIKAN TAMPILAN GAMBAR)
        ========================================================================== */
-    .heritage-section .eyebrow {
-        color: #ff7a00; text-transform: uppercase;
-        letter-spacing: 3px; font-size: 13px;
-        font-weight: 800; margin-bottom: 16px;
-        display: block;
-    }
+    #legacy .eyebrow {
+    color: #ff7a00;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    display: block;
+}
     .heritage-text-col { 
         padding-right: 50px; 
         justify-content: center;
@@ -288,6 +295,18 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
     .card-orange i { color: #fff; }
     .card-orange h3 { color: #fff !important; }
     .card-orange p { color: rgba(255,255,255,0.9); }
+    .card-orange:has(.bento-img) {
+        padding-right: 45%;
+    }
+    .card-orange .bento-img {
+        position: absolute;
+        top: 24px; bottom: 24px; right: 24px;
+        width: 38%;
+        height: calc(100% - 48px);
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    }
     
     .card-white {
         background: #fff; border: 1px solid #f0f0f0; color: #222;
@@ -310,6 +329,71 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
         border-radius: 12px;
         object-fit: cover;
         box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    }
+
+    /* ======================================================================
+       VISION & MISSION
+       ====================================================================== */
+    .vision-mission-section {
+        background: #fff8f2;
+    }
+    .vision-mission-label {
+        display: inline-block;
+        margin-bottom: 10px;
+        color: #d95f00;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+    }
+    .vision-mission-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 0 -12px;
+    }
+    .vision-mission-col {
+        width: 50%;
+        padding: 0 12px;
+        display: flex;
+    }
+    .vision-mission-card {
+        width: 100%;
+        min-height: 260px;
+        padding: 42px 36px;
+        border: 1px solid rgba(217,95,0,0.10);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 12px 28px rgba(58,57,55,0.08);
+        text-align: center;
+    }
+    .vision-mission-icon {
+        display: inline-flex;
+        width: 54px;
+        height: 54px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 22px;
+        border-radius: 12px;
+        background: #ff7a00;
+        color: #fff;
+        font-size: 23px;
+    }
+    .vision-mission-card.mission .vision-mission-icon {
+        background: #3a3937;
+    }
+    .vision-mission-card h3 {
+        margin: 0 0 14px;
+        color: #222;
+        font-size: 24px;
+        font-weight: 800;
+    }
+    .vision-mission-card p {
+        max-width: 420px;
+        margin: 0 auto;
+        color: #5e5e5e;
+        font-size: 16px;
+        line-height: 1.75;
     }
 
 /* ==========================================================================
@@ -518,8 +602,10 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
         .image-split-container { height: 400px; }
         .quote-box { right: 20px; bottom: -20px; width: 250px; }
         
-        .card-dark { padding-right: 40px; }
-        .card-dark .bento-img { display: none; }
+        .card-dark,
+        .card-orange:has(.bento-img) { padding-right: 40px; }
+        .card-dark .bento-img,
+        .card-orange .bento-img { display: none; }
         
         .bento-card { margin-bottom: 24px; }
         
@@ -532,7 +618,9 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     @media only screen and (max-width: 767px) {
         .section-padding { padding: 70px 0; }
-        .about-hero { padding: 120px 0 80px; min-height: auto; }
+        .about-hero { min-height: 400px !important; }
+        .about-hero .container-custom { padding: 40px 20px !important; }
+        .about-hero h1 { font-size: 2.1rem !important; }
         .hero-actions { flex-direction: column; width: 100%; }
         .btn-brand-orange, .btn-glass { width: 100%; }
         
@@ -541,6 +629,10 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
         .quote-box { position: static; width: 100%; margin-top: 20px; box-shadow: none; border: 1px solid #eee; border-left: 5px solid #ff7a00; }
         
         .flex-col-custom { width: 100%; }
+
+        .vision-mission-col { width: 100%; margin-bottom: 24px; }
+        .vision-mission-col:last-child { margin-bottom: 0; }
+        .vision-mission-card { min-height: 0; padding: 36px 24px; }
         
         .cta-banner { padding: 50px 20px; }
         .cta-actions .btn { width: 100%; }
@@ -569,15 +661,22 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
             
             <!-- Left Text -->
             <div class="col-md-6 col-sm-12 flex-col-custom heritage-text-col wow fadeInLeft">
-                <span class="eyebrow">WARISAN KAMI</span>
-                <h2 class="section-title">Dibangun di Atas Kepercayaan dan Keunggulan</h2>
-                <p class="section-subtitle desc">Dibangun dengan visi untuk merevolusi pengalaman berbelanja di Indonesia, Manna Kampus berawal dari usaha keluarga kecil yang berkomitmen menghadirkan produk berkualitas dengan harga yang wajar. Seiring waktu, kami tumbuh menjadi tolok ukur retail yang dihormati di Indonesia.</p>
-                <p class="section-subtitle desc">Perjalanan kami ditandai oleh pemahaman mendalam tentang kebutuhan rumah tangga Indonesia. Kami tidak hanya menjual produk, kami menciptakan ruang yang membuat keluarga merasa nyaman. Dari produk segar lokal hingga kebutuhan premium, setiap item di rak kami merupakan bukti komitmen kami terhadap kualitas.</p>
-                
+                <span class="eyebrow">Tentang Perusahaan</span>
+                <h2 class="section-title">Sejarah Manna Kampus</h2>
+                <p class="section-subtitle desc">
+                Perjalanan kami dimulai pada tahun <strong>1980</strong>, saat <strong>Bapak Siswanto Hendro Sutikno</strong> selaku pemilik sekaligus Direktur Utama mendirikan sebuah rumah makan bernama 
+                <strong>Mirota Nayan</strong> di Jl. Solo Km 8, Yogyakarta. Nama <strong>"Mirota"</strong> sendiri menyimpan akronim yang unik yaitu <strong>Mi</strong>numan, <strong>Ro</strong>ti, dan 
+                <strong>Ta</strong>rt — sebuah identitas awal yang menjadi cikal bakal tumbuh kembang usaha kami.</p>
+
+                <p class="section-subtitle desc">
+                Seiring tingginya kepercayaan pelanggan, lokasi usaha kemudian berpindah ke kawasan yang lebih strategis di Jl. Solo Km 7, Babarsari, Caturtunggal, Sleman, Yogyakarta. Di tempat baru ini, 
+                Mirota Nayan terus bertransformasi tidak hanya menyajikan aneka makanan dan minuman, tetapi juga melengkapi kebutuhan masyarakat dengan menyediakan alat tulis. Dari sinilah semangat untuk terus 
+                melayani dan berkembang menjadi <strong>"Rumah Belanja Terpercaya"</strong> mulai diukir.
+                </p>
                 <div class="stats-row">
                     <div class="stats-box">
-                        <h3>35+</h3>
-                        <p>Tahun Pengabdian</p>
+                        <h3>46+</h3>
+                        <p>Years of Service</p>
                     </div>
                     <div class="stats-box">
                         <h3>120k+</h3>
@@ -591,11 +690,11 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div style="position: relative;">
                     <div class="image-split-container">
                         <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=1974&auto=format&fit=crop" alt="Manna Kampus History">
-                        <div class="year-label year-left">1988</div>
+                        <div class="year-label year-left">1980</div>
                         <div class="year-label year-right">2026</div>
                     </div>
                     <div class="quote-box">
-                        "Berakar pada tradisi, bergerak menuju masa depan retail."
+                        "Berakar dari Tradisi, Bertumbuh Menuju Masa Depan Ritel."
                     </div>
                 </div>
             </div>
@@ -604,29 +703,58 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </section>
 
+<!-- Vision & Mission Section -->
+<section id="vision" class="section-padding vision-mission-section">
+    <div class="container container-custom">
+        <div class="text-center" style="margin-bottom: 42px;">
+            <span class="vision-mission-label wow fadeInUp">Prinsip Utama</span>
+            <h2 class="section-title wow fadeInUp" data-wow-delay="0.1s">Visi &amp; Misi</h2>
+        </div>
+
+        <div class="vision-mission-grid">
+            <div class="vision-mission-col wow fadeInUp" data-wow-delay="0.15s">
+                <article class="vision-mission-card">
+                    <div class="vision-mission-icon"><i class="fa-solid fa-compass" aria-hidden="true"></i></div>
+                    <h3>Visi Kami</h3>
+                    <p>Menjadikan Manna Kampus sebagai rumah belanja yang bernuansa kekeluargaan, dengan memberikan layanan yang ramah, cepat dan tepat, produk yang berkualitas,
+                    harga yang murah, dan fasilitas yang nyaman serta aman sehingga Manna Kampus mempunyai nilai lebih dan dapat dipercaya oleh masyarakat Yogyakarta.</p>
+                </article>
+            </div>
+            <div class="vision-mission-col wow fadeInUp" data-wow-delay="0.25s">
+                <article class="vision-mission-card mission">
+                    <div class="vision-mission-icon"><i class="fa fa-rocket" aria-hidden="true"></i></div>
+                    <h3>Misi Kami</h3>
+                    <p>Meningkatkan Kualitas Layanan secara Internal dan Eksternal untuk mencapai kepuasan konsumen.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Core Values Section (Bento Grid) -->
-<section id="vision" class="section-padding bg-light-gray">
+<section id="core-values" class="section-padding bg-light-gray">
     <div class="container container-custom">
         
         <div class="text-center" style="margin-bottom: 60px;">
-            <h2 class="section-title wow fadeInUp">Nilai-Nilai Inti Kami</h2>
-            <p class="section-subtitle wow fadeInUp" data-wow-delay="0.15s" style="max-width: 650px; margin: 0 auto;">Prinsip yang mendorong pertumbuhan kami dan membentuk identitas kami sebagai <br> Rumah Belanja Terpercaya.</p>
+            <h2 class="section-title wow fadeInUp">Core Value Manna Kampus</h2>
+            <p class="section-subtitle wow fadeInUp" data-wow-delay="0.15s" style="max-width: 650px; margin: 0 auto;">Prinsip yang mendorong pertumbuhan kami dan membentuk identitas kami sebagai Rumah Belanja Terpercaya.</p>
         </div>
 
         <!-- Row 1 -->
         <div class="flex-row-custom bento-row">
             <div class="col-md-8 col-sm-12 flex-col-custom">
                 <div class="bento-card card-orange wow fadeInUp">
-                    <i class="fa fa-eye"></i>
-                    <h3>Visi Kami</h3>
-                    <p>Menjadi destinasi retail paling dipercaya dan paling disukai di Indonesia, dengan menghadirkan nilai, kenyamanan, dan rasa kebersamaan yang bermanfaat bagi setiap rumah tangga yang kami layani.</p>
+                    <i class="fa-solid fa-heart"></i>
+                    <h3>Caring</h3>
+                    <p>Kepedulian terhadap suatu keadaan / kondisi / peristiwa yang membutuhkan tindakan yang berdasarkan empati dan kepekaan.</p>
+                    <img src="<?php echo BASE_URL; ?>assets/uploads/cheaper.jpg" class="bento-img" alt="Community">
                 </div>
             </div>
             <div class="col-md-4 col-sm-12 flex-col-custom">
                 <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.2s">
-                    <i class="fa fa-shield"></i>
-                    <h3>Integritas</h3>
-                    <p>Kejujuran dalam setiap transaksi dan transparansi dalam setiap proses adalah cara kami membangun kepercayaan selama bertahun-tahun.</p>
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <h3>Human Integrity</h3>
+                    <p>Karakter yang dimiliki dan diwujudkan oleh seluruh individu dalam bentuk konsistensi antara perkataan dan perbuatan, sikap dan perilaku.</p>
                 </div>
             </div>
         </div>
@@ -635,17 +763,52 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="flex-row-custom bento-row">
             <div class="col-md-4 col-sm-12 flex-col-custom">
                 <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.15s">
-                    <i class="fa fa-rocket"></i>
-                    <h3>Inovasi</h3>
-                    <p>Terus berkembang dengan teknologi retail dan logistik modern agar pengalaman berbelanja menjadi lebih mudah bagi keluarga Indonesia masa kini.</p>
+                    <i class="fa fa-users"></i>
+                    <h3>Ethical Communication</h3>
+                    <p>Komunikasi yang didasarkan pada sikap dan nilai tertentu (etika) seperti jujur, menghargai, dan bertanggungjawab.</p>
                 </div>
             </div>
             <div class="col-md-8 col-sm-12 flex-col-custom">
                 <div class="bento-card card-dark wow fadeInUp" data-wow-delay="0.3s">
-                    <i class="fa fa-users"></i>
-                    <h3>Prioritas Komunitas</h3>
-                    <p>Kami bukan sekadar toko, kami juga mitra komunitas. Mendukung petani lokal, pelaku UMKM, dan pengrajin adalah inti dari strategi sumber daya kami.</p>
-<img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=600&auto=format&fit=crop" class="bento-img" alt="Community">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <h3>Adaptive</h3>
+                    <p>Suatu tindakan positif sebagai respon penyesauian diri terhadap perubahan situasi (lingkungan, ekonomi, busaya, politik, kesehatan, 
+                        sosial, dan keamanan), perkembangan teknologi dan isu - isu global lainnya.</p>
+                    <img src="<?php echo BASE_URL; ?>assets/uploads/cheaper.jpg" class="bento-img" alt="Community">
+                </div>
+            </div>
+        </div>
+
+            <!-- Row 3 -->
+        <div class="flex-row-custom bento-row">
+            <div class="col-md-8 col-sm-12 flex-col-custom">
+                <div class="bento-card card-orange wow fadeInUp">
+                    <i class="fa fa-eye"></i>
+                    <h3>Profesional</h3>
+                    <p>Menjalankan tugas dengan mengerahkan semua kompetensi (softskill dan hardskill) yang dimiliki. Bertahan terhadap situasi yang tidak sesuai 
+                        harapan, dan mampu bangkit kembali (resilien)
+                    </p>
+                    <img src="<?php echo BASE_URL; ?>assets/uploads/cheaper.jpg" class="bento-img" alt="Community">
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 flex-col-custom">
+                <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.2s">
+                    <i class="fa-solid fa-award"></i>
+                    <h3>Excellent Service</h3>
+                    <p>Upaya memberikan layanan terbaik yangberorientasi pada kepuasan konsumen (internal dan eksternal).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="flex-row-custom bento-row">
+            <div class="col-md-12 col-sm-12 flex-col-custom">
+                <div class="bento-card card-white wow fadeInUp" data-wow-delay="0.15s">
+                    <i class="fa-solid fa-arrow-trend-up""></i>
+                    <h3>Reputable & Profitability</h3>
+                    <p>Suatu upaya yang dilakukan secara berkesinambungan oleh perusahaan untuk menciptakan pandangan positif masyarakat
+                        atau stakeholder sehingga dapat mewujudkan pertumbuhan usaha dan laba yang optimal.
+                    </p>
                 </div>
             </div>
         </div>
@@ -712,8 +875,8 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
         
         <div class="journey-header">
             <div>
-                <h2 class="section-title wow fadeInUp">Perjalanan Pertumbuhan</h2>
-                <p class="section-subtitle mb-0 wow fadeInUp" data-wow-delay="0.15s" style="white-space: nowrap; font-size: 18px;">Tonggak-tonggak penting yang membentuk perjalanan kami sejak 1989 hingga kini.</p>
+                <h2 class="section-title wow fadeInUp">Perjalanan Kami</h2>
+                <p class="section-subtitle mb-0 wow fadeInUp" data-wow-delay="0.15s">Momen dan pencapaian penting yang membentuk kami dari tahun 1980 hingga saat ini.</p>
             </div>
             <div class="journey-nav hidden-xs">
                 <button type="button" class="journey-scroll-btn journey-scroll-prev" aria-label="Gulir kiri"><i class="fa fa-angle-left"></i></button>
@@ -721,55 +884,63 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="journey-slider" id="journeySlider">
-            <div class="journey-track flex-row-custom">
-                <?php if (!empty($about_growth_news)) : ?>
-                    <?php foreach ($about_growth_news as $index => $news_item) : ?>
-                        <?php
-                        $milestone_year = '';
-                        $milestone_date = trim((string)$news_item['news_date']);
-                        if (!empty($milestone_date)) {
-                            $date_obj = DateTime::createFromFormat('d-m-Y', $milestone_date);
-                            if ($date_obj !== false) {
-                                $milestone_year = $date_obj->format('Y');
-                            } else {
-                                $milestone_year = $milestone_date;
-                            }
-                        }
-                        $default_photo = !empty($news_item['photo']) ? 'assets/uploads/' . $news_item['photo'] : 'assets/uploads/default.jpg';
-                        $branch_image = 'assets/uploads/mk' . ($index + 1) . '.png';
-                        if (file_exists(__DIR__ . '/' . $branch_image)) {
-                            $milestone_photo = $branch_image;
-                        } else {
-                            $milestone_photo = $default_photo;
-                        }
-                        $milestone_title = trim((string)$news_item['news_title']);
-                        $milestone_excerpt = trim(strip_tags((string)$news_item['news_content_short']));
-                        if ($milestone_excerpt === '') {
-                            $milestone_excerpt = 'Lihat berita selengkapnya untuk detail lebih lanjut.';
-                        }
-                        ?>
-
-                        <div class="col-md-3 col-sm-6 flex-col-custom milestone-col wow fadeInUp" data-wow-delay="<?php echo $index * 0.15; ?>s">
-                            <div class="milestone-card">
-                                <div class="milestone-year-label"><span><?php echo htmlspecialchars($milestone_year); ?></span></div>
-                                <a class="milestone-link" href="news.php?slug=<?php echo urlencode($news_item['news_slug']); ?>">
-                                    <div class="milestone-img-wrap">
-                                        <img src="<?php echo htmlspecialchars($milestone_photo); ?>" alt="<?php echo htmlspecialchars($milestone_title); ?>">
-                                    </div>
-                                    <div class="milestone-body">
-                                        <h4><?php echo htmlspecialchars($milestone_title); ?></h4>
-                                        <p><?php echo htmlspecialchars($milestone_excerpt); ?></p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <div class="col-md-12 text-center" style="padding-top:20px; color:#666;">
-                        Data milestone belum tersedia.
+        <div class="flex-row-custom">
+            <!-- Item 1 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom milestone-col wow fadeInUp">
+                <div class="milestone-card">
+                    <div class="milestone-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=600&auto=format&fit=crop" alt="1989">
+                        <span class="milestone-year-badge">1980</span>
                     </div>
-                <?php endif; ?>
+                    <div class="milestone-body">
+                        <h4>Awal Mula Pendirian</h4>
+                        <p>Pada tahun <strong>1980</strong>, <strong>Bapak Siswanto Hendro Sutikno</strong> mendirikan rumah makan <strong>Mirota Nayan</strong> di Jl. Solo Km 8, Yogyakarta. 
+                            Usaha ini kemudian berpindah ke Jl. Solo Km 7 Babarsari dan merambah penjualan makanan, minuman, serta alat tulis.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom milestone-col wow fadeInUp" data-wow-delay="0.15s">
+                <div class="milestone-card">
+                    <div class="milestone-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=600&auto=format&fit=crop" alt="1998">
+                        <span class="milestone-year-badge">1983</span>
+                    </div>
+                    <div class="milestone-body">
+                        <h4>Pengesahan Badan Hukum</h4>
+                        <p>Langkah profesional dimulai pada tahun <strong>1983</strong> dengan disahkannya badan hukum <strong>"PT. Mirota Nayan"</strong> oleh Notaris RM. Soeryanto 
+                            Partaningrat, SH, yang dipimpin oleh <strong>Bapak Siswanto HS</strong> sebagai Direktur Utama dan <strong>Bapak Nico Sukandar</strong> sebagai General Manager.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom milestone-col wow fadeInUp" data-wow-delay="0.3s">
+                <div class="milestone-card">
+                    <div class="milestone-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=600&auto=format&fit=crop" alt="2012">
+                        <span class="milestone-year-badge">1985</span>
+                    </div>
+                    <div class="milestone-body">
+                        <h4>Kiprah Awal Mirota Kampus</h4>
+                        <p>Pada <strong>13 Mei 1985</strong>, PT. Mirota Nayan membuka toko buku dan alat tulis di Jl. C. Simanjuntak No. 64C dengan nama Mirota Kampus. 
+                            Nama <strong>"Mirota"</strong> merupakan akronim <strong>Mi</strong>numan, <strong>Ro</strong>ti, dan <strong>Ta</strong>rt, sedangkan "Kampus" dipilih karena lokasinya yang berdekatan dengan UGM. 
+                            Tanggal ini pun resmi menjadi momen berdirinya Mirota Kampus.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Item 4 -->
+            <div class="col-md-3 col-sm-6 flex-col-custom milestone-col wow fadeInUp" data-wow-delay="0.45s">
+                <div class="milestone-card">
+                    <div class="milestone-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1601599561096-f87c95fff1e9?q=80&w=600&auto=format&fit=crop" alt="Present">
+                        <span class="milestone-year-badge">2021 - Present</span>
+                    </div>
+                    <div class="milestone-body">
+                        <h4>Era Baru Manna Kampus</h4>
+                        <p>Mirota Kampus resmi bertransformasi menjadi <strong>Manna Kampus</strong> sebagai bentuk semangat inovasi dan peningkatan kualitas layanan. Hingga saat ini, 
+                            Manna Kampus terus berkembang dengan <strong>10 outlet</strong> di Yogyakarta, Sleman, dan Bantul sebagai <strong>"Rumah Belanja Terpercaya"</strong>.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -810,6 +981,25 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
             target.src = fallback;
         }
     }, true);
+
+    var heroSectionLinks = document.querySelectorAll('.hero-actions a[href^="#"]');
+    for (var linkIndex = 0; linkIndex < heroSectionLinks.length; linkIndex++) {
+        heroSectionLinks[linkIndex].addEventListener('click', function (event) {
+            var target = document.querySelector(this.getAttribute('href'));
+            if (!target) return;
+
+            event.preventDefault();
+            var header = document.querySelector('.mk-header');
+            var headerHeight = header ? header.offsetHeight : 0;
+            var targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            window.history.replaceState(null, '', this.getAttribute('href'));
+        });
+    }
 
     var journeySlider = document.getElementById('journeySlider');
     if (journeySlider) {

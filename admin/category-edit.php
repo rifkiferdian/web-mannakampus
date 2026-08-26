@@ -1,5 +1,28 @@
 <?php require_once('header.php'); ?>
 
+<style>
+.no-plus-icon::before {
+    display: none !important;
+}
+
+.no-plus-icon {
+    text-align: center;
+}
+
+.content-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.content-header h1{
+    margin: 0;
+}
+.content-header-right{
+    margin-left: auto; /* jaga-jaga kalau parent belum flex */
+}
+</style>
+
 <?php
 if(isset($_POST['form1'])) {
 	$valid = 1;
@@ -49,7 +72,9 @@ if(isset($_POST['form1'])) {
 		$statement = $pdo->prepare("UPDATE tbl_category SET category_name=?, category_slug=?, meta_title=?, meta_keyword=?, meta_description=? WHERE category_id=?");
 		$statement->execute(array($_POST['category_name'],$category_slug,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
 
-    	$success_message = 'Category is updated successfully.';
+	$_SESSION['success_message'] = 'Category is updated successfully.';
+	header('Location: category.php');
+	exit;
     }
 }
 ?>
@@ -75,9 +100,7 @@ if(!isset($_REQUEST['id'])) {
 	<div class="content-header-left">
 		<h1>Edit Category</h1>
 	</div>
-	<div class="content-header-right">
-		<a href="category.php" class="btn btn-primary btn-sm">View All</a>
-	</div>
+		<a href="category.php" class="btn btn-primary btn-sm no-plus-icon"><i class="fa fa-arrow-left" style="text-align: center;"></i> View All</a>
 </section>
 
 

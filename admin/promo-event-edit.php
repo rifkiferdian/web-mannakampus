@@ -1,6 +1,29 @@
 <?php require_once('header.php'); ?>
 <?php require_once('promo-event-utils.php'); ?>
 
+<style>
+.no-plus-icon::before {
+    display: none !important;
+}
+
+.no-plus-icon {
+    text-align: center;
+}
+
+.content-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.content-header h1{
+    margin: 0;
+}
+.content-header-right{
+    margin-left: auto;
+}
+</style>
+
 <?php
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $statement = $pdo->prepare("SELECT * FROM tbl_promo_event WHERE id=?");
@@ -102,7 +125,8 @@ if(isset($_POST['form1'])) {
 				}
 			}
 
-			header('location: promo-event.php?updated=1');
+			$_SESSION['success_message'] = 'Promo atau event berhasil diperbarui.';
+			header('Location: promo-event.php');
 			exit;
 		}
 	}
@@ -111,7 +135,7 @@ if(isset($_POST['form1'])) {
 
 <section class="content-header">
 	<div class="content-header-left"><h1>Edit Promo &amp; Event Utama</h1></div>
-	<div class="content-header-right"><a href="promo-event.php" class="btn btn-primary btn-sm">Lihat Semua</a></div>
+		<a href="promo-event.php" class="btn btn-primary btn-sm no-plus-icon"><i class="fa fa-arrow-left" style="text-align: center;"></i> View All</a>
 </section>
 
 <?php require_once('promo-event-form.php'); ?>

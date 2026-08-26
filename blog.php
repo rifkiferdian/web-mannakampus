@@ -9,14 +9,17 @@ function format_tanggal_indo($date) {
 	return date('d', $ts).' '.$bulan[(int)date('n', $ts)].' '.date('Y', $ts);
 }
 
-// Palet warna badge kategori, berputar berdasarkan category_id
-$category_palette = array('#E8792E', '#5C8C5E', '#D9663F', '#5A4634', '#3E7C8C');
-
 $keyword  = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $cat_slug = isset($_GET['cat']) ? trim($_GET['cat']) : '';
 
 // Ambil daftar kategori untuk pill filter
 $categories = $pdo->query("SELECT category_id, category_name, category_slug FROM tbl_category ORDER BY category_name ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+$category_palette = array('#E87817', '#D45745', '#2B4C6F', '#5A8247', '#388697', '#B5653D', '#805A75', '#63707E');
+$category_colors = array();
+foreach ($categories as $index => $category) {
+	$category_colors[$category['category_id']] = $category_palette[$index % count($category_palette)];
+}
 
 $where  = "";
 $params = array();
@@ -131,7 +134,7 @@ function mk_page_url($p, $keyword, $cat_slug) {
 <section class="mk-blog-hero">
 	<div class="container">
 		<h1 class="mk-blog-hero-title">Jendela Informasi &amp; <span>Tips Belanja Manna Kampus</span></h1>
-		<p class="mk-blog-hero-sub">Temukan tips belanja cerdas, inspirasi hidup sehat, dan update terbaru dari<br> Rumah Belanja Terpercaya Anda.</p
+		<p class="mk-blog-hero-sub">Temukan tips belanja cerdas, inspirasi hidup sehat, dan update terbaru dari<br> Rumah Belanja Terpercaya Anda.</p>
 	</div>
 </section>
 <!-- Hero End -->
@@ -146,7 +149,7 @@ function mk_page_url($p, $keyword, $cat_slug) {
 					<?php if ($news_list): ?>
 						<?php foreach ($news_list as $news): ?>
 						<?php
-						$badge_color = $category_palette[$news['category_id'] % count($category_palette)];
+						$badge_color = isset($category_colors[$news['category_id']]) ? $category_colors[$news['category_id']] : '#E8792E';
 						$excerpt = strip_tags($news['news_content']);
 						$excerpt = mb_strlen($excerpt) > 130 ? mb_substr($excerpt, 0, 130).'...' : $excerpt;
 						?>

@@ -334,6 +334,23 @@ select {
 	border-left-color: #ff7a00 !important;
 }
 
+/* Tandai submenu yang sedang dibuka agar mudah dibedakan dari submenu lain. */
+.skin-yellow .treeview-menu>li.active>a {
+	color: #fff !important;
+	background-color: rgba(255, 122, 0, 0.18);
+	border-left: 3px solid #ff7a00;
+}
+
+/* Area scroll sidebar dimulai tepat di bawah header, sehingga submenu tidak terpotong. */
+@media (min-width: 768px) {
+	.fixed .main-sidebar {
+		top: 50px;
+		bottom: 0;
+		height: auto;
+		padding-top: 0;
+	}
+}
+
 .nav-tabs-custom>.nav-tabs>li.active,
 .box.box-info {
 	border-top-color: #ff7a00 !important;

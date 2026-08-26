@@ -237,14 +237,14 @@
 
             <div class="mk-app-badges">
                 <a href="#" class="mk-app-store-badge">
-                    <span class="mk-app-store-badge-icon"><i class="fa fa-apple"></i></span>
+                    <span class="mk-app-store-badge-icon"><i class="fab fa-apple"></i></span>
                     <span class="mk-app-store-badge-text">
                         <span class="mk-app-store-badge-eyebrow">Download on the</span>
                         <span class="mk-app-store-badge-main">App Store</span>
                     </span>
                 </a>
                 <a href="#" class="mk-app-store-badge">
-                    <span class="mk-app-store-badge-icon"><i class="fa fa-google-play"></i></span>
+                    <span class="mk-app-store-badge-icon"><i class="fab fa-google-play"></i></span>
                     <span class="mk-app-store-badge-text">
                         <span class="mk-app-store-badge-eyebrow">GET IT ON</span>
                         <span class="mk-app-store-badge-main">Google Play</span>

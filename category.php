@@ -32,33 +32,47 @@ foreach ($result as $row)
 }
 ?>
 
-<?php
-$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-$statement->execute();
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-foreach ($result as $row) {
-    $banner_category = $row['banner_category'];
+<style>
+/* Hero kategori menggunakan CSS yang sama dengan hero blog.php. */
+.mk-blog-hero{ background:#F7F5F1; padding:90px 24px 91px; text-align:center; }
+.mk-blog-hero-title{ font-size:3.25rem; font-weight:800; color:#2E2620; margin:0 0 14px; }
+.mk-blog-hero-title span{ color:#E8792E; }
+.mk-blog-hero-sub{ font-size:1.5rem; color:#7A6F63; max-width:640px; margin:0 auto 28px; line-height:1.6; }
+
+.mk-category-list .container {
+	max-width: 1240px;
+	margin: 0 auto;
+	padding: 48px 32px;
 }
-?>	
+
+.mk-category-list .post-item .image-holder {
+	border-radius: 14px;
+	overflow: hidden;
+}
+
+@media (max-width: 576px) {
+	.mk-category-list .container {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.mk-blog-hero-title {
+		font-size: 1.6rem;
+	}
+}
+</style>
 
 <!-- Banner Start -->
-<div class="page-banner" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/<?php echo $banner_category; ?>);">
-	<div class="overlay"></div>
+<section class="mk-blog-hero">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="banner-text">
-					<h1>Category: <?php echo $category_name; ?></h1>
-				</div>
-			</div>
-		</div>
+		<h1 class="mk-blog-hero-title">Artikel Kategori <span><?php echo $category_name; ?></span></h1>
+		<p class="mk-blog-hero-sub">Temukan informasi dan tips pilihan dari kategori ini.</p>
 	</div>
-</div>
-<!-- Banner End -->
-
+</section>
+<!-- Hero End -->
 
 <!-- Blog Start -->
-<section class="blog">
+<section class="blog mk-category-list">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-9">

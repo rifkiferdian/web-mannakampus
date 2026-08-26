@@ -639,6 +639,81 @@ if($cur_page == 'blog.php')
 			gap: 26px!important;
 			flex: 1!important;
 		}
+		.mk-nav-group {
+			position: relative!important;
+		}
+		.mk-nav-group.active summary {
+			color: #b95a00!important;
+		}
+		.mk-nav-group.active summary:before {
+			content: ""!important;
+			position: absolute!important;
+			left: 0!important;
+			right: 0!important;
+			bottom: 20px!important;
+			height: 2px!important;
+			background: #ff7a00!important;
+		}
+		.mk-nav-group summary {
+			position: relative!important;
+			display: flex!important;
+			align-items: center!important;
+			gap: 6px!important;
+			height: 72px!important;
+			color: #1f2933!important;
+			font-family: "Open Sans", sans-serif!important;
+			font-size: 14px!important;
+			font-weight: 700!important;
+			font-style: normal!important;
+			letter-spacing: normal!important;
+			line-height: 72px!important;
+			cursor: pointer!important;
+			list-style: none!important;
+			white-space: nowrap!important;
+		}
+		.mk-nav-group summary::-webkit-details-marker {
+			display: none!important;
+		}
+		.mk-nav-group summary:after {
+			content: "\f107"!important;
+			font-family: FontAwesome!important;
+			font-size: 11px!important;
+		}
+		.mk-nav-group summary:hover {
+			color: #b95a00!important;
+		}
+		.mk-nav-submenu {
+			position: absolute!important;
+			top: 62px!important;
+			left: 50%!important;
+			display: flex!important;
+			width: 210px!important;
+			padding: 8px 0!important;
+			flex-direction: column!important;
+			transform: translateX(-50%)!important;
+			border-top: 2px solid #ff7a00!important;
+			border-radius: 0 0 8px 8px!important;
+			background: #fff!important;
+			box-shadow: 0 12px 25px rgba(15,23,42,0.16)!important;
+		}
+		.mk-nav .mk-nav-submenu a,
+		.mk-nav .mk-nav-submenu a:hover,
+		.mk-nav .mk-nav-submenu a:focus {
+			display: block!important;
+			padding: 10px 16px!important;
+			color: #1f2933!important;
+			font-size: 13px!important;
+			line-height: 1.35!important;
+			white-space: normal!important;
+		}
+		.mk-nav .mk-nav-submenu a:hover,
+		.mk-nav .mk-nav-submenu a.active {
+			background: #fff7ef!important;
+			color: #b95a00!important;
+		}
+		.mk-nav .mk-nav-submenu a:after {
+			display: none!important;
+		}
 		.mk-nav a,
 		.mk-nav a:hover,
 		.mk-nav a:focus {
@@ -1005,6 +1080,43 @@ if($cur_page == 'blog.php')
 				border-radius: 3px!important;
 				background: #ff7a00!important;
 			}
+			.mk-mobile-nav .mk-mobile-nav-group {
+				border-bottom: 1px solid rgba(15,23,42,0.07)!important;
+			}
+			.mk-mobile-nav .mk-mobile-nav-group summary {
+				display: flex!important;
+				min-height: 48px!important;
+				align-items: center!important;
+				justify-content: space-between!important;
+				padding: 0 8px!important;
+				color: #1f2933!important;
+				font-family: "Open Sans", sans-serif!important;
+				font-size: 14px!important;
+				font-weight: 700!important;
+				font-style: normal!important;
+				cursor: pointer!important;
+				list-style: none!important;
+			}
+			.mk-mobile-nav .mk-mobile-nav-group.active summary {
+				color: #b95a00!important;
+			}
+			.mk-mobile-nav .mk-mobile-nav-group summary::-webkit-details-marker {
+				display: none!important;
+			}
+			.mk-mobile-nav .mk-mobile-nav-group summary:after {
+				content: "\f107"!important;
+				font-family: FontAwesome!important;
+				font-size: 12px!important;
+			}
+			.mk-mobile-nav .mk-mobile-nav-group[open] summary:after {
+				content: "\f106"!important;
+			}
+			.mk-mobile-nav .mk-mobile-nav-group a {
+				min-height: 40px!important;
+				padding-left: 24px!important;
+				border-bottom: 0!important;
+				line-height: 40px!important;
+			}
 			.mk-hero,
 			.mk-hero .container {
 				min-height: 520px!important;
@@ -1206,6 +1318,11 @@ foreach ($result as $row)
 
         <?php
   			$current_page = basename($_SERVER['PHP_SELF']);
+			$is_about_menu = in_array($current_page, array('about-us.php', 'kemitraan.php', 'career.php', 'social.php', 'contact-us.php'));
+			$is_blbms_menu = in_array($current_page, array('klaim-hadiah.php', 'reward.php', 'winners.php', 'archive-all.php'));
+			$is_shopping_menu = in_array($current_page, array('belanja-online.php', 'lokasi-outlet.php', 'explor.php'));
+			$is_membership_menu = in_array($current_page, array('member.php', 'community.php'));
+			$is_promo_menu = in_array($current_page, array('promo.php', 'blog.php', 'news.php'));
 		?>
 		<!-- Header Start -->
 		<header class="mk-header">
@@ -1214,34 +1331,58 @@ foreach ($result as $row)
 					<a href="<?php echo BASE_URL; ?>" class="mk-brand"><img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus"></a>
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
 						<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
-						<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-						<a href="promo.php"class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo</a>
-						<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
-						<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
-						<a href="coba.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
-						<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
-						<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
-						<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
-						<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
-						<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Kami</a>
-						<a href="contact-us.php"class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
+						<details class="mk-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>">
+							<summary>About Us</summary>
+							<div class="mk-nav-submenu">
+								<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
+								<a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
+								<a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
+								<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social Activities</a>
+								<a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
+							</div>
+						</details>
+						<details class="mk-nav-group<?php echo $is_blbms_menu ? ' active' : ''; ?>">
+							<summary>BLBMS Program</summary>
+							<div class="mk-nav-submenu">
+								<a href="reward.php" class="<?php echo ($current_page == 'reward.php') ? 'active' : ''; ?>">Reward</a>
+								<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Claim Reward</a>
+								<a href="winners.php" class="<?php echo ($current_page == 'winners.php') ? 'active' : ''; ?>">Winners</a>
+
+								
+							</div>
+						</details>
+						<details class="mk-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>">
+							<summary>Shopping</summary>
+							<div class="mk-nav-submenu">
+								<a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Shop Online</a>
+								<a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Store Location</a>
+							</div>
+						</details>
+						<details class="mk-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>">
+							<summary>Membership &amp; Community</summary>
+							<div class="mk-nav-submenu">
+								<a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Membership</a>
+								<a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community Hub</a>
+							</div>
+						</details>
+						<details class="mk-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>">
+							<summary>Promo &amp; News</summary>
+							<div class="mk-nav-submenu">
+								<a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Latest Promos</a>
+								<a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Articles</a>
+							</div>
+						</details>
 					</nav>
 
 					<details class="mk-mobile-menu">
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
 							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
-							<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-							<a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo</a>
-							<a href="blog.php"class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog</a>
-							<a href="kemitraan.php"class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
-							<a href="career.php"class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
-							<a href="social.php"class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social</a>
-							<a href="klaim-hadiah.php"class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
-							<a href="belanja-online.php"class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a>
-							<a href="community.php"class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community</a>
-							<a href="lokasi-outlet.php"class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Kami</a>
-							<a href="contact-us.php"class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
+							<details class="mk-mobile-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>"<?php echo $is_about_menu ? ' open' : ''; ?>><summary>About Us</summary><a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a><a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a><a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a><a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social Activities</a><a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_blbms_menu ? ' active' : ''; ?>"<?php echo $is_blbms_menu ? ' open' : ''; ?>><summary>BLBMS Program</summary><a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Claim Reward</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>"<?php echo $is_shopping_menu ? ' open' : ''; ?>><summary>Shopping</summary><a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Shop Online</a><a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Store Location</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>"<?php echo $is_membership_menu ? ' open' : ''; ?>><summary>Membership &amp; Community</summary><a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Membership</a><a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community Hub</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>"<?php echo $is_promo_menu ? ' open' : ''; ?>><summary>Promo &amp; News</summary><a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Latest Promos</a><a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Articles</a></details>
 						</nav>
 					</details>
 				</div>
@@ -1250,6 +1391,23 @@ foreach ($result as $row)
 		<script>
 		(function() {
 			var dropdownMenus = document.querySelectorAll('.mk-topbar-menu.has-dropdown');
+			var navGroups = document.querySelectorAll('.mk-nav-desktop .mk-nav-group');
+
+			for (var navIndex = 0; navIndex < navGroups.length; navIndex++) {
+				(function(navGroup) {
+					navGroup.addEventListener('toggle', function() {
+						if (!navGroup.open) {
+							return;
+						}
+
+						for (var otherIndex = 0; otherIndex < navGroups.length; otherIndex++) {
+							if (navGroups[otherIndex] !== navGroup) {
+								navGroups[otherIndex].removeAttribute('open');
+							}
+						}
+					});
+				})(navGroups[navIndex]);
+			}
 
 			function closeTopbarDropdowns(exceptMenu) {
 				for (var i = 0; i < dropdownMenus.length; i++) {

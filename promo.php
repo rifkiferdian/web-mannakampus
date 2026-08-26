@@ -190,7 +190,7 @@ body.mk-no-scroll {
             <p class="mk-shop-hero-desc">Dapatkan penawaran terbaik minggu ini hanya di Manna Kampus Rumah Belanja Terpercaya. Dari produk segar hingga kebutuhan rumah tangga, semuanya dengan harga istimewa.</p>
             <div class="mk-shop-hero-actions">
                 <a href="#" class="mk-shop-hero-btn-primary"> Lihat Katalog </a>
-                <a href="#" class="mk-shop-hero-btn-outline"> Member Deals </a>
+                <a href="member.php" class="mk-shop-hero-btn-outline"> Member Deals </a>
             </div>
         </div>
 
