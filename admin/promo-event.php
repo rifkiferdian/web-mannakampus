@@ -24,7 +24,7 @@
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th>SL</th>
+								<th>No</th>
 								<th>Gambar</th>
 								<th>Judul</th>
 								<th>Tipe</th>

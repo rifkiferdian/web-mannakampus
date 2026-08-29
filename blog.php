@@ -165,7 +165,7 @@ function mk_page_url($p, $keyword, $cat_slug) {
 									</a>
 								</h3>
 								<p class="mk-news-card-excerpt"><?php echo htmlspecialchars($excerpt, ENT_QUOTES, 'UTF-8'); ?></p>
-								<a class="mk-news-card-more" href="<?php echo htmlspecialchars(BASE_URL.'news.php?slug='.$news['news_slug'], ENT_QUOTES, 'UTF-8'); ?>">Read More &rarr;</a>
+								<a class="mk-news-card-more" href="<?php echo htmlspecialchars(BASE_URL.'news.php?slug='.$news['news_slug'], ENT_QUOTES, 'UTF-8'); ?>">Baca Selengkapnya &rarr;</a>
 							</div>
 						</article>
 						<?php endforeach; ?>

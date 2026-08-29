@@ -140,35 +140,35 @@
 	<div class="mk-connect-grid">
 
 		<div class="mk-connect-card">
-			<div class="mk-connect-icon instagram"><i class="fa fa-instagram"></i></div>
+			<div class="mk-connect-icon instagram"><i class="fab fa-instagram"></i></div>
 			<p class="mk-connect-name">Instagram</p>
 			<p class="mk-connect-handle">@mannakampus</p>
 			<a href="#" class="mk-connect-follow instagram">Follow</a>
 		</div>
 
 		<div class="mk-connect-card">
-			<div class="mk-connect-icon facebook"><i class="fa fa-facebook"></i></div>
+			<div class="mk-connect-icon facebook"><i class="fab fa-facebook"></i></div>
 			<p class="mk-connect-name">Facebook</p>
 			<p class="mk-connect-handle">@mannakampus</p>
 			<a href="#" class="mk-connect-follow facebook">Follow</a>
 		</div>
 
 		<div class="mk-connect-card">
-			<div class="mk-connect-icon twitter"><i class="fa fa-twitter"></i></div>
+			<div class="mk-connect-icon twitter"><i class="fab fa-twitter"></i></div>
 			<p class="mk-connect-name">X (Twitter)</p>
 			<p class="mk-connect-handle">@mannakampus</p>
 			<a href="#" class="mk-connect-follow twitter">Follow</a>
 		</div>
 
 		<div class="mk-connect-card">
-			<div class="mk-connect-icon youtube"><i class="fa fa-youtube-play"></i></div>
+			<div class="mk-connect-icon youtube"><i class="fab fa-youtube-play"></i></div>
 			<p class="mk-connect-name">YouTube</p>
 			<p class="mk-connect-handle">@mannakampus</p>
 			<a href="#" class="mk-connect-follow youtube">Follow</a>
 		</div>
 
 		<div class="mk-connect-card">
-			<div class="mk-connect-icon tiktok"><i class="fa fa-music"></i></div>
+			<div class="mk-connect-icon tiktok"><i class="fab fa-tiktok"></i></div>
 			<p class="mk-connect-name">TikTok</p>
 			<p class="mk-connect-handle">@mannakampus</p>
 			<a href="#" class="mk-connect-follow tiktok">Follow</a>

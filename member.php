@@ -71,9 +71,6 @@
 
 @media (max-width: 768px) { .mb-event-card { grid-template-columns: 1fr; padding: 16px; } .mb-event-content { padding: 8px 4px 4px; } }
 
-@media (max-width: 992px) { .mk-why-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px) { .mk-why-grid { grid-template-columns: 1fr; } .mk-why-section { padding: 50px 20px; } .mk-why-title { font-size: 1.75rem; } }
-
 /* Member page card styles (kept if used elsewhere) */
 .mb-cards-wrap { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px; }
 .mb-card { background: #ffffff; border-radius: 12px; padding: 28px 22px; box-shadow: 0 6px 18px rgba(0,0,0,0.04); text-align: center; }
@@ -130,6 +127,63 @@
     padding: 0 !important;
     border: none !important;
     text-shadow: none !important;
+}
+/* =========================================
+   MOBILE - CARA BERGABUNG
+   ========================================= */
+
+@media (max-width: 992px) {
+    .mk-why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+
+    .mk-why-section {
+        padding: 50px 16px;
+    }
+
+    .mk-why-title {
+        font-size: 1.75rem;
+        line-height: 1.25;
+        margin-bottom: 12px;
+    }
+
+    .mk-why-divider {
+        margin-bottom: 30px;
+    }
+
+    /* Card menjadi 1 kolom */
+    .mk-why-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* Card dibuat lebih lebar dan lega */
+    .mk-why-card {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 24px 22px;
+        border-radius: 12px;
+    }
+
+    .mk-step-badge {
+        font-size: 0.95rem;
+        padding: 6px 12px;
+        margin-bottom: 12px;
+    }
+
+    .mk-why-card-title {
+        font-size: 1.15rem;
+        line-height: 1.3;
+        margin-bottom: 8px;
+    }
+
+    .mk-why-card-desc {
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
 }
 </style>
 

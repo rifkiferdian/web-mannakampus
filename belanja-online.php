@@ -117,7 +117,7 @@
             <p class="mk-shop-hero-desc">Nikmati pengalaman belanja kebutuhan harian tanpa keluar rumah. Segar, lengkap, dan diantar langsung ke depan pintu Anda.</p>
             <div class="mk-shop-hero-actions">
                 <a href="#" class="mk-shop-hero-btn-primary">Masuk Toko Digital <i class="fa fa-arrow-right"></i></a>
-                <a href="#" class="mk-shop-hero-btn-outline">Lihat Promo</a>
+                <a href="promo.php" class="mk-shop-hero-btn-outline">Lihat Promo</a>
             </div>
         </div>
 
@@ -143,15 +143,14 @@
                 <h2 class="mk-category-title">Kategori Belanja</h2>
                 <p class="mk-category-sub">Temukan kebutuhan Anda berdasarkan kategori terlengkap</p>
             </div>
-            <a href="#" class="mk-category-link">Lihat Semua Kategori <i class="fa fa-arrow-right"></i></a>
-        </div>
+<a href="<?php echo BASE_URL; ?>explor.php?id=<?php echo $default_cabang['id'] ?? ''; ?>" class="mk-category-link">Lihat Semua Kategori <i class="fa fa-arrow-right"></i></a>        </div>
 
         <div class="mk-category-grid">
             <!-- Main: Fresh Produce -->
             <div class="mk-category-main">
                 <img src="<?php echo BASE_URL; ?>assets/uploads/kategori-belanja1.png" alt="Fresh Produce">
                 <div class="mk-category-overlay">
-                    <p class="mk-category-overlay-title">Fresh Produce</p>
+                    <p class="mk-category-overlay-title">Produk Segar</p>
                     <p class="mk-category-overlay-desc">Sayur & buah segar setiap hari dari petani lokal.</p>
                 </div>
             </div>
@@ -161,7 +160,7 @@
                 <div class="mk-category-side-top">
                     <img src="<?php echo BASE_URL; ?>assets/uploads/kategori-belanja2.png" alt="Grocery & Pantry">
                     <div class="mk-category-overlay">
-                        <p class="mk-category-overlay-title">Grocery & Pantry</p>
+                        <p class="mk-category-overlay-title">Bahan Makanan & Kebutuhan Dapur</p>
                         <p class="mk-category-overlay-desc">Kebutuhan dapur lengkap dalam satu tempat.</p>
                     </div>
                 </div>
@@ -171,13 +170,13 @@
                     <div>
                         <img src="<?php echo BASE_URL; ?>assets/uploads/kategori-belanja.png" alt="Home Care">
                         <div class="mk-category-overlay">
-                            <p class="mk-category-overlay-title">Home Care</p>
+                            <p class="mk-category-overlay-title">Perawatan di Rumah</p>
                         </div>
                     </div>
                     <div>
                         <img src="<?php echo BASE_URL; ?>assets/uploads/kategori-belanja4.png" alt="Personal Care">
                         <div class="mk-category-overlay">
-                            <p class="mk-category-overlay-title">Personal Care</p>
+                            <p class="mk-category-overlay-title">Perawatan Diri</p>
                         </div>
                     </div>
                 </div>

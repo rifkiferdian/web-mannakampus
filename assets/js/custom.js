@@ -67,6 +67,49 @@
             $(this).find('.promo-event-current').text(('0' + nextIndex).slice(-2));
         });
 
+        $('#promo-event-carousel').on('slide.bs.carousel', function(event) {
+    var nextIndex = $(event.relatedTarget).index() + 1;
+    $(this).find('.promo-event-current').text(('0' + nextIndex).slice(-2));
+});
+
+(function () {
+    var $carousel = $('#promo-event-carousel');
+    if (!$carousel.length) return;
+
+    var startX = 0, isDragging = false, threshold = 50;
+
+    function dragStart(e) {
+	if (e.type === 'mousedown') {
+		e.preventDefault(); // <-- INI YANG BARU, mencegah native image-drag browser
+	}
+	isDragging = true;
+	startX = (e.type === 'touchstart') ? e.originalEvent.touches[0].clientX : e.clientX;
+	$carousel.carousel('pause');
+}
+
+    function dragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        var endX = (e.type === 'touchend') ? e.originalEvent.changedTouches[0].clientX : e.clientX;
+        var diff = endX - startX;
+
+        if (Math.abs(diff) > threshold) {
+            diff < 0 ? $carousel.carousel('next') : $carousel.carousel('prev');
+        }
+        $carousel.carousel('cycle');
+    }
+
+    $carousel.on('touchstart mousedown', '.promo-event-visual', dragStart);
+    $carousel.on('touchend mouseup mouseleave', '.promo-event-visual', dragEnd);
+
+    $carousel.on('click', '.promo-event-visual', function (e) {
+        if (Math.abs(e.clientX - startX) > threshold) {
+            e.preventDefault();
+        }
+    });
+})();
+
+
         // Carousel - Atorney
         $('.team-member-carousel').owlCarousel({
             loop: true,
@@ -118,7 +161,7 @@
                     nav:true
                 },
                 1000:{
-                    items:3,
+                    items:4,
                     nav:true,
                     loop:true
                 }

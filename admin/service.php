@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Services</h1>
+		<h1>Services</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="service-add.php" class="btn btn-primary btn-sm">Add Service</a>
@@ -17,7 +17,7 @@
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th width="50">SL</th>
+								<th width="50">No</th>
 								<th width="140">Photo</th>
 								<th width="100">Name</th>
 								<th width="100">Slug</th>

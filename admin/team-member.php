@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Data Penghargaan MannaKampus</h1>
+		<h1>Award Data</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="team-member-add.php" class="btn btn-primary btn-sm">Tambah Penghargaan</a>
@@ -17,7 +17,7 @@
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th>SL</th>
+								<th>No</th>
 								<th>Gambar</th>
 								<th width="180">Nama Penghargaan</th>
 								<th width="240">Kategori</th>

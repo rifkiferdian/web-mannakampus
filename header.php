@@ -65,19 +65,20 @@ foreach ($result as $row)
 
 <!-- jQuery & Slick JS -->
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
 	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-L1HKGJE7GT"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-WRNY33500R"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
 	  gtag('js', new Date());
 
-	  gtag('config', 'G-L1HKGJE7GT');
+	  gtag('config', 'G-WRNY33500R');
 	</script>
+
 
 	<!-- Meta Tags -->	
 	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -1015,7 +1016,7 @@ if($cur_page == 'blog.php')
 				margin-left: auto!important;
 				z-index: 1001!important;
 			}
-			.mk-mobile-menu summary {
+			.mk-mobile-menu > summary {
 				display: flex!important;
 				width: 44px!important;
 				height: 44px!important;
@@ -1086,9 +1087,11 @@ if($cur_page == 'blog.php')
 			.mk-mobile-nav .mk-mobile-nav-group summary {
 				display: flex!important;
 				min-height: 48px!important;
+				height: auto!important;          /* ← tambahan baru */
 				align-items: center!important;
 				justify-content: space-between!important;
-				padding: 0 8px!important;
+				padding: 12px 8px!important;     /* ← ubah dari "0 8px" jadi ini */
+				line-height: 1.3!important;      /* ← tambahan baru */
 				color: #1f2933!important;
 				font-family: "Open Sans", sans-serif!important;
 				font-size: 14px!important;
@@ -1253,6 +1256,42 @@ if($cur_page == 'blog.php')
 			transition: none!important;
 		}
 
+		.whatsapp-float {
+			position: fixed;
+			bottom: 24px;
+			right: 24px;
+			width: 60px;
+			height: 60px;
+			background-color: #25D366; /* warna hijau khas WhatsApp */
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+			z-index: 9999; /* dinaikkan biar aman dari elemen lain yang z-index-nya lebih rendah */
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			text-decoration: none;
+		}
+		.whatsapp-float i {
+			color: #FFFFFF;
+			font-size: 32px;
+		}
+		.whatsapp-float:hover {
+			transform: scale(1.08);
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+		}
+
+		@media (max-width: 768px) {
+			.whatsapp-float {
+				width: 52px;
+				height: 52px;
+				bottom: 16px;
+				right: 16px;
+			}
+			.whatsapp-float i {
+				font-size: 26px;
+			}
+		}
 	</style>
 
 
@@ -1294,13 +1333,16 @@ foreach ($result as $row)
 						<div class="mk-topbar-menu has-dropdown">
 							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Mitra Bisnis</a>
 							<div class="mk-topbar-dropdown">
-								<a href="#">Tenant</a>
-								<a href="#">Register New Supplier</a>
-								<a href="#">B2B</a>
+								<a href="#">Gerai</a>
+								<a href="#">Daftarkan Pemasok Baru</a>
+								<a href="#">Bisnis Antar Bisnis</a>
 							</div>
 						</div>
 						<div class="mk-topbar-menu has-dropdown">
-							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Our Brands</a>
+							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Mitra Kami
+
+							
+							</a>
 							<div class="mk-topbar-dropdown">
 								<a target="_blank" href="#">Lega Legi Kopi & Resto </a>
 								<a target="_blank" href="#">ROEMI Xtraordinary Ice Cream</a>
@@ -1330,46 +1372,46 @@ foreach ($result as $row)
 				<div class="mk-navbar">
 					<a href="<?php echo BASE_URL; ?>" class="mk-brand"><img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $logo; ?>" alt="Manna Kampus"></a>
 					<nav class="mk-nav mk-nav-desktop" aria-label="Navigasi utama">
-						<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
+						<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Beranda</a>
 						<details class="mk-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>">
-							<summary>About Us</summary>
+							<summary>Tentang Kami</summary>
 							<div class="mk-nav-submenu">
-								<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a>
-								<a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a>
-								<a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a>
-								<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social Activities</a>
-								<a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a>
+								<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">Tentang Kami</a>
+								<a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Perusahaan</a>
+								<a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Karir</a>
+								<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Kegiatan Sosial</a>
+								<a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Kontak Kami</a>
 							</div>
 						</details>
 						<details class="mk-nav-group<?php echo $is_blbms_menu ? ' active' : ''; ?>">
-							<summary>BLBMS Program</summary>
+							<summary>Program BLBMS</summary>
 							<div class="mk-nav-submenu">
-								<a href="reward.php" class="<?php echo ($current_page == 'reward.php') ? 'active' : ''; ?>">Reward</a>
-								<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Claim Reward</a>
-								<a href="winners.php" class="<?php echo ($current_page == 'winners.php') ? 'active' : ''; ?>">Winners</a>
+								<a href="reward.php" class="<?php echo ($current_page == 'reward.php') ? 'active' : ''; ?>">Hadiah</a>
+								<a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a>
+								<a href="winners.php" class="<?php echo ($current_page == 'winners.php') ? 'active' : ''; ?>">Pemenang</a>
 
 								
 							</div>
 						</details>
 						<details class="mk-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>">
-							<summary>Shopping</summary>
+							<summary>Belanja</summary>
 							<div class="mk-nav-submenu">
-								<a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Shop Online</a>
-								<a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Store Location</a>
+								<a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja  Online</a>
+								<a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Outlet</a>
 							</div>
 						</details>
 						<details class="mk-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>">
-							<summary>Membership &amp; Community</summary>
+							<summary>Keanggotaan &amp; Komunitas</summary>
 							<div class="mk-nav-submenu">
-								<a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Membership</a>
-								<a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community Hub</a>
+								<a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Keanggotaan</a>
+								<a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Pusat Komunitas</a>
 							</div>
 						</details>
 						<details class="mk-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>">
-							<summary>Promo &amp; News</summary>
+							<summary>Promo &amp; Berita</summary>
 							<div class="mk-nav-submenu">
-								<a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Latest Promos</a>
-								<a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Articles</a>
+								<a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo Terbaru</a>
+								<a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Artikel</a>
 							</div>
 						</details>
 					</nav>
@@ -1377,12 +1419,12 @@ foreach ($result as $row)
 					<details class="mk-mobile-menu">
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
-							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Homepage</a>
-							<details class="mk-mobile-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>"<?php echo $is_about_menu ? ' open' : ''; ?>><summary>About Us</summary><a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">About Us</a><a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Corporate</a><a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Career</a><a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Social Activities</a><a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Contact Us</a></details>
-							<details class="mk-mobile-nav-group<?php echo $is_blbms_menu ? ' active' : ''; ?>"<?php echo $is_blbms_menu ? ' open' : ''; ?>><summary>BLBMS Program</summary><a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Claim Reward</a></details>
-							<details class="mk-mobile-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>"<?php echo $is_shopping_menu ? ' open' : ''; ?>><summary>Shopping</summary><a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Shop Online</a><a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Store Location</a></details>
-							<details class="mk-mobile-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>"<?php echo $is_membership_menu ? ' open' : ''; ?>><summary>Membership &amp; Community</summary><a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Membership</a><a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Community Hub</a></details>
-							<details class="mk-mobile-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>"<?php echo $is_promo_menu ? ' open' : ''; ?>><summary>Promo &amp; News</summary><a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Latest Promos</a><a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Articles</a></details>
+							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Beranda</a>
+							<details class="mk-mobile-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>"<?php echo $is_about_menu ? ' open' : ''; ?>><summary>Tentang Kami</summary><a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">Tentang Kami</a><a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Perusahaan</a><a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Karir</a><a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Kegiatan Sosial</a><a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Kontak Kami</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_blbms_menu ? ' active' : ''; ?>"<?php echo $is_blbms_menu ? ' open' : ''; ?>><summary>Program BLBMS</summary><a href="reward.php" class="<?php echo ($current_page == 'reward.php') ? 'active' : ''; ?>">Hadiah</a><a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a><a href="winners.php" class="<?php echo ($current_page == 'winners.php') ? 'active' : ''; ?>">Pemenang</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>"<?php echo $is_shopping_menu ? ' open' : ''; ?>><summary>Belanja</summary><a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a><a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Outlet</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>"<?php echo $is_membership_menu ? ' open' : ''; ?>><summary>Keanggotaan &amp; Komunitas</summary><a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Keanggotaan</a><a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Pusat Komunitas</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>"<?php echo $is_promo_menu ? ' open' : ''; ?>><summary>Promo &amp; Berita</summary><a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo Terbaru</a><a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Artikel</a></details>
 						</nav>
 					</details>
 				</div>
@@ -1391,7 +1433,7 @@ foreach ($result as $row)
 		<script>
 		(function() {
 			var dropdownMenus = document.querySelectorAll('.mk-topbar-menu.has-dropdown');
-			var navGroups = document.querySelectorAll('.mk-nav-desktop .mk-nav-group');
+			var navGroups = document.querySelectorAll('.mk-nav-desktop .mk-nav-group, .mk-mobile-nav .mk-mobile-nav-group');
 
 			for (var navIndex = 0; navIndex < navGroups.length; navIndex++) {
 				(function(navGroup) {

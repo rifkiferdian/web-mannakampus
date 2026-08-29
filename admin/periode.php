@@ -37,7 +37,7 @@ if(isset($_SESSION['success_message'])) {
           <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th width="50">SL</th>
+                    <th width="50">No</th>
                     <th>Program Name</th>
                     <th width="100">Year</th>
                     <th>Periode Name</th>

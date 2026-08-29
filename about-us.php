@@ -690,8 +690,8 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div style="position: relative;">
                     <div class="image-split-container">
                         <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=1974&auto=format&fit=crop" alt="Manna Kampus History">
-                        <div class="year-label year-left">1980</div>
-                        <div class="year-label year-right">2026</div>
+                        <!-- <div class="year-label year-left">1980</div> -->
+                        <!-- <div class="year-label year-right">2026</div> -->
                     </div>
                     <div class="quote-box">
                         "Berakar dari Tradisi, Bertumbuh Menuju Masa Depan Ritel."
@@ -877,10 +877,6 @@ $about_growth_news = $about_growth_stmt->fetchAll(PDO::FETCH_ASSOC);
             <div>
                 <h2 class="section-title wow fadeInUp">Perjalanan Kami</h2>
                 <p class="section-subtitle mb-0 wow fadeInUp" data-wow-delay="0.15s">Momen dan pencapaian penting yang membentuk kami dari tahun 1980 hingga saat ini.</p>
-            </div>
-            <div class="journey-nav hidden-xs">
-                <button type="button" class="journey-scroll-btn journey-scroll-prev" aria-label="Gulir kiri"><i class="fa fa-angle-left"></i></button>
-                <button type="button" class="journey-scroll-btn journey-scroll-next" aria-label="Gulir kanan"><i class="fa fa-angle-right"></i></button>
             </div>
         </div>
 

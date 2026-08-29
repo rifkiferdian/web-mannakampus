@@ -304,7 +304,7 @@ foreach ($result_cabang as $row) {
                 <p class="mk-member-desc">Dapatkan poin belanja, diskon khusus ulang tahun, dan akses eksklusif ke flash sale member-only. Daftar sekarang dan mulai menabung!</p>
                 <div class="mk-member-actions">
                     <a href="#" class="mk-member-btn-primary">Daftar Member Gratis</a>
-                    <a href="#" class="mk-member-btn-outline">Pelajari Keuntungan</a>
+                    <a href="member.php" class="mk-member-btn-outline">Pelajari Keuntungan</a>
                 </div>
             </div>
             <div class="mk-member-card-graphic">

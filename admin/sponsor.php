@@ -52,7 +52,7 @@ table.dataTable tbody td img {
           <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th width="50">SL</th>
+                    <th width="50">No</th>
                     <th width="120">Logo</th>
                     <th>Sponsor Name</th>
                     <th>Program</th>

@@ -95,7 +95,6 @@
             <p class="mk-mitra-hero-desc">Membangun ekosistem ritel yang terpercaya dan berkelanjutan. Mari jalin kerjasama strategis untuk memperluas jangkauan pasar Anda.</p>
             <div class="mk-mitra-hero-actions">
                 <a href= " # " class="mk-mitra-btn-primary">Mulai Kemitraan</a>
-                <a href=" # " class="mk-mitra-btn-outline">Pelajari Lebih Lanjut</a>
             </div>
         </div>
     </div>

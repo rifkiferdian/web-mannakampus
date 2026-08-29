@@ -198,7 +198,7 @@
 	<!-- Search  -->
 	<div class="widget mk-search-wrap">
 		<form class="mk-search-form" action="<?php echo BASE_URL.URL_SEARCH; ?>" method="post">
-			<input type="text" style="font-size: 1.5rem" name="search_string" placeholder="<?php echo SEARCH; ?>">
+			<input type="text" style="font-size: 1.5rem" name="search_string" placeholder="Cari">
 			<button type="submit"><i class="fa fa-search"></i></button>
 		</form>
 	</div>
@@ -216,7 +216,7 @@
 	<!-- Categories -->
 	<div class="widget mk-card">
 		<div class="mk-widget-head">
-			<h4 class="mk-widget-title"><?php echo CATEGORIES; ?></h4>
+			<h4 class="mk-widget-title">Kategori</h4>
 		</div>
 		<ul class="mk-category-list">
 			<?php
@@ -247,7 +247,7 @@
 	<!-- Popular Posts -->
 <div class="widget mk-card">
 	<div class="mk-widget-head">
-		<h4 class="mk-widget-title"><?php echo POPULAR_NEWS; ?></h4>
+		<h4 class="mk-widget-title">Berita Populer</h4>
 	</div>
 	<ul class="mk-pop-list">
 		<?php
@@ -280,7 +280,7 @@
 	<!-- Latest News -->
 	<div class="widget widget-latest-news">
 		<div class="mk-widget-head">
-			<h4 class="mk-widget-title"><?php echo LATEST_NEWS; ?></h4>
+			<h4 class="mk-widget-title">Berita Terbaru</h4>
 		</div>
 		<ul class="mk-latest-list">
 			<?php
@@ -297,7 +297,7 @@
 			}
 			?>
 		</ul>
-		<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="mk-subscribe-btn" style="font-size: 1.2rem;">SUBSCRIBE TO NEWS</a>
+		<a href="<?php echo BASE_URL.URL_SEARCH; ?>" class="mk-subscribe-btn" style="font-size: 1.2rem;">Berlangganan Berita</a>
 	</div>
 </div>
 <!-- Sidebar Container End -->

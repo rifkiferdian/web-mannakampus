@@ -7,37 +7,43 @@ if(!isset($_REQUEST['search_string']))
 	header('location: '.BASE_URL);
 	exit;
 }
-
 $search_string = strip_tags($_REQUEST['search_string']);
 ?>
 
-<?php
-$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-$statement->execute();
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-foreach ($result as $row) {
-    $banner_search = $row['banner_search'];
+<style>
+/* Hero Section */
+.mk-blog-hero { background:#F7F5F1; padding:90px 24px 91px; text-align:center; }
+.mk-blog-hero-title { font-size:3.25rem; font-weight:800; color:#2E2620; margin:0 0 14px; }
+.mk-blog-hero-title span { color:#E8792E; }
+.mk-blog-hero-sub { font-size:1.5rem; color:#7A6F63; max-width:640px; margin:0 auto 28px; line-height:1.6; }
+
+/* Layout Blog & Border Radius Gambar */
+.mk-category-list .container { max-width: 1240px; margin: 0 auto; padding: 48px 32px; }
+.mk-category-list .post-item .image-holder { border-radius: 14px; overflow: hidden; }
+
+/* Merapikan posisi dan jarak Kategori & Tanggal */
+.mk-category-list .status { display: flex; flex-wrap: wrap; gap: 20px; list-style: none; padding: 0; margin: 10px 0 15px; }
+.mk-category-list .status li { display: flex; align-items: center; gap: 6px; font-size: 1rem; color: #E8792E; }
+.mk-category-list .status li a { display: inline !important; font-size: inherit !important; color: #E8792E !important; margin: 0 !important; padding: 0 !important; text-decoration: none; }
+.mk-category-list .status li a:hover { text-decoration: underline; }
+
+@media (max-width: 576px) {
+    .mk-category-list .container { padding-left: 20px; padding-right: 20px; }
+    .mk-blog-hero-title { font-size: 1.6rem; }
 }
-?>
+</style>
 
 <!-- Banner Start -->
-<div class="page-banner" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/<?php echo $banner_search; ?>);">
-	<div class="overlay"></div>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="banner-text">
-					<h1><?php echo SEARCH_BY_COLON; ?> <?php echo $search_string; ?></h1>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<section class="mk-blog-hero">
+    <div class="container">
+        <h1 class="mk-blog-hero-title"><?php echo SEARCH_BY_COLON; ?> <span><?php echo $search_string; ?></span></h1>
+        <p class="mk-blog-hero-sub">Temukan hasil pencarian artikel atau berita untuk kata kunci di atas.</p>
+    </div>
+</section>
 <!-- Banner End -->
 
-
-<!-- Blog Start -->
-<section class="blog">
+<!-- Blog Start (Class mk-category-list ditambahkan di sini) -->
+<section class="blog mk-category-list">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-9">

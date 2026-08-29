@@ -9,7 +9,7 @@ if(isset($_SESSION['success_message'])) {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Categories</h1>
+		<h1>News Categories</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="category-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -34,7 +34,7 @@ if(isset($_SESSION['success_message'])) {
           <table id="example1" class="table table-bordered table-striped">
 			<thead>
 			    <tr>
-			        <th>SL</th>
+			        <th>No</th>
 			        <th>Category Name</th>
 			        <th>Category Slug</th>
 			        <th>Action</th>
