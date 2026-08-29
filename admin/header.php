@@ -26,6 +26,10 @@ if(!isset($_SESSION['user'])) {
 // Ambil nama halaman saat ini lebih awal agar tidak terjadi error pada in_array
 $cur_page = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], "/") + 1);
 
+// ==========================================
+// MENU ACTIVE STATE & PAGE GROUPS
+// ==========================================
+
 // Kelompokkan semua file yang termasuk "keluarga" tiap submenu Outlet
 $branch_info_pages       = ['branch-info.php', 'branch-info-add.php', 'branch-info-edit.php'];
 $branch_videos_pages     = ['branch-videos.php', 'branch-videos-add.php', 'branch-videos-edit.php'];
@@ -55,6 +59,14 @@ $news_pages = array_merge(
     $news_category_pages,
     $news_content_pages,
     $news_comment_pages
+);
+
+$award_category_pages = ['designation.php', 'designation-add.php', 'designation-edit.php', 'designation-delete.php'];
+$award_award_pages = ['team-member.php', 'team-member-add.php', 'team-member-edit.php', 'team-member-delete.php'];
+
+$award_pages = array_merge(
+	$award_category_pages,
+	$award_award_pages
 );
 
 // Kelompokkan file untuk tiap submenu prize_draw
@@ -103,6 +115,7 @@ $is_news_active        = in_array($cur_page, $news_pages);
 $is_faq_active         = in_array($cur_page, $faq_menu_pages);
 $is_photo_video_active = in_array($cur_page, $photo_video_menu_pages);
 $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
+$is_award_active	   = in_array($cur_page, $award_pages);
 ?>
 <!DOCTYPE html>
 <html>
@@ -145,8 +158,250 @@ $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 	}
 		.admin-success-toast { position:fixed; top:70px; right:24px; z-index:11000; max-width:420px; margin:0; border:0; border-left:4px solid #2e8b57; box-shadow:0 8px 24px rgba(0,0,0,.18); }
 		@media (max-width:767px) { .admin-success-toast { top:60px; right:12px; left:12px; max-width:none; } }
+
+		.auto-page-section {
+			font-size: 12.5px;
+			font-weight: 600;
+			color: #f86d1d;
+			text-transform: uppercase;
+			margin-bottom: 4px;
+			letter-spacing: 1.4px;
+		}
+
+		.content-header .content-header-left h1 {
+			margin: 0;
+			font-size: 24px;
+			font-weight: 700;
+			line-height: 1.25;
+		}
+
+		.auto-breadcrumb {
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 14px;
+			color: #777;
+			line-height: 1.4;
+			font-weight: 515;
+		}
 	</style>
 </head>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const headerLeft = document.querySelector('.content-header-left');
+    const title = headerLeft ? headerLeft.querySelector('h1') : null;
+
+    if (!headerLeft || !title) {
+        return;
+    }
+
+    const sectionMap = {
+        'page.php': 'WEBSITE',
+        'page-add.php': 'WEBSITE',
+        'page-edit.php': 'WEBSITE',
+
+        'menu.php': 'WEBSITE',
+        'menu-add.php': 'WEBSITE',
+        'menu-edit.php': 'WEBSITE',
+
+        'language.php': 'WEBSITE',
+
+        'category.php': 'CONTENT',
+        'category-add.php': 'CONTENT',
+        'category-edit.php': 'CONTENT',
+        'category-delete.php': 'CONTENT',
+
+        'news.php': 'CONTENT',
+        'news-add.php': 'CONTENT',
+        'news-edit.php': 'CONTENT',
+        'news-delete.php': 'CONTENT',
+
+        'comment.php': 'CONTENT',
+
+        'promo-event.php': 'CONTENT',
+        'promo-event-add.php': 'CONTENT',
+        'promo-event-edit.php': 'CONTENT',
+
+        'designation.php': 'CONTENT',
+        'designation-add.php': 'CONTENT',
+        'designation-edit.php': 'CONTENT',
+
+        'team-member.php': 'CONTENT',
+        'team-member-add.php': 'CONTENT',
+        'team-member-edit.php': 'CONTENT',
+
+        'testimonial.php': 'CONTENT',
+        'testimonial-add.php': 'CONTENT',
+        'testimonial-edit.php': 'CONTENT',
+
+        'partner.php': 'CONTENT',
+        'partner-add.php': 'CONTENT',
+        'partner-edit.php': 'CONTENT',
+
+        'service.php': 'CONTENT',
+        'service-add.php': 'CONTENT',
+        'service-edit.php': 'CONTENT',
+
+        'slider.php': 'MEDIA',
+        'slider-add.php': 'MEDIA',
+        'slider-edit.php': 'MEDIA',
+
+        'photo-category.php': 'MEDIA',
+        'photo-category-add.php': 'MEDIA',
+        'photo-category-edit.php': 'MEDIA',
+
+        'photo.php': 'MEDIA',
+        'photo-add.php': 'MEDIA',
+        'photo-edit.php': 'MEDIA',
+
+        'video-category.php': 'MEDIA',
+        'video-category-add.php': 'MEDIA',
+        'video-category-edit.php': 'MEDIA',
+
+        'video.php': 'MEDIA',
+        'video-add.php': 'MEDIA',
+        'video-edit.php': 'MEDIA',
+
+        'file.php': 'MEDIA',
+        'file-add.php': 'MEDIA',
+        'file-edit.php': 'MEDIA',
+
+        'social-media.php': 'AUDIENCE',
+
+        'subscriber.php': 'AUDIENCE',
+        'subscriber-delete.php': 'AUDIENCE',
+        'subscriber-remove.php': 'AUDIENCE',
+        'subscriber-csv.php': 'AUDIENCE',
+        'subscriber-email.php': 'AUDIENCE',
+
+        'settings.php': 'SETTINGS'
+    };
+
+    const breadcrumbMap = {
+        'designation.php': 'Award',
+        'designation-add.php': 'Award',
+        'designation-edit.php': 'Award',
+
+        'team-member.php': 'Award',
+        'team-member-add.php': 'Award',
+        'team-member-edit.php': 'Award',
+
+        'category.php': 'News',
+        'category-add.php': 'News',
+        'category-edit.php': 'News',
+        'category-delete.php': 'News',
+
+        'news.php': 'News',
+        'news-add.php': 'News',
+        'news-edit.php': 'News',
+        'news-delete.php': 'News',
+
+        'comment.php': 'News',
+
+        'faq-category.php': 'FAQ',
+        'faq-category-add.php': 'FAQ',
+        'faq-category-edit.php': 'FAQ',
+        'faq-category-delete.php': 'FAQ',
+
+        'faq.php': 'FAQ',
+        'faq-add.php': 'FAQ',
+        'faq-edit.php': 'FAQ',
+        'faq-delete.php': 'FAQ',
+
+        'photo-category.php': 'Photo and Video',
+        'photo-category-add.php': 'Photo and Video',
+        'photo-category-edit.php': 'Photo and Video',
+
+        'photo.php': 'Photo and Video',
+        'photo-add.php': 'Photo and Video',
+        'photo-edit.php': 'Photo and Video',
+
+        'video-category.php': 'Photo and Video',
+        'video-category-add.php': 'Photo and Video',
+        'video-category-edit.php': 'Photo and Video',
+
+        'video.php': 'Photo and Video',
+        'video-add.php': 'Photo and Video',
+        'video-edit.php': 'Photo and Video',
+
+        'subscriber.php': 'Subscriber',
+        'subscriber-email.php': 'Subscriber',
+
+        'branch-info.php': 'Outlet',
+        'branch-info-add.php': 'Outlet',
+        'branch-info-edit.php': 'Outlet',
+
+        'branch-videos.php': 'Outlet',
+        'branch-videos-add.php': 'Outlet',
+        'branch-videos-edit.php': 'Outlet',
+
+        'branch-tenants.php': 'Outlet',
+        'branch-tenants-add.php': 'Outlet',
+        'branch-tenants-edit.php': 'Outlet',
+
+        'branch-katalog.php': 'Outlet',
+        'branch-katalog-add.php': 'Outlet',
+        'branch-katalog-edit.php': 'Outlet',
+
+        'branch-facilities.php': 'Outlet',
+        'branch-facilities-add.php': 'Outlet',
+        'branch-facilities-edit.php': 'Outlet',
+
+        'branch-galleries.php': 'Outlet',
+        'branch-galleries-add.php': 'Outlet',
+        'branch-galleries-edit.php': 'Outlet',
+
+        'branch-promo.php': 'Outlet',
+        'branch-promo-add.php': 'Outlet',
+        'branch-promo-edit.php': 'Outlet',
+
+        'program.php': 'Prize Draw',
+        'program-add.php': 'Prize Draw',
+        'program-edit.php': 'Prize Draw',
+
+        'periode.php': 'Prize Draw',
+        'periode-add.php': 'Prize Draw',
+        'periode-edit.php': 'Prize Draw',
+
+        'reward.php': 'Prize Draw',
+        'reward-add.php': 'Prize Draw',
+        'reward-edit.php': 'Prize Draw',
+
+        'winners.php': 'Prize Draw',
+        'winners-add.php': 'Prize Draw',
+        'winners-edit.php': 'Prize Draw',
+
+        'sponsor.php': 'Prize Draw',
+        'sponsor-add.php': 'Prize Draw',
+        'sponsor-edit.php': 'Prize Draw'
+    };
+
+    const currentPage = window.location.pathname.split('/').pop();
+
+    const section = sectionMap[currentPage] || '';
+    const parent = breadcrumbMap[currentPage] || '';
+
+    if (section) {
+        const sectionElement = document.createElement('div');
+
+        sectionElement.className = 'auto-page-section';
+        sectionElement.textContent = section;
+
+        headerLeft.insertBefore(sectionElement, title);
+    }
+
+    if (parent) {
+        const breadcrumb = document.createElement('div');
+
+        breadcrumb.className = 'auto-breadcrumb';
+        breadcrumb.textContent = parent + ' > ' + title.textContent.trim();
+
+        headerLeft.appendChild(breadcrumb);
+    }
+});
+</script>
+
+
 <script>
     $(document).ready(function() {
         // Memaksa scrollbar sidebar kembali ke paling atas
@@ -161,7 +416,7 @@ $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 
 		<header class="main-header">
 			<a href="index.php" class="logo">
-				<span class="logo-lg">Consultine</span>
+				<span class="logo-lg">Manna Kampus</span>
 			</a>
 
 			<nav class="navbar navbar-static-top">
@@ -195,50 +450,6 @@ $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 		</header>
 
 		<aside class="main-sidebar">
-			<?php if ($_SESSION['user']['role'] == 'News'): ?>
-				<section class="sidebar">
-					<ul class="sidebar-menu">
-						<li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
-							<a href="index.php">
-								<i class="fa fa-hand-o-right"></i> <span>Dashboard</span>
-							</a>
-						</li>
-						
-						<li class="treeview <?php if( ($cur_page == 'slider-add.php')||($cur_page == 'slider.php')||($cur_page == 'slider-edit.php') ) {echo 'active';} ?>">
-							<a href="slider.php">
-								<i class="fa fa-hand-o-right"></i> <span>Slider</span>
-							</a>
-						</li>
-
-						<li class="treeview <?php if( ($cur_page == 'promo-event-add.php')||($cur_page == 'promo-event.php')||($cur_page == 'promo-event-edit.php') ) {echo 'active';} ?>">
-							<a href="promo-event.php">
-								<i class="fa fa-calendar"></i> <span>Promo &amp; Event Utama</span>
-							</a>
-						</li>
-
-						<li class="treeview <?php echo $is_news_active ? 'active menu-open' : ''; ?>">
-							<a href="#">
-								<i class="fa fa-hand-o-right"></i>
-								<span>News</span>
-								<span class="pull-right-container">
-									<i class="fa fa-angle-left pull-right"></i>
-								</span>
-							</a>
-							<ul class="treeview-menu" style="<?php echo $is_news_active ? 'display:block;' : ''; ?>">
-								<li class="<?php echo in_array($cur_page, $news_category_pages) ? 'active' : ''; ?>">
-									<a href="category.php"><i class="fa fa-circle-o"></i> Category</a>
-								</li>
-								<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
-									<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
-								</li>
-								<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
-									<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-			<?php else: ?>
 				<section class="sidebar">
 					<ul class="sidebar-menu">
 						<li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
@@ -284,9 +495,6 @@ $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 								<li class="<?php echo in_array($cur_page, $news_content_pages) ? 'active' : ''; ?>">
 									<a href="news.php"><i class="fa fa-circle-o"></i> News</a>
 								</li>
-								<li class="<?php echo in_array($cur_page, $news_comment_pages) ? 'active' : ''; ?>">
-									<a href="comment.php"><i class="fa fa-circle-o"></i> Comment</a>
-								</li>
 							</ul>
 						</li>
 
@@ -296,17 +504,21 @@ $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 							</a>
 						</li>
 
-						<li class="treeview <?php if( ($cur_page == 'designation-add.php')||($cur_page == 'designation.php')||($cur_page == 'designation-edit.php') || ($cur_page == 'team-member-add.php')||($cur_page == 'team-member.php')||($cur_page == 'team-member-edit.php') ) {echo 'active';} ?>">
+						<li class="treeview <?php echo $is_award_active ? 'active menu-open' : ''; ?>">
 							<a href="#">
 								<i class="fa fa-hand-o-right"></i>
-								<span>Penghargaan MannaKampus</span>
+								<span>Award</span>
 								<span class="pull-right-container">
 									<i class="fa fa-angle-left pull-right"></i>
 								</span>
 							</a>
-							<ul class="treeview-menu">
-								<li><a href="designation.php"><i class="fa fa-circle-o"></i> Kategori Penghargaan</a></li>
-								<li><a href="team-member.php"><i class="fa fa-circle-o"></i> Data Penghargaan</a></li>
+							<ul class="treeview-menu" style="<?php echo $is_award_active ? 'display:block;' : ''; ?>">
+								<li class="<?php echo in_array($cur_page, $award_category_pages) ? 'active' : ''; ?>">
+									<a href="designation.php"><i class="fa fa-circle-o"></i> Categories</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $award_award_pages) ? 'active' : ''; ?>">
+									<a href="team-member.php"><i class="fa fa-circle-o"></i> Award Data</a>
+								</li>
 							</ul>
 						</li>
 
@@ -467,7 +679,6 @@ $is_subscriber_active  = in_array($cur_page, $subscriber_menu_pages);
 						</li>
 					</ul>
 				</section>
-			<?php endif; ?>
 		</aside>
 
 		<div class="content-wrapper">

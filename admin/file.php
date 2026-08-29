@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Files</h1>
+		<h1>Files</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="file-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -22,7 +22,7 @@
           <table id="example1" class="table table-bordered table-striped">
 			<thead>
 			    <tr>
-			        <th>SL</th>
+			        <th>No</th>
 			        <th>File Title</th>
 			        <th>File Name</th>
 			        <th>Download File</th>

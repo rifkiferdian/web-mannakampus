@@ -25,9 +25,12 @@
     position: relative;
     padding: 68px 0 30px;
     overflow: hidden;
-    background:
+    /* background:
         radial-gradient(circle at 92% 8%, rgba(255,122,0,0.09), transparent 22%),
-        linear-gradient(180deg, #fffaf5 0%, #fff 49%, #f47700 49%, #f47700 100%);
+        linear-gradient(180deg, #fffaf5 0%, #fff 49%, #f47700 49%, #f47700 100%); */
+	background-image: url(../images/banner4.png);
+    background-size: cover; 
+background-position: top center;
 }
 
 .promo-events .container {
@@ -6502,7 +6505,6 @@ body {
 
 .cc-window,
 .cc-revoke,
-.whatsapp-float,
 .st-sticky-share-buttons,
 .st-sticky-share-buttons *,
 #st-1,
@@ -6985,7 +6987,7 @@ body {
 
 /* Weekly offers */
 .weekly-offers {
-    padding: 30px 0 56px !important;
+    padding: 60px 0 56px !important;
     background: #fff !important;
 }
 

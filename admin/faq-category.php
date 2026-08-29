@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View FAQ Categories</h1>
+		<h1>FAQ Categories</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="faq-category-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -21,7 +21,7 @@
           <table id="example1" class="table table-bordered table-striped">
 			<thead>
 			    <tr>
-			        <th>SL</th>
+			        <th>No</th>
 			        <th>FAQ Category</th>
 			        <th>Action</th>
 			    </tr>

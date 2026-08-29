@@ -203,7 +203,7 @@ This link will be active only for 24 hours.
 	</ul>
 </div>
 					<div class="col-sm-6 col-md-3 col-lg-3 footer-col wow fadeInRight">
-						<h3><?php echo CONTACT_US; ?></h3>
+						<h3>Hubungi Kami</h3>
 						<div class="contact-item">
 							<div class="icon"><i class="fa-solid fa-location-dot"></i></div>
 							<div class="text"><?php echo $contact_address; ?></div>
@@ -248,12 +248,13 @@ This link will be active only for 24 hours.
 			<i class="fa fa-angle-up"></i>
 		</a>
 
-<div class="whatsapp-float" style="position: fixed; bottom: 100px; right: 20px; z-index: 99;">
-<a href="https://wa.me/6282312345678/?text=Hi,%20Admin." target="_blank" rel="noopener">
-<img src="https://insantri.com/wp-content/uploads/2021/09/WA-logo@65x.png" width="65" height="66" alt="Hubungi Kami Melalui WhatsApp"></a></div>
-
-	</div>
-
+<!--Whatsapp Button -->
+<a href="https://wa.me/085943611060?text=Halo%20Admin%2C%20saya%20ingin%20bertanya" 
+   target="_blank" rel="noopener" 
+   class="whatsapp-float" 
+   aria-label="Hubungi Kami via WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
 
 <script>
 window.addEventListener("load", function(){
@@ -272,7 +273,6 @@ window.cookieconsent.initialise({
 
 
 	<!-- Scripts -->
-	<script src="<?php echo BASE_URL; ?>assets/js/jquery-2.2.4.min.js"></script>
 	<script src="<?php echo BASE_URL; ?>assets/js/bootstrap.min.js"></script>
 	<script src="<?php echo BASE_URL; ?>assets/js/jquery.slicknav.min.js"></script>	
 	<script src="<?php echo BASE_URL; ?>assets/js/hoverIntent.js"></script>

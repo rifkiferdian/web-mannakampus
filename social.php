@@ -35,7 +35,7 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
        GENERAL UTILITIES
        ========================================================================== */
     html, body {
-        overflow-x: hidden !important;
+        overflow-x: visible !important;
         overflow-y: visible !important;
         max-width: 100% !important;
         height: auto !important;
@@ -611,8 +611,7 @@ $gallery_social = $statement_gallery->fetchAll(PDO::FETCH_ASSOC);
                     <h2>Berita & Kegiatan Terbaru</h2>
                     <p>Dokumentasi nyata aksi kemanusiaan kami di lapangan.</p>
                 </div>
-                <a href="<?php echo BASE_URL.URL_CATEGORY.'social'; ?>" class="social-all-link">Lihat Semua Berita <i class="fa fa-arrow-right"></i></a>
-            </div>
+                    <a href="<?php echo BASE_URL . URL_CATEGORY; ?>sosial" class="social-all-link">Lihat Semua Berita <i class="fa fa-arrow-right"></i></a>            </div>
 
             <div class="social-cards">
                 <?php if(!empty($news_social)): ?>

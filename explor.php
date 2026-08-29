@@ -80,6 +80,8 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 .mk-blog-hero-sub { font-size:1.5rem; color:#F1EEEA; max-width:620px; margin:0 0 20px; line-height:1.6; }
 
 /* ---------------- SECTION 1: MAPS & INFO CABANG (Background Putih) ---------------- */
+.mk-back-link {transition: transform 0.2s ease, color 0.2s ease;}
+.mk-back-link:hover {transform: translateX(-4px);color: #A04000;}
 .mk-sec-info { background-color: #ffffff; padding: 50px 0; border-bottom: 1px solid #EAEAEA; }
 .mk-detail-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; align-items: stretch; }
 
@@ -274,11 +276,19 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
     </section>
     <!-- Hero Banner End -->
 
+
     <?php if ($current_cabang): ?>
         
         <!-- SECTION 1: MAPS & DETAIL CABANG -->
         <section class="mk-sec-info">
             <div class="mk-container">
+                
+                <!-- Tombol Kembali ke Daftar Outlet -->
+                <div style="padding-top: 24px; margin-bottom: 20px;">
+                    <a href="<?php echo BASE_URL; ?>outlet.php" style="display:inline-flex; align-items:center; gap:8px; color:#E8792E; font-weight:700; font-size:1.05rem; text-decoration:none;">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Outlet
+                    </a>
+                </div>
                 <div class="mk-detail-grid">
                     
                     <!-- Kiri: Peta & Overlay Nama Cabang -->

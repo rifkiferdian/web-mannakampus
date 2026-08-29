@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Partners</h1>
+		<h1>Partners</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="partner-add.php" class="btn btn-primary btn-sm">Add Partner</a>
@@ -17,7 +17,7 @@
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th width="30">SL</th>
+								<th width="30">No</th>
 								<th>Photo</th>
 								<th width="100">Name</th>
 								<th width="100">URL</th>

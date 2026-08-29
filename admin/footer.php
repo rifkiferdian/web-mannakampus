@@ -14,6 +14,27 @@ if(!empty($success_message)) {
 	}
 }
 ?>
+
+<style>
+    #example1_wrapper .row:first-child {
+        display: flex;
+    }
+
+    #example1_wrapper .row:first-child .col-sm-6:first-child {
+        display: none;
+    }
+
+    #example1_wrapper .row:first-child .col-sm-6:last-child {
+        width: 100%;
+        float: none;
+    }
+
+    #example1_wrapper .dataTables_filter {
+        float: none;
+        text-align: left;
+    }
+</style>
+
 		</div>
 
 	</div>
@@ -104,14 +125,21 @@ if(!empty($success_message)) {
 
 
 
-	    $("#example1").DataTable();
-	    $('#example2').DataTable({
-	      "paging": true,
-	      "lengthChange": false,
-	      "searching": false,
-	      "ordering": true,
-	      "info": true,
-	      "autoWidth": false
+			$("#example1").DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"searching": true,
+				"ordering": true,
+				"info": false,
+				"autoWidth": false
+			});	    
+			$('#example2').DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"searching": false,
+				"ordering": true,
+				"info": true,
+				"autoWidth": false
 	    });
 
 	    $('#confirm-delete').on('show.bs.modal', function(e) {

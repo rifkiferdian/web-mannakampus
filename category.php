@@ -60,6 +60,38 @@ foreach ($result as $row)
 		font-size: 1.6rem;
 	}
 }
+/* Merapikan posisi dan jarak Kategori & Tanggal */
+.mk-category-list .status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Jarak antara Kategori dan Tanggal */
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 15px;
+}
+
+/* Memastikan elemen di dalam li sejajar mendatar */
+.mk-category-list .status li {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Jarak antara icon, tulisan "Category:", dan link */
+    font-size: 1rem; /* Ukuran font utama */
+    color: #E8792E; /* Warna oranye */
+}
+
+/* Memaksa link kategori agar tidak turun ke bawah dan ukurannya sama */
+.mk-category-list .status li a {
+    display: inline !important; /* Memaksa tetap dalam satu baris */
+    font-size: inherit !important; /* Memaksa ukuran font sama dengan teks "Category:" */
+    color: #E8792E !important; 
+    margin: 0 !important;
+    padding: 0 !important;
+    text-decoration: none;
+}
+
+.mk-category-list .status li a:hover {
+    text-decoration: underline;
+}
 </style>
 
 <!-- Banner Start -->

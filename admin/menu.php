@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Menus</h1>
+		<h1>Menu</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="menu-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -37,7 +37,7 @@
 					<table id="example1" class="table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th>Serial</th>
+								<th>No</th>
 								<th>Menu Type</th>
 								<th>Menu Name</th>
 								<th>Menu URL</th>

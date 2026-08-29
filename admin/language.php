@@ -22,7 +22,7 @@ if(isset($_POST['form1'])) {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Edit Language Data</h1>
+		<h1>Language Data</h1>
 	</div>
 </section>
 

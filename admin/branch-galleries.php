@@ -42,7 +42,7 @@ if(isset($_SESSION['success_message'])) {
           <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th width="50">SL</th>
+                    <th width="50">No</th>
                     <th width="200">Branch</th>
                     <th>Foto</th>
                     <th width="150">Action</th>

@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>Kategori Penghargaan</h1>
+		<h1>Category Award</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="designation-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -22,7 +22,7 @@
           <table id="example1" class="table table-bordered table-striped">
 			<thead>
 			    <tr>
-			        <th>SL</th>
+			        <th>No</th>
 			        <th>Nama Kategori</th>
 			        <th>Action</th>
 			    </tr>

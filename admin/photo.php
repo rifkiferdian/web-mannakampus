@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Photos</h1>
+		<h1>Photos</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="photo-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -22,7 +22,7 @@
           <table id="example1" class="table table-bordered table-striped">
 			<thead>
 			    <tr>
-			        <th>SL</th>
+			        <th>No</th>
 			        <th>Caption</th>
 			        <th>Photo</th>
 			        <th>Category</th>

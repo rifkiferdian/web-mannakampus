@@ -1645,9 +1645,9 @@ try {
 <!-- ===================== Section Sponsor / Our Partners ================== -->
 <section class="mk-sponsor-section">
     <div class="mk-sponsor-container">
-        <h3 class="mk-sponsor-title">Our Sponsor</h3>
+        <h3 class="mk-sponsor-title">Sponsor Kami</h3>
         <div class="mk-sponsor-line"></div>
-        <p class="mk-sponsor-subtitle">All of our corporate sponsors are listed below.</p>
+        <p class="mk-sponsor-subtitle">Semua sponsor perusahaan kami tercantum di bawah ini.</p>
 
         <div class="mk-sponsor-grid">
             <?php if (!empty($data_sponsor)): ?>

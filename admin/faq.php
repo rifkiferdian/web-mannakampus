@@ -2,7 +2,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View FAQs</h1>
+		<h1>FAQs</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="faq-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -22,7 +22,7 @@
           <table id="example1" class="table table-bordered table-striped">
 			<thead>
 			    <tr>
-			        <th width="50">SL</th>
+			        <th width="50">No</th>
 			        <th width="140">FAQ Title</th>
 			        <th>FAQ Content</th>
 			        <th width="120">FAQ Category</th>
