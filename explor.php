@@ -51,7 +51,15 @@ $stmt_promo->execute([$current_cabang['id']]);
 $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
 
 // G. Query Flyer
-$stmt_flyer = $pdo->prepare("SELECT * FROM tbl_flyer WHERE id_cabang = ? ORDER BY id ASC");
+$stmt_flyer = $pdo->prepare("
+    SELECT * 
+    FROM tbl_flyer 
+    WHERE id_cabang = ?
+      AND start_date <= CURDATE()
+      AND end_date >= CURDATE()
+    ORDER BY id ASC
+");
+
 $stmt_flyer->execute([$current_cabang['id']]);
 $result_flyers = $stmt_flyer->fetchAll(PDO::FETCH_ASSOC);
 
@@ -188,45 +196,71 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 @media (max-width: 768px) { .mk-promo-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .mk-promo-grid { grid-template-columns: 1fr; } }
 
-/* ---------------- SECTION 5 : FLYER CAROUSEL ---------------- */
-.mk-flyer-section { padding: 50px 24px; background: #FDFBF8; text-align: left !important; border-top: none !important; }
-.mk-flyer-wrap { max-width: 1240px !important; margin: 0 auto !important; padding: 0 20px !important; box-sizing: border-box; text-align: left !important; }
+/* ---------------- SECTION 5: FLYER PROMO CABANG ---------------- */
+.mk-flyer-section{ background-color: #FDFBF8; padding:70px 0; }
+.mk-flyer-header{ max-width:1200px; margin:0 auto 40px; text-align:center; }
+.mk-flyer-header h2{ font-size:1.75rem; font-weight:800; color:#2E2620; margin:0 0 8px; }
+.mk-flyer-header p{ color:#8A7F73; font-size:1.25rem; margin:0 0 16px; }
+.mk-flyer-underline{ width:70px; height:4px; background:#E8792E; margin:0 auto; border-radius:2px; }
 
-/* Judul dan Subjudul diubah menjadi Rata Kiri */
-.mk-flyer-header { text-align: left !important; margin-bottom: 30px !important; width: 100%; }
-.mk-flyer-header h2 { margin: 0 0 6px 0 !important; font-size: 1.75rem; font-weight: 700; color: #2E2620; text-align: center; !important; }
-.mk-flyer-header p { color: #8A7F73 !important; margin: 0 !important; font-size: 1.25rem; text-align: center; !important; }
-.mk-flyer-underline { width: 60px; height: 3px; background-color: #E8792E; margin: 20px auto; border-radius: 2px; }
-/* Memperbesar Lebar Kontainer Karusel Supaya Gambar Terlihat Lebih Besar */
-.mk-flyer-carousel-container { position: relative; max-width: 1100px !important; margin: 0 auto 20px !important; padding: 0 60px !important; box-sizing: border-box; overflow: hidden !important; }
-.mk-flyer-slick-slider { display: block; width: 100%; }
-.mk-flyer-slick-slider .slick-list { overflow: visible !important; padding: 30px 0 !important; }
+.mk-flyer-wrap{ max-width:800px; margin:0 auto; position:relative; padding:0 60px; }
+.mk-flyer-slider{ margin:0 -12px; }
+.mk-flyer-slide{ padding:0 12px; }
+.mk-flyer-slide-inner{ background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08); }
+.mk-flyer-slide img{
+    width:100%;
+    display:block;
+    aspect-ratio:3/4;
+    object-fit:cover;
+    border-radius:14px;
+    opacity:.45;
+    transform:scale(.86);
+    box-shadow:0 10px 28px rgba(0,0,0,.10);
+    transition:transform .35s ease, opacity .35s ease, box-shadow .35s ease;
+    cursor:pointer;
+}
+.mk-flyer-slider .slick-center img{
+    opacity:1;
+    transform:scale(1);
+    box-shadow:0 22px 48px rgba(0,0,0,.20);
+}
+.mk-flyer-slider .slick-slide{ transition:all .35s ease; }
+.mk-flyer-slider .slick-current .mk-flyer-slide-inner{ cursor:zoom-in; }
 
-/* Memperbesar Maksimal Tinggi Gambar Flyer */
-.mk-flyer-slick-slider .slick-slide { padding: 0 15px !important; outline: none; transition: all 0.4s ease; transform: scale(0.85); opacity: 0.4; filter: blur(3px); }
-.mk-flyer-slick-slider .slick-slide img { width: 100%; height: auto; max-height: 560px !important; object-fit: contain; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); display: block; margin: 0 auto; cursor: pointer; }
+.mk-flyer-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:48px; height:48px;
+    border-radius:50%;
+    background:#fff;
+    border:1px solid #EAEAEA;
+    color:#E8792E;
+    font-size:1.15rem;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+    z-index:5;
+    transition:background .2s ease, color .2s ease;
+}
+.mk-flyer-arrow-prev{ left:0; }
+.mk-flyer-arrow-next{ right:0; }
+.mk-flyer-arrow:hover{ background:#E8792E; color:#fff; }
 
-/* Ukuran Gambar Utama di Tengah yang Lebih Besar & Jelas */
-.mk-flyer-slick-slider .slick-center { transform: scale(1.05) !important; opacity: 1 !important; filter: blur(0px) !important; z-index: 10; }
-.mk-flyer-slick-slider .slick-center img { box-shadow: 0 15px 40px rgba(0,0,0,0.25); }
+.mk-flyer-actions{ display:flex; justify-content:center; gap:16px; margin-top:44px; }
+.mk-flyer-btn{ display:inline-flex; align-items:center; gap:8px; padding:13px 30px; border-radius:8px; font-weight:700; font-size:1.05rem; text-decoration:none; border:1.5px solid transparent; transition:background .2s ease,color .2s ease; }
+.mk-flyer-btn-primary{ background:#E8792E; color:#fff !important; }
+.mk-flyer-btn-primary:hover{ background:#A04000; }
+.mk-flyer-btn-outline{ background:#fff; color:#2E2620 !important; border-color:#2E2620; }
+.mk-flyer-btn-outline:hover{ background:#2E2620; color:#fff !important; }
 
-/* Posisi Tombol Panah Navigasi */
-.mk-arrow-btn { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 99 !important; width: 50px !important; height: 50px !important; background-color: #E8792E !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; border: none !important; cursor: pointer !important; transition: all 0.25s ease !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-.mk-arrow-btn i { color: #FFFFFF !important; font-size: 1.3rem !important; }
-.mk-arrow-btn:hover { background-color: #C9611F !important; transform: translateY(-50%) scale(1.1) !important; }
-.mk-arrow-left { left: 0px !important; }
-.mk-arrow-right { right: 0px !important; }
+.mk-flyer-empty{ text-align:center; color:#8A7F73; font-size:1.05rem; padding:40px 0; }
 
-.mk-flyer-actions { display: flex; justify-content: center; gap: 16px; margin-top: 25px; }
-.mk-flyer-btn { display: inline-flex; align-items: center; gap: 8px; background: #E8792E; color: #FFFFFF !important; font-weight: 700; font-size: 1rem; padding: 10px 24px; border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase; text-decoration: none; transition: background .2s ease; }
-.mk-flyer-btn:hover { background: #C9611F; }
-
-/* Animasi halus saat modal muncul */
-#imageModal { animation: fadeIn 0.25s ease-in-out; }
-#imageModalImg { animation: zoomIn 0.25s ease-in-out; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes zoomIn { from { transform: scale(0.8); } to { transform: scale(1); } }
-@media (max-width: 768px) { .mk-flyer-carousel-container { padding: 0 10px; max-width: 100%; } .mk-flyer-slick-slider .slick-slide { transform: scale(0.95); opacity: 0.3; filter: none; } .mk-arrow-btn { width: 38px !important; height: 38px !important; } .mk-arrow-left { left: 5px !important; } .mk-arrow-right { right: 5px !important; } }
+@media (max-width:768px){
+    .mk-flyer-wrap{ padding:0 44px; }
+    .mk-flyer-arrow{ width:40px; height:40px; font-size:1rem; }
+    .mk-flyer-header h2{ font-size:1.5rem; }
+}
 
 /* ---------------- SECTION 6 FASILITAS & KENYAMANAN ---------------- */
 .mk-facility-section { padding: 60px 24px; background: #ffffff; text-align: center; width: 100%; box-sizing: border-box; }
@@ -243,7 +277,7 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 @media (max-width: 768px) { .mk-facility-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------------- SECTION 7 GALERI FOTO CABANG ---------------- */
-.mk-gallery-section { padding: 80px 0; background: #fff; }
+.mk-gallery-section { padding: 80px 0; background: #FDFBF8; }
 .mk-gallery-section .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 .mk-gallery-header-center { text-align: center; margin-bottom: 40px; position: relative; min-height: 50px; }
 .mk-gallery-header-center h2 { font-size: 1.75rem; font-weight: 800; color: #2E2620; margin: 0 0 12px; }
@@ -484,10 +518,6 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
                                         <?php endif; ?>
                                         <span class="mk-price-now">Rp <?php echo number_format($p['harga_promo'], 0, ',', '.'); ?></span>
                                     </div>
-
-                                    <button class="mk-btn-cart">
-                                        Tambah ke Keranjang
-                                    </button>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -501,78 +531,49 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
             </div>
         </section>
 
-        <!-- SECTION 5 : PROMO FLYER CAROUSEL -->
-        <section class="mk-flyer-section">
-            <div class="mk-flyer-wrap">
-                
-                <!-- Bagian Judul Katalog Cabang Dinamis -->
-                    <div class="mk-flyer-header">
-                        <h2>Katalog Cabang <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
-                        <p>Hanya berlaku di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></p>
-                        <div class="mk-flyer-underline"></div>
-                    </div>
+        <!-- SECTION 5: FLYER PROMO CABANG -->
+        <section class="mk-flyer-section" id="mk-flyer-section">
+            <div class="mk-container">
+                <div class="mk-flyer-header">
+                    <h2>Katalog Cabang <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                    <p>Hanya berlaku di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    <div class="mk-flyer-underline"></div>
+                </div>
 
-                <!-- Carousel Container -->
-                <div class="mk-flyer-carousel-container">
-                    <div id="flyerSlidesWrapper" class="mk-flyer-slick-slider">
-                        <?php
-                            // Ambil data flyer dari database berdasarkan cabang aktif
-                            $stmt_flyer = $pdo->prepare("SELECT * FROM tbl_flyer WHERE id_cabang = ? ORDER BY id ASC");
-                            $stmt_flyer->execute([$current_cabang['id']]);
-                            $result_flyers = $stmt_flyer->fetchAll(PDO::FETCH_ASSOC);
-                        ?>
+                <?php if (!empty($result_flyers)): ?>
+                    <div class="mk-flyer-wrap">
+                        <button type="button" class="mk-flyer-arrow mk-flyer-arrow-prev" id="mk-flyer-prev"><i class="fa fa-chevron-left"></i></button>
+                        <button type="button" class="mk-flyer-arrow mk-flyer-arrow-next" id="mk-flyer-next"><i class="fa fa-chevron-right"></i></button>
 
-                        <?php if (!empty($result_flyers)): ?>
-                            <?php foreach ($result_flyers as $flyer): 
-                                // Deteksi nama kolom gambar secara dinamis
-                                $nama_file_foto = '';
-                                if (!empty($flyer['foto'])) {
-                                    $nama_file_foto = $flyer['foto'];
-                                } elseif (!empty($flyer['gambar'])) {
-                                    $nama_file_foto = $flyer['gambar'];
-                                } elseif (!empty($flyer['file'])) {
-                                    $nama_file_foto = $flyer['file'];
-                                } else {
-                                    $values = array_values($flyer);
-                                    $nama_file_foto = isset($values[2]) ? $values[2] : 'default.jpg';
-                                }
-
-                                $foto_flyer = BASE_URL . 'assets/uploads/' . $nama_file_foto;
-                            ?>
-                            <div class="flyer-slide-item">
-                            <img src="<?php echo $foto_flyer; ?>" 
-                                alt="Promo Flyer Manna Kampus" 
-                                onclick="openImageModal(this.src)" 
-                                style="cursor: pointer;">
-                        </div>
+                        <div class="mk-flyer-slider">
+                            <?php foreach ($result_flyers as $flyer): ?>
+                                <?php $photoFile = htmlspecialchars($flyer['photo'], ENT_QUOTES, 'UTF-8'); ?>
+                                <div class="mk-flyer-slide">
+                                    <div class="mk-flyer-slide-inner">
+                                        <img
+                                            src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $photoFile; ?>"
+                                            data-photo="<?php echo $photoFile; ?>"
+                                            alt="Flyer Promo <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?>">
+                                    </div>
+                                </div>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <div class="flyer-slide-item">
-                                <p style="padding: 40px; color:#8A7F73;">Belum ada brosur promo untuk cabang ini.</p>
-                            </div>
-                        <?php endif; ?>
+                        </div>
                     </div>
-                    
-                    <!-- Tombol Navigasi Kiri & Kanan -->
-                    <button class="mk-arrow-btn mk-arrow-left" id="flyerPrevBtn"><i class="fa fa-chevron-left"></i></button>
-                    <button class="mk-arrow-btn mk-arrow-right" id="flyerNextBtn"><i class="fa fa-chevron-right"></i></button>
-                </div>
 
-                <!-- Tombol Download & Print -->
-                <div class="mk-flyer-actions">
-                    <a id="downloadFlyerBtn" href="#" download class="mk-flyer-btn">
-                        <i class="fa fa-download"></i> Download
-                    </a>
-                    <button onclick="window.print()" class="mk-flyer-btn">
-                        <i class="fa fa-print"></i> Print
-                    </button>
-                </div>
-
+                    <div class="mk-flyer-actions">
+                        <a href="#" id="mk-flyer-download" class="mk-flyer-btn mk-flyer-btn-primary" download>
+                            <i class="fa fa-download"></i> Download
+                        </a>
+                        <a href="#" id="mk-flyer-print" class="mk-flyer-btn mk-flyer-btn-outline">
+                            <i class="fa fa-print"></i> Print
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <p class="mk-flyer-empty">Belum ada brosur promo untuk cabang ini saat ini.</p>
+                <?php endif; ?>
             </div>
         </section>
 
-
-        
         <!-- SECTION 6 : FASILITAS & KENYAMANAN -->
         <section class="mk-facility-section">
             <div class="mk-facility-wrap">
@@ -717,54 +718,84 @@ function changeActiveVideo(videoUrl, element) {
 }
 </script>
 
-<script type="text/javascript">
-(function($) {
-    $(window).on('load', function() {
-        var $slider = $('#flyerSlidesWrapper');
-        
-        if ($slider.length > 0) {
-            if ($slider.hasClass('slick-initialized')) {
-                $slider.slick('unslick');
-            }
+<?php if (!empty($result_flyers)): ?>
+<script>
+window.addEventListener('load', function () {
+    if (typeof jQuery === 'undefined') {
+        console.error('MK Flyer Carousel: jQuery tidak ditemukan.');
+        return;
+    }
+    var $ = jQuery;
 
-            $slider.slick({
-                centerMode: true,
-                centerPadding: '0px',
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                infinite: true,
-                speed: 400,
-                arrows: true,
-                prevArrow: $('#flyerPrevBtn'),
-                nextArrow: $('#flyerNextBtn'),
-                responsive: [
-                    {
-                        breakpoint: 768,
-                        settings: {
-                            slidesToShow: 1,
-                            centerPadding: '0px',
-                            centerMode: true
-                        }
-                    }
-                ]
-            });
+    if (typeof $.fn.slick === 'undefined') {
+        console.error('MK Flyer Carousel: Slick plugin tidak ter-load.');
+        return;
+    }
 
-            // Set link download awal setelah slider siap
-            setTimeout(updateDownloadLink, 100);
+    var $slider = $('.mk-flyer-slider');
+    if ($slider.hasClass('slick-initialized')) {
+        $slider.slick('unslick');
+    }
 
-            // Update link download tiap kali slide berubah (klik panah/geser)
-            $slider.on('afterChange', function(event, slick, currentSlide) {
-                updateDownloadLink();
-            });
+    $slider.slick({
+        centerMode: true,
+        centerPadding: '140px',
+        slidesToShow: 1,
+        arrows: false,
+        dots: false,
+        infinite: true,
+        speed: 400,
+        autoplay: true,
+        autoplaySpeed: 4000,
+        responsive: [
+            { breakpoint: 992, settings: { centerPadding: '80px' } },
+            { breakpoint: 576, settings: { centerPadding: '30px' } }
+        ]
+    });
+
+    $('#mk-flyer-prev').on('click', function () { $slider.slick('slickPrev'); });
+    $('#mk-flyer-next').on('click', function () { $slider.slick('slickNext'); });
+
+    // Klik gambar: kalau bukan slide tengah -> geser ke situ. Kalau slide tengah -> buka lightbox.
+    $slider.on('click', '.mk-flyer-slide-inner', function () {
+        var $slide = $(this).closest('.slick-slide');
+
+        if ($slide.hasClass('slick-current')) {
+            var clickedSrc = $(this).find('img').attr('src');
+            openImageModal(clickedSrc);
+        } else {
+            $slider.slick('slickGoTo', $slide.data('slick-index'));
         }
     });
 
-    // Switcher Cabang
-    $(document).on('change', '#branchFlyerSelect', function() {
-        var selectedId = $(this).val();
-        window.location.href = "?id=" + selectedId;
+    function updateFlyerActions() {
+        var $activeImg = $slider.find('.slick-current img');
+        if (!$activeImg.length) return;
+        var url = $activeImg.attr('src');
+        var filename = $activeImg.data('photo');
+        $('#mk-flyer-download').attr('href', url).attr('download', filename);
+        $('#mk-flyer-print').attr('href', url);
+    }
+    updateFlyerActions();
+    $slider.on('afterChange', updateFlyerActions);
+
+    $('#mk-flyer-print').on('click', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        var printWindow = window.open('', '_blank');
+        printWindow.document.write(
+            '<html><head><title>Print Flyer</title></head><body style="margin:0;text-align:center;">' +
+            '<img src="' + url + '" style="width:100%;max-width:800px;">' +
+            '</body></html>'
+        );
+        printWindow.document.close();
+        printWindow.onload = function () {
+            printWindow.focus();
+            printWindow.print();
+        };
     });
-})(jQuery);
+});
 </script>
+<?php endif; ?>
 
 <?php require_once('footer.php'); ?>
