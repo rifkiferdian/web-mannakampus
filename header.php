@@ -697,6 +697,9 @@ if($cur_page == 'blog.php')
 			background: #fff!important;
 			box-shadow: 0 12px 25px rgba(15,23,42,0.16)!important;
 		}
+		.mk-nav-group:not([open]) .mk-nav-submenu { display:none!important; }
+		.mk-nav-group[open] .mk-nav-submenu { display:flex!important; }
+		
 		.mk-nav .mk-nav-submenu a,
 		.mk-nav .mk-nav-submenu a:hover,
 		.mk-nav .mk-nav-submenu a:focus {
@@ -1378,7 +1381,7 @@ foreach ($result as $row)
 							<div class="mk-nav-submenu">
 								<a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">Tentang Kami</a>
 								<a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Perusahaan</a>
-								<a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Karir</a>
+								<a href="https://career.mannakampus.com/">Karir</a>
 								<a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Kegiatan Sosial</a>
 								<a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Kontak Kami</a>
 							</div>
@@ -1401,10 +1404,10 @@ foreach ($result as $row)
 							</div>
 						</details>
 						<details class="mk-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>">
-							<summary>Keanggotaan &amp; Komunitas</summary>
+							<summary>Keanggotaan &amp; Sosial Media</summary>
 							<div class="mk-nav-submenu">
 								<a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Keanggotaan</a>
-								<a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Pusat Komunitas</a>
+								<a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Sosial Media</a>
 							</div>
 						</details>
 						<details class="mk-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>">
@@ -1420,7 +1423,7 @@ foreach ($result as $row)
 						<summary aria-label="Buka menu navigasi"><i class="fa fa-bars" aria-hidden="true"></i></summary>
 						<nav class="mk-mobile-nav" aria-label="Navigasi utama mobile">
 							<a href="<?php echo BASE_URL; ?>"class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Beranda</a>
-							<details class="mk-mobile-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>"<?php echo $is_about_menu ? ' open' : ''; ?>><summary>Tentang Kami</summary><a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">Tentang Kami</a><a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Perusahaan</a><a href="career.php" class="<?php echo ($current_page == 'career.php') ? 'active' : ''; ?>">Karir</a><a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Kegiatan Sosial</a><a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Kontak Kami</a></details>
+							<details class="mk-mobile-nav-group<?php echo $is_about_menu ? ' active' : ''; ?>"<?php echo $is_about_menu ? ' open' : ''; ?>><summary>Tentang Kami</summary><a href="about-us.php" class="<?php echo ($current_page == 'about-us.php') ? 'active' : ''; ?>">Tentang Kami</a><a href="kemitraan.php" class="<?php echo ($current_page == 'kemitraan.php') ? 'active' : ''; ?>">Perusahaan</a><a href="https://career.mannakampus.com/">Karir</a><a href="social.php" class="<?php echo ($current_page == 'social.php') ? 'active' : ''; ?>">Kegiatan Sosial</a><a href="contact-us.php" class="<?php echo ($current_page == 'contact-us.php') ? 'active' : ''; ?>">Kontak Kami</a></details>
 							<details class="mk-mobile-nav-group<?php echo $is_blbms_menu ? ' active' : ''; ?>"<?php echo $is_blbms_menu ? ' open' : ''; ?>><summary>Program BLBMS</summary><a href="reward.php" class="<?php echo ($current_page == 'reward.php') ? 'active' : ''; ?>">Hadiah</a><a href="klaim-hadiah.php" class="<?php echo ($current_page == 'klaim-hadiah.php') ? 'active' : ''; ?>">Klaim Hadiah</a><a href="winners.php" class="<?php echo ($current_page == 'winners.php') ? 'active' : ''; ?>">Pemenang</a></details>
 							<details class="mk-mobile-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>"<?php echo $is_shopping_menu ? ' open' : ''; ?>><summary>Belanja</summary><a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a><a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Outlet</a></details>
 							<details class="mk-mobile-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>"<?php echo $is_membership_menu ? ' open' : ''; ?>><summary>Keanggotaan &amp; Komunitas</summary><a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Keanggotaan</a><a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Pusat Komunitas</a></details>
@@ -1482,6 +1485,24 @@ foreach ($result as $row)
 			document.addEventListener('keydown', function(event) {
 				if (event.key === 'Escape') {
 					closeTopbarDropdowns();
+				}
+			});
+
+			document.addEventListener('click', function(event) {
+				var clickedNavGroup = event.target.closest('.mk-nav-group, .mk-mobile-nav-group');
+
+				if (!clickedNavGroup) {
+					for (var i = 0; i < navGroups.length; i++) {
+						navGroups[i].removeAttribute('open');
+					}
+				}
+			});
+
+			document.addEventListener('click', function(event) {
+				var mobileMenu = document.querySelector('.mk-mobile-menu');
+
+				if (mobileMenu && mobileMenu.open && !event.target.closest('.mk-mobile-menu')) {
+					mobileMenu.removeAttribute('open');
 				}
 			});
 		})();

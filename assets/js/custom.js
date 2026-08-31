@@ -143,7 +143,7 @@
         $('.news-carousel').owlCarousel({
             loop: true,
             autoplay: true,
-            margin: 30,
+            margin: 0,
             dots: false,
             animateIn: true,
             responsiveClass: true,
@@ -172,7 +172,7 @@
         $('.testimonial-carousel').owlCarousel({
             loop: true,
             autoplay: true,
-            margin: 15,
+            margin: 0,
             dots: false,
             animateIn: true,
             responsiveClass: true,
@@ -230,7 +230,7 @@
         $('.partner-carousel').owlCarousel({
             loop: true,
             autoplay: true,
-            margin: 25,
+            margin: 5,
             dots: false,
             animateIn: true,
             responsiveClass: true,

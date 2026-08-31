@@ -288,14 +288,34 @@ if ($current_cabang) {
 <!-- Hero Shop End -->
 
 <?php
-// Ambil flyer sesuai cabang terpilih (menggunakan variabel dari atas)
+// Ambil flyer sesuai cabang terpilih dan tanggal aktif
 if ($selected_cabang_id > 0) {
-    $statement = $pdo->prepare("SELECT * FROM tbl_flyer WHERE id_cabang = ? ORDER BY id ASC");
-    $statement->execute(array($selected_cabang_id));
+
+    $statement = $pdo->prepare("
+        SELECT *
+        FROM tbl_flyer
+        WHERE id_cabang = ?
+          AND start_date <= CURDATE()
+          AND end_date >= CURDATE()
+        ORDER BY id ASC
+    ");
+
+    $statement->execute([$selected_cabang_id]);
+
 } else {
-    $statement = $pdo->prepare("SELECT * FROM tbl_flyer ORDER BY id ASC");
+
+    $statement = $pdo->prepare("
+        SELECT *
+        FROM tbl_flyer
+        WHERE start_date <= CURDATE()
+          AND end_date >= CURDATE()
+        ORDER BY id ASC
+    ");
+
     $statement->execute();
 }
+
+// Simpan hasil query ke variabel $flyers
 $flyers = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -393,10 +413,6 @@ $flyers = $statement->fetchAll(PDO::FETCH_ASSOC);
                                         <?php endif; ?>
                                         <span class="mk-price-now">Rp <?php echo number_format($p['harga_promo'], 0, ',', '.'); ?></span>
                                     </div>
-
-                                    <button class="mk-btn-cart">
-                                        Tambah ke Keranjang
-                                    </button>
                                 </div>
                             </div>
                         <?php endforeach; ?>

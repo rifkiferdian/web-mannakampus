@@ -36,14 +36,17 @@ if(isset($_SESSION['success_message'])) {
       <div class="box box-info">
         <div class="box-body table-responsive">
           <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th width="100">No</th>
-                    <th width="200">Branch</th>
-                    <th>Photo</th>
-                    <th width="150">Action</th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                        <th width="60">No</th>
+                        <th width="180">Branch</th>
+                        <th width="200">Photo</th>
+                        <th width="130">Start Date</th>
+                        <th width="130">End Date</th>
+                        <th width="100">Status</th>
+                        <th width="150">Action</th>
+                    </tr>
+                </thead>
             <tbody>
                 <?php
                 $i=0;
@@ -51,10 +54,29 @@ if(isset($_SESSION['success_message'])) {
                 $statement->execute();
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach ($result as $row) {
-                    $i++;
-                    $photo_file = !empty($row['photo']) ? '../assets/uploads/' . $row['photo'] : '';
-                    $photo_exists = $photo_file && file_exists($photo_file);
+                    foreach ($result as $row) {
+                        $i++;
+
+                        $photo_file = !empty($row['photo']) ? '../assets/uploads/' . $row['photo'] : '';
+                        $photo_exists = $photo_file && file_exists($photo_file);
+
+                        $today = date('Y-m-d');
+
+                        if (!empty($row['start_date']) && !empty($row['end_date'])) {
+                            if ($today < $row['start_date']) {
+                                $status = 'Scheduled';
+                                $status_class = 'label-warning';
+                            } elseif ($today > $row['end_date']) {
+                                $status = 'Expired';
+                                $status_class = 'label-danger';
+                            } else {
+                                $status = 'Active';
+                                $status_class = 'label-success';
+                            }
+                        } else {
+                            $status = 'No Date';
+                            $status_class = 'label-default';
+                        }
                     ?>
                     <tr>
                         <td><?php echo $i; ?></td>
@@ -62,12 +84,24 @@ if(isset($_SESSION['success_message'])) {
                         <td>
                             <?php if($photo_exists): ?>
                                 <img src="<?php echo $photo_file; ?>" alt="<?php echo htmlspecialchars($row['photo']); ?>" style="max-width:120px; max-height:80px; display:block; margin-bottom:4px;" />
-                                <span><?php echo htmlspecialchars($row['photo']); ?></span>
                             <?php elseif(!empty($row['photo'])): ?>
                                 <?php echo htmlspecialchars($row['photo']); ?>
                             <?php else: ?>
                                 -
                             <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php echo !empty($row['start_date']) ? date('d/m/Y', strtotime($row['start_date'])) : '-'; ?>
+                        </td>
+
+                        <td>
+                            <?php echo !empty($row['end_date']) ? date('d/m/Y', strtotime($row['end_date'])) : '-'; ?>
+                        </td>
+
+                        <td>
+                            <span class="label <?php echo $status_class; ?>">
+                                <?php echo $status; ?>
+                            </span>
                         </td>
                         <td>
                             <a href="branch-katalog-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-xs">Edit</a>

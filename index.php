@@ -861,7 +861,7 @@ function home_promo_event_date($start_date, $end_date) {
 							<div class="thumb">
 								<div class="photo" style="background-image:url(<?php echo BASE_URL; ?>assets/uploads/<?php echo $row['photo']; ?>);"></div>
 							</div>
-													<?php
+						<?php
 							// Bersihkan HTML dan potong deskripsi biar tidak terlalu panjang
 							$news_desc_plain = trim(strip_tags($row['news_content_short']));
 							$news_desc_plain = preg_replace('/\s+/', ' ', $news_desc_plain);

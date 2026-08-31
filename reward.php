@@ -40,6 +40,34 @@ $rewardImgPath = BASE_URL . 'assets/uploads/';
 $defaultRewardImg = BASE_URL . 'assets/images/reward-placeholder.png';
 ?>
 
+<?php
+$bulanIndonesia = [
+    1 => 'Januari',
+    2 => 'Februari',
+    3 => 'Maret',
+    4 => 'April',
+    5 => 'Mei',
+    6 => 'Juni',
+    7 => 'Juli',
+    8 => 'Agustus',
+    9 => 'September',
+    10 => 'Oktober',
+    11 => 'November',
+    12 => 'Desember'
+];
+
+$drawDate = '';
+
+if (!empty($periode['draw_date'])) {
+    $timestamp = strtotime($periode['draw_date']);
+
+    $drawDate =
+        date('d', $timestamp) . ' ' .
+        $bulanIndonesia[(int)date('m', $timestamp)] . ' ' .
+        date('Y', $timestamp);
+}
+?>
+
 <style>
     /* (CSS SAMA SEPERTI SEBELUMNYA, TIDAK ADA PERUBAHAN) */
     .mk-reward-hero{
@@ -158,6 +186,15 @@ $defaultRewardImg = BASE_URL . 'assets/images/reward-placeholder.png';
         .mk-reward-prize{ right:-10px; bottom:-12px; width:99px; min-height:74px; font-size:11px; }
     }
 
+    .mk-draw-date { display: inline-flex; align-items: center; gap: 12px; margin-top: 22px; padding: 11px 16px; background: #fff; border: 1px solid #f5c9a8; border-radius: 8px; box-shadow: 0 3px 10px rgba(244,119,22,.08); }
+.mk-draw-date-icon { width: 36px; height: 36px; border-radius: 7px; background: #fff1e5; display: flex; align-items: center; justify-content: center; color: #f47716; flex-shrink: 0; }
+.mk-draw-date-icon svg { width: 20px; height: 20px; stroke: currentColor; }
+.mk-draw-date-info { display: flex; flex-direction: column; gap: 2px; }
+.mk-draw-date-label { font-size: 11px; color: #777; font-weight: 600; line-height: 1.2; }
+.mk-draw-date-value { font-size: 15px; color: #f47716; font-weight: 800; line-height: 1.3; }
+
+@media (max-width: 480px) { .mk-draw-date { width: 100%; box-sizing: border-box; justify-content: flex-start; } .mk-draw-date-value { font-size: 14px; } }
+
     /* ===================== Prize List Section (Carousel) ================== */
     .mk-prize-section { padding: 60px 24px 80px; background: #fcfcfc; }
     .mk-prize-container { max-width: 1160px; margin: 0 auto; }
@@ -251,9 +288,35 @@ $defaultRewardImg = BASE_URL . 'assets/images/reward-placeholder.png';
                 <?php echo htmlspecialchars($periode['program_name'] ?? 'Manna Kampus'); ?>
                 <span><?php echo htmlspecialchars($periode['periode_name'] ?? ''); ?></span>
             </h1>
-            <p class="mk-reward-desc">Belanja lebih banyak, raih kesempatan memenangkan Grand Prize sebuah unit Rumah Type 48 serta SUV mewah dan 
-                ratusan hadiah menarik lainnya sebagai bentuk apresiasi kami bagi Anda pelanggan setia.</p>
-            
+                <p class="mk-reward-desc">
+                    Belanja lebih banyak, raih kesempatan memenangkan Grand Prize sebuah unit Rumah Type 48 serta SUV mewah dan 
+                    ratusan hadiah menarik lainnya sebagai bentuk apresiasi kami bagi Anda pelanggan setia.
+                </p>
+
+                <?php if (!empty($periode['draw_date'])): ?>
+                    <div class="mk-draw-date">
+                        
+                        <div class="mk-draw-date-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                <circle cx="12" cy="15" r="1"></circle>
+                            </svg>
+                        </div>
+
+                            <div class="mk-draw-date-info">
+                                <span class="mk-draw-date-label">Tanggal Diundi</span>
+                                <span class="mk-draw-date-value">
+                                    <?php echo htmlspecialchars($drawDate); ?>
+                                </span>
+                            </div>
+
+                        </div>
+                    <?php endif; ?>
+                    
             <div class="mk-reward-actions">
                 <!-- [REVISI] Tampilkan ke-3 tombol. Jika id-nya sama dengan periode aktif, beri kelas 'primary'. Jika tidak, beri kelas 'outline'. -->
                 <?php foreach ($allPeriodes as $p): ?>
