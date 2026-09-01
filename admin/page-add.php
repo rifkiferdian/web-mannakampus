@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -18,19 +19,10 @@ if(isset($_POST['form1'])) {
     	}
     }
 
-    $path = $_FILES['banner']['name'];
-    $path_tmp = $_FILES['banner']['tmp_name'];
-
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for banner<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo for banner<br>';
+    $image_valid = isset($_FILES['banner']) ? image_upload_validate($_FILES['banner']) : false;
+    if($image_valid === false) {
+        $valid = 0;
+        $error_message .= 'You must have to upload a valid JPG or PNG file for banner (max 3 MB)<br>';
     }
 
     if($valid == 1) {
@@ -60,14 +52,21 @@ if(isset($_POST['form1'])) {
 			$page_slug = $page_slug.'-1';
 		}
 
-		$final_name = 'page-banner-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-    	
-		// saving into the database
-		$statement = $pdo->prepare("INSERT INTO tbl_page (page_name,page_slug,page_content,page_layout,banner,status,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?)");
-		$statement->execute(array($_POST['page_name'],$page_slug,$_POST['page_content'],$_POST['page_layout'],$final_name,$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
+		$final_name = image_upload_save_as_webp(
+			$_FILES['banner'],
+			'page-banner-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
 
-    	$success_message = 'Page is added successfully.';
+		if($final_name === false) {
+			$error_message .= 'Banner tidak dapat diunggah.<br>';
+		} else {
+			// saving into the database
+			$statement = $pdo->prepare("INSERT INTO tbl_page (page_name,page_slug,page_content,page_layout,banner,status,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?)");
+			$statement->execute(array($_POST['page_name'],$page_slug,$_POST['page_content'],$_POST['page_layout'],$final_name,$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
+
+			$success_message = 'Page is added successfully.';
+		}
     }
 }
 ?>
@@ -143,7 +142,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Banner <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="banner">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="banner" accept="image/jpeg, image/png">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>					
 						<div class="form-group">

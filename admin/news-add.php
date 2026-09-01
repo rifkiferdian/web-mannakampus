@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -46,18 +47,11 @@ if(isset($_POST['form1'])) {
 	}
 
 
-	$path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
-
-
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' && $ext!='JPG' && $ext!='PNG' && $ext!='JPEG' && $ext!='GIF' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
-    }
+	$image_valid = isset($_FILES['photo']) ? image_upload_validate($_FILES['photo']) : false;
+	if($image_valid === false) {
+		$valid = 0;
+		$error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
+	}
 	
 
 	if($valid == 1) {
@@ -93,8 +87,16 @@ if(isset($_POST['form1'])) {
 			$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],'',$_POST['category_id'],$publisher,0,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
 		} else {
     		// uploading the photo into the main location and giving it a final name
-    		$final_name = 'news-'.$ai_id.'.'.$ext;
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+			$final_name = image_upload_save_as_webp(
+				$_FILES['photo'],
+				'news-'.$news_slug,
+				__DIR__.'/../assets/uploads/'
+			);
+			if($final_name === false) {
+				$error_message .= 'Gambar tidak dapat diunggah.<br>';
+			} else {
+				// lanjut INSERT ke database seperti biasa
+			}
 
             $statement = $pdo->prepare("INSERT INTO tbl_news (news_title,news_slug,news_content,news_content_short,news_date,photo,category_id,publisher,total_view,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 			$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$final_name,$_POST['category_id'],$publisher,0,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));

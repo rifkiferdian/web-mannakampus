@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -19,20 +20,20 @@ if(isset($_POST['form1'])) {
         $error_message .= "Promo Price can not be empty<br>";
     }
 
-    $path = $_FILES['foto']['name'];
-    $path_tmp = $_FILES['foto']['tmp_name'];
+    // Photo is optional here, only validate if the user actually chose a file
+    $has_image = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
     $final_name = 'default-product.jpg';
 
-    if($path != '') {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
-        if($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'gif') {
+    if($has_image) {
+        $image_valid = image_upload_validate($_FILES['foto']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for photo<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
-        if($path != '') {
+        if($has_image) {
             $statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_cabang_promo'");
             $statement->execute();
             $result = $statement->fetchAll();
@@ -40,24 +41,34 @@ if(isset($_POST['form1'])) {
                 $ai_id = $row[10];
             }
 
-            $final_name = 'branch-promo-'.$ai_id.'.'.$ext;
-            move_uploaded_file($path_tmp, '../assets/uploads/'.$final_name);
+            $final_name = image_upload_save_as_webp(
+                $_FILES['foto'],
+                'branch-promo-'.$ai_id,
+                __DIR__.'/../assets/uploads/'
+            );
+
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            }
         }
 
-        $statement = $pdo->prepare("INSERT INTO tbl_cabang_promo (id_cabang, badge, kategori, nama_produk, harga_coret, harga_promo, foto) VALUES (?,?,?,?,?,?,?)");
-        $statement->execute(array(
-            $_POST['id_cabang'],
-            $_POST['badge'],
-            $_POST['kategori'],
-            $_POST['nama_produk'],
-            $_POST['harga_coret'] != '' ? $_POST['harga_coret'] : null,
-            $_POST['harga_promo'],
-            $final_name
-        ));
+        if($valid == 1) {
+            $statement = $pdo->prepare("INSERT INTO tbl_cabang_promo (id_cabang, badge, kategori, nama_produk, harga_coret, harga_promo, foto) VALUES (?,?,?,?,?,?,?)");
+            $statement->execute(array(
+                $_POST['id_cabang'],
+                $_POST['badge'],
+                $_POST['kategori'],
+                $_POST['nama_produk'],
+                $_POST['harga_coret'] != '' ? $_POST['harga_coret'] : null,
+                $_POST['harga_promo'],
+                $final_name
+            ));
 
-        $_SESSION['success_message'] = 'Branch promo is added successfully.';
-        header('Location: branch-promo.php');
-        exit;
+            $_SESSION['success_message'] = 'Branch promo is added successfully.';
+            header('Location: branch-promo.php');
+            exit;
+        }
     }
 }
 
@@ -132,7 +143,7 @@ $cabang_list = $statement->fetchAll();
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Photo</label>
                             <div class="col-sm-9" style="padding-top:5px">
-                                <input type="file" name="foto"> (Only jpg, jpeg, gif and png are allowed)
+                                <input type="file" name="foto"> (Only JPG or PNG, max 3 MB)
                             </div>
                         </div>
                         <div class="form-group">

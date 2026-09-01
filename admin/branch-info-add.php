@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -23,19 +24,10 @@ if(isset($_POST['form1'])) {
         $error_message .= "Address can not be empty<br>";
     }
 
-    $path = $_FILES['foto']['name'];
-    $path_tmp = $_FILES['foto']['tmp_name'];
-
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for photo<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo for photo<br>';
+    $image_valid = isset($_FILES['foto']) ? image_upload_validate($_FILES['foto']) : false;
+    if($image_valid === false) {
+        $valid = 0;
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if($valid == 1) {
@@ -48,14 +40,21 @@ if(isset($_POST['form1'])) {
 			$ai_id=$row[10];
 		}
 
-		$final_name = 'cabang-foto-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-    	
-		// saving into the database
-		$statement = $pdo->prepare("INSERT INTO tbl_cabang (nama_cabang, alamat, foto) VALUES (?,?,?)");
-		$statement->execute(array($_POST['nama_cabang'], $_POST['alamat'], $final_name));
+		$final_name = image_upload_save_as_webp(
+			$_FILES['foto'],
+			'cabang-foto-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
 
-    	$success_message = 'Branch information is added successfully.';
+		if($final_name === false) {
+			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+		} else {
+			// saving into the database
+			$statement = $pdo->prepare("INSERT INTO tbl_cabang (nama_cabang, alamat, foto) VALUES (?,?,?)");
+			$statement->execute(array($_POST['nama_cabang'], $_POST['alamat'], $final_name));
+
+			$success_message = 'Branch information is added successfully.';
+		}
     }
 }
 ?>
@@ -131,7 +130,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Branch Photo <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="foto">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="foto">(Only JPG or PNG, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">

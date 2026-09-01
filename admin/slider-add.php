@@ -1,23 +1,23 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
 	$valid = 1;
 
-	$path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
+	// ══ Foto wajib diisi ══
+	$has_photo = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo<br>';
-    }
+	if($has_photo) {
+		$photo_valid = image_upload_validate($_FILES['photo']);
+		if($photo_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
+		}
+	} else {
+		$valid = 0;
+		$error_message .= 'You must have to select a photo<br>';
+	}
 
 	if($valid == 1) {
 
@@ -29,20 +29,28 @@ if(isset($_POST['form1'])) {
 			$ai_id=$row[10];
 		}
 
+		// ══ Simpan foto sebagai WebP ══
+		$final_name = image_upload_save_as_webp(
+			$_FILES['photo'],
+			'slider-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
+		if($final_name === false) {
+			$valid = 0;
+			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+		}
 
-		$final_name = 'slider-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+		if($valid == 1) {
+			$statement = $pdo->prepare("INSERT INTO tbl_slider (photo,heading,content,button_text,button_url,position,status) VALUES (?,?,?,?,?,?,?)");
+			$statement->execute(array($final_name,$_POST['heading'],$_POST['content'],$_POST['button_text'],$_POST['button_url'],$_POST['position'],$_POST['status']));
 
-	
-		$statement = $pdo->prepare("INSERT INTO tbl_slider (photo,heading,content,button_text,button_url,position,status) VALUES (?,?,?,?,?,?,?)");
-		$statement->execute(array($final_name,$_POST['heading'],$_POST['content'],$_POST['button_text'],$_POST['button_url'],$_POST['position'],$_POST['status']));
-			
-		$success_message = 'Slider is added successfully!';
+			$success_message = 'Slider is added successfully!';
 
-		unset($_POST['heading']);
-		unset($_POST['content']);
-		unset($_POST['button_text']);
-		unset($_POST['button_url']);
+			unset($_POST['heading']);
+			unset($_POST['content']);
+			unset($_POST['button_text']);
+			unset($_POST['button_url']);
+		}
 	}
 }
 ?>
@@ -82,7 +90,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Photo <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="photo">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">

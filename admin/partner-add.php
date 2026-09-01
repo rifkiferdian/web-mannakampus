@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -9,20 +10,19 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'Name can not be empty<br>';
 	}
 
-	$path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
+	// ══ Foto wajib diisi ══
+	$has_photo = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo<br>';
-    }
+	if($has_photo) {
+		$photo_valid = image_upload_validate($_FILES['photo']);
+		if($photo_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
+		}
+	} else {
+		$valid = 0;
+		$error_message .= 'You must have to select a photo<br>';
+	}
 
 	if($valid == 1) {
 
@@ -34,18 +34,26 @@ if(isset($_POST['form1'])) {
 			$ai_id=$row[10];
 		}
 
+		// ══ Simpan foto sebagai WebP ══
+		$final_name = image_upload_save_as_webp(
+			$_FILES['photo'],
+			'partner-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
+		if($final_name === false) {
+			$valid = 0;
+			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+		}
 
-		$final_name = 'partner-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+		if($valid == 1) {
+			$statement = $pdo->prepare("INSERT INTO tbl_partner (name,url,photo) VALUES (?,?,?)");
+			$statement->execute(array($_POST['name'],$_POST['url'],$final_name));
 
-	
-		$statement = $pdo->prepare("INSERT INTO tbl_partner (name,url,photo) VALUES (?,?,?)");
-		$statement->execute(array($_POST['name'],$_POST['url'],$final_name));
-			
-		$success_message = 'Partner is added successfully!';
+			$success_message = 'Partner is added successfully!';
 
-		unset($_POST['name']);
-		unset($_POST['url']);
+			unset($_POST['name']);
+			unset($_POST['url']);
+		}
 	}
 }
 ?>
@@ -97,7 +105,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Photo <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="photo">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">

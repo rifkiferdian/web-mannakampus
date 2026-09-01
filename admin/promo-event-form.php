@@ -32,7 +32,7 @@
 							<label class="col-sm-2 control-label"><?php echo $is_edit ? 'Ganti Gambar' : 'Gambar'; ?> <?php if(!$is_edit): ?><span>*</span><?php endif; ?></label>
 							<div class="col-sm-9" style="padding-top:5px;">
 								<input type="file" name="image" accept=".jpg,.jpeg,.png,.gif,.webp">
-								<small>JPG, PNG, GIF, atau WebP, maksimal 8 MB. Rekomendasi ukuran 1800 × 800 px.</small>
+								<small>JPG atau PNG, maksimal 3 MB. Rekomendasi ukuran 1800 × 800 px.</small>
 							</div>
 						</div>
 

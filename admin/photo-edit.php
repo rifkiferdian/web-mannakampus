@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <style>
 .no-plus-icon::before {
@@ -32,36 +33,51 @@ if(isset($_POST['form1'])) {
         $error_message .= "Photo Caption Name can not be empty<br>";
     }
 
-    $path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
+    // Cek apakah user mengunggah file foto baru
+    $has_new_image = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-    	$ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['photo']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
        
     if($valid == 1) {
 
-    	if($path == '') {
-    		// updating into the database
+    	if(!$has_new_image) {
+    		// updating into the database (no new photo uploaded)
 			$statement = $pdo->prepare("UPDATE tbl_photo SET photo_caption=?, p_category_id=? WHERE photo_id=?");
 			$statement->execute(array($_POST['photo_caption'],$_POST['p_category_id'],$_REQUEST['id']));
+
+			$success_message = 'Photo is updated successfully.';
     	} else {
-    		unlink('../assets/uploads/'.$_POST['previous_photo']);
 
-    		$final_name = 'photo-'.$_REQUEST['id'].'.'.$ext;
-        	move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+    		$final_name = image_upload_save_as_webp(
+    			$_FILES['photo'],
+    			'photo-'.$_REQUEST['id'],
+    			__DIR__.'/../assets/uploads/'
+    		);
 
-        	// updating into the database
-			$statement = $pdo->prepare("UPDATE tbl_photo SET photo_caption=?, photo_name=?, p_category_id=? WHERE photo_id=?");
-			$statement->execute(array($_POST['photo_caption'],$final_name,$_POST['p_category_id'],$_REQUEST['id']));
+    		if($final_name === false) {
+    			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+    		} else {
+	        	// updating into the database (with new photo)
+				$statement = $pdo->prepare("UPDATE tbl_photo SET photo_caption=?, photo_name=?, p_category_id=? WHERE photo_id=?");
+				$statement->execute(array($_POST['photo_caption'],$final_name,$_POST['p_category_id'],$_REQUEST['id']));
+
+				// Hapus foto lama SETELAH update berhasil & namanya beda
+				if($_POST['previous_photo'] !== $final_name) {
+					$old_path = __DIR__.'/../assets/uploads/'.basename($_POST['previous_photo']);
+					if(is_file($old_path)) {
+						unlink($old_path);
+					}
+				}
+
+				$success_message = 'Photo is updated successfully.';
+    		}
     	}
-    	
-    	$success_message = 'Photo is updated successfully.';
     }
 }
 ?>
@@ -138,9 +154,9 @@ foreach ($result as $row) {
 				            </div>
 				        </div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Upload New Photo <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Upload New Photo</label>
 							<div class="col-sm-4" style="padding-top:6px;">
-								<input type="file" name="photo">
+								<input type="file" name="photo"> (Only JPG or PNG, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">

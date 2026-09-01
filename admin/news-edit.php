@@ -1,4 +1,6 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
+
 <style>
 .no-plus-icon::before {
     display: none !important;
@@ -73,20 +75,18 @@ if(isset($_POST['form1'])) {
 		$publisher = $_POST['publisher'];	
 	}
 
+	// Upload gambar bersifat OPSIONAL saat edit.
+	// Cek apakah user benar-benar memilih file baru (bukan dikosongkan)
+	$has_new_image = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
+	$previous_photo = isset($_POST['previous_photo']) ? $_POST['previous_photo'] : '';
 
-	$path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
-
-    $previous_photo = $_POST['previous_photo'];
-
-	if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' && $ext!='JPG' && $ext!='PNG' && $ext!='JPEG' && $ext!='GIF' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
-    }
+	if($has_new_image) {
+		$image_valid = image_upload_validate($_FILES['photo']);
+		if($image_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
+		}
+	}
 
 	if($valid == 1) {
 
@@ -107,45 +107,38 @@ if(isset($_POST['form1'])) {
 			$news_slug = $news_slug.'-1';
 		}
 
-		// If previous image not found and user do not want to change the photo
-	    if($previous_photo == '' && $path == '') {
-	    	$statement = $pdo->prepare("UPDATE tbl_news SET news_title=?, news_slug=?, news_content=?, news_content_short=?, news_date=?, category_id=?, publisher=?, meta_title=?, meta_keyword=?, meta_description=? WHERE news_id=?");
-	    	$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$_POST['category_id'],$publisher,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
-	    }
+		$final_name = $previous_photo; // default: pertahankan foto lama
 
-		// If previous image found and user do not want to change the photo
-	    if($previous_photo != '' && $path == '') {
-	    	$statement = $pdo->prepare("UPDATE tbl_news SET news_title=?, news_slug=?, news_content=?, news_content_short=?, news_date=?, category_id=?, publisher=?, meta_title=?, meta_keyword=?, meta_description=? WHERE news_id=?");
-	    	$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$_POST['category_id'],$publisher,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
-	    }
+		if($has_new_image) {
+			$final_name = image_upload_save_as_webp(
+				$_FILES['photo'],
+				'news-'.$_REQUEST['id'],
+				__DIR__.'/../assets/uploads/'
+			);
 
+			if($final_name === false) {
+				$valid = 0;
+				$error_message .= 'Gambar tidak dapat diunggah.<br>';
+			}
+		}
 
-	    // If previous image not found and user want to change the photo
-	    if($previous_photo == '' && $path != '') {
+		if($valid == 1) {
+			// Simpan perubahan ke database
+			$statement = $pdo->prepare("UPDATE tbl_news SET news_title=?, news_slug=?, news_content=?, news_content_short=?, news_date=?, photo=?, category_id=?, publisher=?, meta_title=?, meta_keyword=?, meta_description=? WHERE news_id=?");
+			$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$final_name,$_POST['category_id'],$publisher,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
 
-	    	$final_name = 'news-'.$_REQUEST['id'].'.'.$ext;
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+			// Hapus foto lama HANYA kalau ada foto baru & namanya beda dari yang lama
+			if($has_new_image && $previous_photo !== '' && $previous_photo !== $final_name) {
+				$old_photo_path = __DIR__.'/../assets/uploads/'.$previous_photo;
+				if(is_file($old_photo_path)) {
+					unlink($old_photo_path);
+				}
+			}
 
-	    	$statement = $pdo->prepare("UPDATE tbl_news SET news_title=?, news_slug=?, news_content=?, news_content_short=?, news_date=?, photo=?, category_id=?, publisher=?, meta_title=?, meta_keyword=?, meta_description=? WHERE news_id=?");
-	    	$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$final_name,$_POST['category_id'],$publisher,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
-	    }
-
-	    
-	    // If previous image found and user want to change the photo
-		if($previous_photo != '' && $path != '') {
-
-	    	unlink('../assets/uploads/'.$previous_photo);
-
-	    	$final_name = 'news-'.$_REQUEST['id'].'.'.$ext;
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-	    	$statement = $pdo->prepare("UPDATE tbl_news SET news_title=?, news_slug=?, news_content=?, news_content_short=?, news_date=?, photo=?, category_id=?, publisher=?, meta_title=?, meta_keyword=?, meta_description=? WHERE news_id=?");
-	    	$statement->execute(array($_POST['news_title'],$news_slug,$_POST['news_content'],$_POST['news_content_short'],$_POST['news_date'],$final_name,$_POST['category_id'],$publisher,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
-	    }
-
-	    $_SESSION['success_message'] = 'News is updated successfully!';
-	    header('Location: news.php');
-	    exit;
+			$_SESSION['success_message'] = 'News is updated successfully!';
+			header('Location: news.php');
+			exit;
+		}
 	}
 }
 ?>
@@ -263,7 +256,8 @@ foreach ($result as $row) {
 						<div class="form-group">
 				            <label for="" class="col-sm-3 control-label">Change Featured Photo</label>
 				            <div class="col-sm-6" style="padding-top:6px;">
-				                <input type="file" name="photo">
+				                <input type="file" name="photo" accept="image/jpeg, image/png">
+				                <br><small>JPG atau PNG, maksimal 3 MB. Kosongkan jika tidak ingin mengganti foto.</small>
 				            </div>
 				        </div>
 						<div class="form-group">

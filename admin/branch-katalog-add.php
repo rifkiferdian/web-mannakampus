@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -10,9 +11,10 @@ if(isset($_POST['form1'])) {
         $error_message .= "Branch can not be empty<br>";
     }
 
-    if(empty($_FILES['photo']['name'])) {
+    $image_valid = isset($_FILES['photo']) ? image_upload_validate($_FILES['photo']) : false;
+    if($image_valid === false) {
         $valid = 0;
-        $error_message .= "Photo can not be empty<br>";
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if(empty($_POST['start_date'])) {
@@ -32,56 +34,43 @@ if(isset($_POST['form1'])) {
         }
     }
 
-    $path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
-    $final_name = '';
-
-    if($path != '') {
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'gif') {
-            $valid = 0;
-            $error_message .= 'You must upload jpg, jpeg, gif or png file for photo<br>';
-        }
-    }
-
     if($valid == 1) {
 
-        if($path != '') {
+        $statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_flyer'");
+        $statement->execute();
+        $result = $statement->fetchAll();
 
-            $statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_flyer'");
-            $statement->execute();
-            $result = $statement->fetchAll();
-
-            foreach($result as $row) {
-                $ai_id = $row[10];
-            }
-
-            $final_name = 'branch-katalog-' . $ai_id . '.' . $ext;
-
-            move_uploaded_file(
-                $path_tmp,
-                '../assets/uploads/' . $final_name
-            );
+        foreach($result as $row) {
+            $ai_id = $row[10];
         }
 
-        $statement = $pdo->prepare("
-            INSERT INTO tbl_flyer 
-            (id_cabang, photo, start_date, end_date) 
-            VALUES (?,?,?,?)
-        ");
+        $final_name = image_upload_save_as_webp(
+            $_FILES['photo'],
+            'branch-katalog-'.$ai_id,
+            __DIR__.'/../assets/uploads/'
+        );
 
-        $statement->execute(array(
-            $_POST['id_cabang'],
-            $final_name,
-            $_POST['start_date'],
-            $_POST['end_date']
-        ));
+        if($final_name === false) {
+            $error_message .= 'Gambar tidak dapat diunggah.<br>';
+        } else {
+            $statement = $pdo->prepare("
+                INSERT INTO tbl_flyer 
+                (id_cabang, photo, start_date, end_date) 
+                VALUES (?,?,?,?)
+            ");
 
-        $_SESSION['success_message'] = 'Branch katalog is added successfully.';
+            $statement->execute(array(
+                $_POST['id_cabang'],
+                $final_name,
+                $_POST['start_date'],
+                $_POST['end_date']
+            ));
 
-        header('Location: branch-katalog.php');
-        exit;
+            $_SESSION['success_message'] = 'Branch katalog is added successfully.';
+
+            header('Location: branch-katalog.php');
+            exit;
+        }
     }
 }
 
@@ -154,7 +143,7 @@ $cabang_list = $statement->fetchAll();
 
                                 <input type="file" name="photo">
 
-                                (Only jpg, jpeg, gif and png are allowed)
+                                (Only JPG or PNG, max 3 MB)
 
                             </div>
                         </div>

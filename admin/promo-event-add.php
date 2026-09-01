@@ -62,15 +62,19 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'Slug already exists.<br>';
 	}
 
-	$image_extension = isset($_FILES['image']) ? promo_event_upload_extension($_FILES['image']) : false;
-	if($image_extension === false) {
+	$image_valid = isset($_FILES['image']) ? image_upload_validate($_FILES['image']) : false;
+	if($image_valid === false) {
 		$valid = 0;
-		$error_message .= 'Unggah gambar JPG, PNG, GIF, atau WebP yang valid dengan ukuran maksimal 8 MB.<br>';
+		$error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran max 3 MB.<br>';
 	}
 
 	if($valid) {
-		$image_name = promo_event_image_name($form_data['slug'], $image_extension);
-		if(!move_uploaded_file($_FILES['image']['tmp_name'], __DIR__.'/../assets/uploads/'.$image_name)) {
+		$image_name = image_upload_save_as_webp(
+			$_FILES['image'],
+			'promo-event-'.$form_data['slug'],
+			__DIR__.'/../assets/uploads/'
+		);
+		if($image_name === false) {
 			$error_message .= 'Gambar tidak dapat diunggah.<br>';
 		} else {
 			$button_text = trim($form_data['button_text']) !== '' ? trim($form_data['button_text']) : 'Lihat Detail';

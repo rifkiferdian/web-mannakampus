@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <style>
 .no-plus-icon::before {
@@ -53,42 +54,58 @@ if(isset($_POST['form1'])) {
         $error_message .= "Alamat can not be empty<br>";
     }
 
-    $path = $_FILES['foto']['name'];
-    $path_tmp = $_FILES['foto']['tmp_name'];
+    // Cek apakah user mengunggah file foto baru
+    $has_new_image = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['foto']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
 
-   		if($path == '') {
-			// updating into the database (no new photo uploaded)
-			$statement = $pdo->prepare("UPDATE tbl_cabang SET nama_cabang=?, alamat=?, jam_operasional=?, kontak=?, badge_tipe=?, link_maps=? WHERE id=?");
-			$statement->execute(array($_POST['nama_cabang'],$_POST['alamat'],$_POST['jam_operasional'],$_POST['kontak'],$_POST['badge_tipe'],$_POST['link_maps'],$_REQUEST['id']));
-   		} else {
+    	$final_name = $_POST['current_foto']; // default: tetap pakai yang lama
 
-   			// remove old photo if it's not the default one
-   			if($_POST['current_foto']!='default.jpg' && file_exists('../assets/uploads/'.$_POST['current_foto'])) {
-   				unlink('../assets/uploads/'.$_POST['current_foto']);
-   			}
+    	if($has_new_image) {
+    		$final_name = image_upload_save_as_webp(
+    			$_FILES['foto'],
+    			'cabang-foto-'.$_REQUEST['id'],
+    			__DIR__.'/../assets/uploads/'
+    		);
 
-   			$final_name = 'cabang-foto-'.$_REQUEST['id'].'.'.$ext;
-        	move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+    		if($final_name === false) {
+    			$valid = 0;
+    			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+    		}
+    	}
 
-   			// updating into the database (with new photo)
-			$statement = $pdo->prepare("UPDATE tbl_cabang SET nama_cabang=?, alamat=?, jam_operasional=?, kontak=?, badge_tipe=?, foto=?, link_maps=? WHERE id=?");
-			$statement->execute(array($_POST['nama_cabang'],$_POST['alamat'],$_POST['jam_operasional'],$_POST['kontak'],$_POST['badge_tipe'],$final_name,$_POST['link_maps'],$_REQUEST['id']));
-   		}
+    	if($valid == 1) {
 
-    	$_SESSION['success_message'] = 'Branch info is updated successfully.';
-    	header('location: branch-info.php');
-    	exit;
+    		if(!$has_new_image) {
+				// updating into the database (no new photo uploaded)
+				$statement = $pdo->prepare("UPDATE tbl_cabang SET nama_cabang=?, alamat=?, jam_operasional=?, kontak=?, badge_tipe=?, link_maps=? WHERE id=?");
+				$statement->execute(array($_POST['nama_cabang'],$_POST['alamat'],$_POST['jam_operasional'],$_POST['kontak'],$_POST['badge_tipe'],$_POST['link_maps'],$_REQUEST['id']));
+	   		} else {
+				// updating into the database (with new photo)
+				$statement = $pdo->prepare("UPDATE tbl_cabang SET nama_cabang=?, alamat=?, jam_operasional=?, kontak=?, badge_tipe=?, foto=?, link_maps=? WHERE id=?");
+				$statement->execute(array($_POST['nama_cabang'],$_POST['alamat'],$_POST['jam_operasional'],$_POST['kontak'],$_POST['badge_tipe'],$final_name,$_POST['link_maps'],$_REQUEST['id']));
+
+				// Hapus file lama SETELAH update berhasil, kalau bukan default & namanya beda
+				if($_POST['current_foto']!='default.jpg' && $_POST['current_foto'] !== $final_name) {
+					$old_path = __DIR__.'/../assets/uploads/'.basename($_POST['current_foto']);
+					if(is_file($old_path)) {
+						unlink($old_path);
+					}
+				}
+	   		}
+
+	    	$_SESSION['success_message'] = 'Branch info is updated successfully.';
+	    	header('location: branch-info.php');
+	    	exit;
+    	}
     }
 }
 ?>
@@ -204,7 +221,7 @@ foreach ($result as $row) {
 				<div class="form-group">
 					<label for="" class="col-sm-2 control-label">Foto</label>
 					<div class="col-sm-9" style="padding-top:5px">
-						<input type="file" name="foto">(Only jpg, jpeg, gif and png are allowed)
+						<input type="file" name="foto">(Only JPG or PNG, max 3 MB)
 					</div>
 				</div>
                 <div class="form-group">

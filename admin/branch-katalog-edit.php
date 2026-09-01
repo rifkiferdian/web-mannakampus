@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <style>
 .no-plus-icon::before {
@@ -64,48 +65,62 @@ if(isset($_POST['form1'])) {
         }
     }
 
-    $path = isset($_FILES['photo']['name']) ? $_FILES['photo']['name'] : '';
-    $path_tmp = isset($_FILES['photo']['tmp_name']) ? $_FILES['photo']['tmp_name'] : '';
-    $final_name = $data['photo'];
+    // Cek apakah user mengunggah file foto baru
+    $has_new_image = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
+    $original_image = $data['photo'];
+    $final_name = $original_image;
 
-    if($path != '') {
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'gif') {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['photo']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must upload jpg, jpeg, gif or png file for photo<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
 
-        if($path != '') {
-            $final_name = 'branch-katalog-' . $id . '.' . $ext;
-
-            move_uploaded_file(
-                $path_tmp,
-                '../assets/uploads/' . $final_name
+        if($has_new_image) {
+            $final_name = image_upload_save_as_webp(
+                $_FILES['photo'],
+                'branch-katalog-'.$id,
+                __DIR__.'/../assets/uploads/'
             );
+
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            }
         }
 
-        $statement = $pdo->prepare("
-            UPDATE tbl_flyer 
-            SET id_cabang=?, photo=?, start_date=?, end_date=? 
-            WHERE id=?
-        ");
+        if($valid == 1) {
+            $statement = $pdo->prepare("
+                UPDATE tbl_flyer 
+                SET id_cabang=?, photo=?, start_date=?, end_date=? 
+                WHERE id=?
+            ");
 
-        $statement->execute(array(
-            $_POST['id_cabang'],
-            $final_name,
-            $_POST['start_date'],
-            $_POST['end_date'],
-            $id
-        ));
+            $statement->execute(array(
+                $_POST['id_cabang'],
+                $final_name,
+                $_POST['start_date'],
+                $_POST['end_date'],
+                $id
+            ));
 
-        $_SESSION['success_message'] = 'Branch katalog is updated successfully.';
+            // Hapus file lama SETELAH update berhasil, kalau namanya beda
+            if($has_new_image && !empty($original_image) && $original_image !== $final_name) {
+                $old_path = __DIR__.'/../assets/uploads/'.basename($original_image);
+                if(is_file($old_path)) {
+                    unlink($old_path);
+                }
+            }
 
-        header('Location: branch-katalog.php');
-        exit;
+            $_SESSION['success_message'] = 'Branch katalog is updated successfully.';
+
+            header('Location: branch-katalog.php');
+            exit;
+        }
     }
 
     $data['id_cabang'] = $_POST['id_cabang'];
@@ -190,7 +205,7 @@ $cabang_list = $statement->fetchAll();
 
                                 <input type="file" name="photo">
 
-                                (Only jpg, jpeg, gif and png are allowed)
+                                (Only JPG or PNG, max 3 MB)
 
                                 <?php if(!empty($data['photo'])): ?>
 

@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -15,36 +16,31 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'You must have to select a designation<br>';
 	}
 
-	$path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
+	// ══ Validasi foto (photo) ══
+	$has_photo = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
+	if($has_photo) {
+		$photo_valid = image_upload_validate($_FILES['photo']);
+		if($photo_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid (maks 3 MB) untuk foto penghargaan<br>';
+		}
+	} else {
+		$valid = 0;
+		$error_message .= 'You must have to select a photo for team member photo<br>';
+	}
 
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for team member photo<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo for team member photo<br>';
-    }
-
-
-    $path1 = $_FILES['banner']['name'];
-    $path_tmp1 = $_FILES['banner']['tmp_name'];
-
-    if($path1!='') {
-        $ext1 = pathinfo( $path1, PATHINFO_EXTENSION );
-        $file_name1 = basename( $path1, '.' . $ext1 );
-        if( $ext1!='jpg' && $ext1!='png' && $ext1!='jpeg' && $ext1!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for banner<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo for banner<br>';
-    }
+	// ══ Validasi banner ══
+	$has_banner = isset($_FILES['banner']) && $_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE;
+	if($has_banner) {
+		$banner_valid = image_upload_validate($_FILES['banner']);
+		if($banner_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid (maks 3 MB) untuk banner<br>';
+		}
+	} else {
+		$valid = 0;
+		$error_message .= 'You must have to select a photo for banner<br>';
+	}
 
 	if($valid == 1) {
 
@@ -73,37 +69,54 @@ if(isset($_POST['form1'])) {
 			$slug = $slug.'-1';
 		}
 
-		$final_name = 'team-member-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+		// ══ Simpan foto sebagai WebP ══
+		$final_name = image_upload_save_as_webp(
+			$_FILES['photo'],
+			'team-member-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
+		if($final_name === false) {
+			$valid = 0;
+			$error_message .= 'Gambar foto tidak dapat diunggah.<br>';
+		}
 
-        $final_name1 = 'team-member-banner-'.$ai_id.'.'.$ext1;
-        move_uploaded_file( $path_tmp1, '../assets/uploads/'.$final_name1 );
+		// ══ Simpan banner sebagai WebP ══
+		$final_name1 = image_upload_save_as_webp(
+			$_FILES['banner'],
+			'team-member-banner-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
+		if($final_name1 === false) {
+			$valid = 0;
+			$error_message .= 'Gambar banner tidak dapat diunggah.<br>';
+		}
 
-	
-		$statement = $pdo->prepare("INSERT INTO tbl_team_member (name,slug,designation_id,photo,banner,degree,detail,facebook,twitter,linkedin,youtube,google_plus,instagram,flickr,address,practice_location,phone,email,website,status,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
-			
-	$success_message = 'Penghargaan berhasil ditambahkan!';
+		if($valid == 1) {
+			$statement = $pdo->prepare("INSERT INTO tbl_team_member (name,slug,designation_id,photo,banner,degree,detail,facebook,twitter,linkedin,youtube,google_plus,instagram,flickr,address,practice_location,phone,email,website,status,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
 
-		unset($_POST['name']);
-		unset($_POST['slug']);
-		unset($_POST['degree']);
-		unset($_POST['detail']);
-		unset($_POST['facebook']);
-		unset($_POST['twitter']);
-		unset($_POST['linkedin']);
-		unset($_POST['youtube']);
-		unset($_POST['google_plus']);
-		unset($_POST['instagram']);
-		unset($_POST['flickr']);
-		unset($_POST['address']);
-		unset($_POST['practice_location']);
-		unset($_POST['phone']);
-		unset($_POST['email']);
-		unset($_POST['website']);
-		unset($_POST['meta_title']);
-		unset($_POST['meta_keyword']);
-		unset($_POST['meta_description']);
+			$success_message = 'Penghargaan berhasil ditambahkan!';
+
+			unset($_POST['name']);
+			unset($_POST['slug']);
+			unset($_POST['degree']);
+			unset($_POST['detail']);
+			unset($_POST['facebook']);
+			unset($_POST['twitter']);
+			unset($_POST['linkedin']);
+			unset($_POST['youtube']);
+			unset($_POST['google_plus']);
+			unset($_POST['instagram']);
+			unset($_POST['flickr']);
+			unset($_POST['address']);
+			unset($_POST['practice_location']);
+			unset($_POST['phone']);
+			unset($_POST['email']);
+			unset($_POST['website']);
+			unset($_POST['meta_title']);
+			unset($_POST['meta_keyword']);
+			unset($_POST['meta_description']);
+		}
 	}
 }
 ?>
@@ -174,13 +187,13 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Gambar Penghargaan <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="photo">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Banner <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="banner">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="banner">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">

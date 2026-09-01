@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -9,19 +10,10 @@ if(isset($_POST['form1'])) {
         $error_message .= "Photo Caption Name can not be empty<br>";
     }
 
-    $path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
-
-    if($path == '') {
-    	$valid = 0;
-        $error_message .= "You must have to select a photo<br>";
-    } else {
-    	$ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
+    $image_valid = isset($_FILES['photo']) ? image_upload_validate($_FILES['photo']) : false;
+    if($image_valid === false) {
+        $valid = 0;
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if(empty($_POST['p_category_id'])) {
@@ -39,15 +31,22 @@ if(isset($_POST['form1'])) {
 			$ai_id=$row[10];
 		}
 
-		// uploading the photo into the main location and giving it a final name
-		$final_name = 'photo-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+		// uploading the photo, converting to webp, and giving it a final name
+		$final_name = image_upload_save_as_webp(
+			$_FILES['photo'],
+			'photo-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
 
-		// saving into the database
-		$statement = $pdo->prepare("INSERT INTO tbl_photo (photo_caption,photo_name,p_category_id) VALUES (?,?,?)");
-		$statement->execute(array($_POST['photo_caption'],$final_name,$_POST['p_category_id']));
+		if($final_name === false) {
+			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+		} else {
+			// saving into the database
+			$statement = $pdo->prepare("INSERT INTO tbl_photo (photo_caption,photo_name,p_category_id) VALUES (?,?,?)");
+			$statement->execute(array($_POST['photo_caption'],$final_name,$_POST['p_category_id']));
 
-    	$success_message = 'Photo is added successfully.';
+			$success_message = 'Photo is added successfully.';
+		}
     }
 }
 ?>
@@ -96,7 +95,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Upload Photo <span>*</span></label>
 							<div class="col-sm-4" style="padding-top:6px;">
-								<input type="file" name="photo">
+								<input type="file" name="photo"> (Only JPG or PNG, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">
