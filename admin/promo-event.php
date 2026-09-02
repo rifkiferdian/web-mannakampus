@@ -5,7 +5,7 @@
 		<h1>Promo &amp; Event Utama</h1>
 	</div>
 	<div class="content-header-right">
-		<a href="promo-event-add.php" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Tambah Baru</a>
+		<a href="promo-event-add.php" class="btn btn-primary btn-sm">Add New</a>
 	</div>
 </section>
 

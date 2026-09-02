@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 <style>
 .no-plus-icon::before {
     display: none !important;
@@ -37,22 +38,25 @@ if(isset($_POST['form1'])) {
         $error_message .= "Branch can not be empty<br>";
     }
 
-    $path = $_FILES['foto']['name'];
-    $path_tmp = $_FILES['foto']['tmp_name'];
+    // Cek apakah user mengunggah file foto baru
+    $has_new_image = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['foto']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
-        if($path == '') {
+        if(!$has_new_image) {
             $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ? WHERE id = ?");
             $statement->execute(array($_POST['id_cabang'],$id));
+
+            $_SESSION['success_message'] = 'Branch gallery is updated successfully.';
+            header('Location: branch-galleries.php');
+            exit;
         } else {
             // get old photo name
             $statement = $pdo->prepare("SELECT foto FROM tbl_cabang_galeri WHERE id = ?");
@@ -62,25 +66,31 @@ if(isset($_POST['form1'])) {
                 $old_photo = $row['foto'];
             }
 
-            // generate new name
-            $ext = pathinfo( $path, PATHINFO_EXTENSION );
-            $final_name = 'branch-gallery-'.$id.'.'.$ext;
+            $final_name = image_upload_save_as_webp(
+                $_FILES['foto'],
+                'branch-gallery-'.$id,
+                __DIR__.'/../assets/uploads/'
+            );
 
-            // upload new
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+            if($final_name === false) {
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            } else {
+                $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ?, foto = ? WHERE id = ?");
+                $statement->execute(array($_POST['id_cabang'],$final_name,$id));
 
-            // delete old
-            if($old_photo != '' && file_exists('../assets/uploads/'.$old_photo)){
-                @unlink('../assets/uploads/'.$old_photo);
+                // Hapus foto lama SETELAH update berhasil
+                if($old_photo != '' && $old_photo !== $final_name) {
+                    $old_path = __DIR__.'/../assets/uploads/'.basename($old_photo);
+                    if(is_file($old_path)) {
+                        @unlink($old_path);
+                    }
+                }
+
+                $_SESSION['success_message'] = 'Branch gallery is updated successfully.';
+                header('Location: branch-galleries.php');
+                exit;
             }
-
-            $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ?, foto = ? WHERE id = ?");
-            $statement->execute(array($_POST['id_cabang'],$final_name,$id));
         }
-
-        $_SESSION['success_message'] = 'Branch gallery is updated successfully.';
-        header('Location: branch-galleries.php');
-        exit;
     }
 }
 
@@ -153,7 +163,7 @@ $cabang_list = $statement->fetchAll();
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Replace Photo</label>
                             <div class="col-sm-4" style="padding-top:6px;">
-                                <input type="file" name="foto">
+                                <input type="file" name="foto"> (Only JPG or PNG, max 3 MB)
                             </div>
                         </div>
                         <div class="form-group">

@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -19,35 +20,17 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'Short Description can not be empty<br>';
 	}
 
-	$path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
+	$image_valid = isset($_FILES['photo']) ? image_upload_validate($_FILES['photo']) : false;
+	if($image_valid === false) {
+		$valid = 0;
+		$error_message .= 'Unggah gambar JPG atau PNG yang valid untuk featured photo, dengan ukuran maksimal 3 MB.<br>';
+	}
 
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for featured photo<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo for featured photo<br>';
-    }
-
-    $path1 = $_FILES['banner']['name'];
-    $path_tmp1 = $_FILES['banner']['tmp_name'];
-
-    if($path1!='') {
-        $ext1 = pathinfo( $path1, PATHINFO_EXTENSION );
-        $file_name1 = basename( $path1, '.' . $ext1 );
-        if( $ext1!='jpg' && $ext1!='png' && $ext1!='jpeg' && $ext1!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for banner<br>';
-        }
-    } else {
-    	$valid = 0;
-        $error_message .= 'You must have to select a photo for banner<br>';
-    }
+	$banner_valid = isset($_FILES['banner']) ? image_upload_validate($_FILES['banner']) : false;
+	if($banner_valid === false) {
+		$valid = 0;
+		$error_message .= 'Unggah gambar JPG atau PNG yang valid untuk banner, dengan ukuran maksimal 3 MB.<br>';
+	}
 
 	if($valid == 1) {
 
@@ -76,24 +59,35 @@ if(isset($_POST['form1'])) {
 			$slug = $slug.'-1';
 		}
 
-		$final_name = 'service-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+		$final_name = image_upload_save_as_webp(
+			$_FILES['photo'],
+			'service-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
 
-        $final_name1 = 'service-banner-'.$ai_id.'.'.$ext1;
-        move_uploaded_file( $path_tmp1, '../assets/uploads/'.$final_name1 );
+		$final_name1 = image_upload_save_as_webp(
+			$_FILES['banner'],
+			'service-banner-'.$ai_id,
+			__DIR__.'/../assets/uploads/'
+		);
 
-		$statement = $pdo->prepare("INSERT INTO tbl_service (name,slug,description,short_description,photo,banner,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?)");
-		$statement->execute(array($_POST['name'],$slug,$_POST['description'],$_POST['short_description'],$final_name,$final_name1,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
-			
-		$success_message = 'Service is added successfully!';
+		if($final_name === false || $final_name1 === false) {
+			$error_message .= 'Gambar tidak dapat diunggah.<br>';
+		} else {
 
-		unset($_POST['name']);
-		unset($_POST['slug']);
-		unset($_POST['description']);
-		unset($_POST['short_description']);
-		unset($_POST['meta_title']);
-		unset($_POST['meta_keyword']);
-		unset($_POST['meta_description']);
+			$statement = $pdo->prepare("INSERT INTO tbl_service (name,slug,description,short_description,photo,banner,meta_title,meta_keyword,meta_description) VALUES (?,?,?,?,?,?,?,?,?)");
+			$statement->execute(array($_POST['name'],$slug,$_POST['description'],$_POST['short_description'],$final_name,$final_name1,$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description']));
+
+			$success_message = 'Service is added successfully!';
+
+			unset($_POST['name']);
+			unset($_POST['slug']);
+			unset($_POST['description']);
+			unset($_POST['short_description']);
+			unset($_POST['meta_title']);
+			unset($_POST['meta_keyword']);
+			unset($_POST['meta_description']);
+		}
 	}
 }
 ?>
@@ -157,13 +151,13 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Featured Photo <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="photo">(Only JPG or PNG, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Banner Photo <span>*</span></label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="banner">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="banner">(Only JPG or PNG, max 3 MB)
 							</div>
 						</div>
 						<h3 class="seo-info">SEO Information</h3>

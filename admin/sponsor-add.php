@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <style>
 .no-plus-icon::before {
@@ -38,16 +39,14 @@ if(isset($_POST['form1'])) {
         $error_message .= "Sponsor name can not be empty<br>";
     }
 
-    // Process Image Upload
-    $path = $_FILES['img']['name'];
-    $path_tmp = $_FILES['img']['tmp_name'];
+    // ══ Logo/gambar wajib diisi ══
+    $has_image = isset($_FILES['img']) && $_FILES['img']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
-        $file_name = basename($path, "." . $ext);
-        if($ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' && $ext!='webp') {
+    if($has_image) {
+        $image_valid = image_upload_validate($_FILES['img']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= "You must have to upload jpg, jpeg, gif, webp or png file<br>";
+            $error_message .= "Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>";
         }
     } else {
         $valid = 0;
@@ -55,19 +54,28 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
-        $final_name = 'sponsor-'.$_POST['id_program'].'-'.time().'.'.$ext;
-        move_uploaded_file($path_tmp, '../assets/uploads/'.$final_name);
+        $final_name = image_upload_save_as_webp(
+            $_FILES['img'],
+            'sponsor-'.$_POST['id_program'].'-'.time(),
+            __DIR__.'/../assets/uploads/'
+        );
+        if($final_name === false) {
+            $valid = 0;
+            $error_message .= 'Gambar tidak dapat diunggah.<br>';
+        }
 
-        $statement = $pdo->prepare("INSERT INTO tbl_sponsor (id_program, sponsor_name, img) VALUES (?,?,?)");
-        $statement->execute(array(
-            $_POST['id_program'],
-            $_POST['sponsor_name'],
-            $final_name
-        ));
+        if($valid == 1) {
+            $statement = $pdo->prepare("INSERT INTO tbl_sponsor (id_program, sponsor_name, img) VALUES (?,?,?)");
+            $statement->execute(array(
+                $_POST['id_program'],
+                $_POST['sponsor_name'],
+                $final_name
+            ));
 
-        $_SESSION['success_message'] = 'Sponsor is added successfully.';
-        header('Location: sponsor.php');
-        exit;
+            $_SESSION['success_message'] = 'Sponsor is added successfully.';
+            header('Location: sponsor.php');
+            exit;
+        }
     }
 }
 
@@ -132,7 +140,7 @@ $program_list = $statement->fetchAll(PDO::FETCH_ASSOC);
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Logo / Image <span>*</span></label>
                             <div class="col-sm-4">
-                                <input type="file" name="img">
+                                <input type="file" name="img">(Only jpg and png are allowed, max 3 MB)
                             </div>
                         </div>
 

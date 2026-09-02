@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 <style>
 .no-plus-icon::before {
     display: none !important;
@@ -51,39 +52,58 @@ if(isset($_POST['form1'])) {
         $error_message .= "Promo Price can not be empty<br>";
     }
 
-    $path = $_FILES['foto']['name'];
-    $path_tmp = $_FILES['foto']['tmp_name'];
-    $final_name = $data['foto'];
+    // Cek apakah user mengunggah file foto baru
+    $has_new_image = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
+    $original_image = $data['foto'];
+    $final_name = $original_image;
 
-    if($path != '') {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
-        if($ext != 'jpg' && $ext != 'jpeg' && $ext != 'png' && $ext != 'gif') {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['foto']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for photo<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
-        if($path != '') {
-            $final_name = 'branch-promo-'.$id.'.'.$ext;
-            move_uploaded_file($path_tmp, '../assets/uploads/'.$final_name);
+        if($has_new_image) {
+            $final_name = image_upload_save_as_webp(
+                $_FILES['foto'],
+                'branch-promo-'.$id,
+                __DIR__.'/../assets/uploads/'
+            );
+
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            }
         }
 
-        $statement = $pdo->prepare("UPDATE tbl_cabang_promo SET id_cabang=?, badge=?, kategori=?, nama_produk=?, harga_coret=?, harga_promo=?, foto=? WHERE id=?");
-        $statement->execute(array(
-            $_POST['id_cabang'],
-            $_POST['badge'],
-            $_POST['kategori'],
-            $_POST['nama_produk'],
-            $_POST['harga_coret'] != '' ? $_POST['harga_coret'] : null,
-            $_POST['harga_promo'],
-            $final_name,
-            $id
-        ));
+        if($valid == 1) {
+            $statement = $pdo->prepare("UPDATE tbl_cabang_promo SET id_cabang=?, badge=?, kategori=?, nama_produk=?, harga_coret=?, harga_promo=?, foto=? WHERE id=?");
+            $statement->execute(array(
+                $_POST['id_cabang'],
+                $_POST['badge'],
+                $_POST['kategori'],
+                $_POST['nama_produk'],
+                $_POST['harga_coret'] != '' ? $_POST['harga_coret'] : null,
+                $_POST['harga_promo'],
+                $final_name,
+                $id
+            ));
 
-        $_SESSION['success_message'] = 'Branch promo is updated successfully.';
-        header('Location: branch-promo.php');
-        exit;
+            // Hapus file lama SETELAH update berhasil, kalau bukan gambar default & namanya beda
+            if($has_new_image && $original_image !== 'default-product.jpg' && $original_image !== $final_name) {
+                $old_path = __DIR__.'/../assets/uploads/'.basename($original_image);
+                if(is_file($old_path)) {
+                    unlink($old_path);
+                }
+            }
+
+            $_SESSION['success_message'] = 'Branch promo is updated successfully.';
+            header('Location: branch-promo.php');
+            exit;
+        }
     }
 
     $data['id_cabang'] = $_POST['id_cabang'];
@@ -173,7 +193,7 @@ $cabang_list = $statement->fetchAll();
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Photo</label>
                             <div class="col-sm-9" style="padding-top:5px">
-                                <input type="file" name="foto"> (Only jpg, jpeg, gif and png are allowed)
+                                <input type="file" name="foto"> (Only JPG or PNG, max 3 MB)
                             </div>
                         </div>
                         <div class="form-group">

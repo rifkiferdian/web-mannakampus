@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <style>
 .no-plus-icon::before {
@@ -40,30 +41,26 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'You must have to select a designation<br>';
 	}
 
-    $path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
+	// ══ Cek apakah ada file baru ══
+	$has_new_photo = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
+	$has_new_banner = isset($_FILES['banner']) && $_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for Team Member photo<br>';
-        }
-    }
+	// ══ Validasi HANYA kalau ada file baru ══
+	if($has_new_photo) {
+		$photo_valid = image_upload_validate($_FILES['photo']);
+		if($photo_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid (maks 3 MB) untuk foto penghargaan<br>';
+		}
+	}
 
-
-    $path1 = $_FILES['banner']['name'];
-    $path_tmp1 = $_FILES['banner']['tmp_name'];
-
-    if($path1!='') {
-        $ext1 = pathinfo( $path1, PATHINFO_EXTENSION );
-        $file_name1 = basename( $path1, '.' . $ext1 );
-        if( $ext1!='jpg' && $ext1!='png' && $ext1!='jpeg' && $ext1!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file for banner<br>';
-        }
-    }
+	if($has_new_banner) {
+		$banner_valid = image_upload_validate($_FILES['banner']);
+		if($banner_valid === false) {
+			$valid = 0;
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid (maks 3 MB) untuk banner<br>';
+		}
+	}
 
 	if($valid == 1) {
 
@@ -84,47 +81,56 @@ if(isset($_POST['form1'])) {
 			$slug = $slug.'-1';
 		}
 
+		// ══ Default: tetap pakai gambar lama ══
+		$final_name = $_POST['current_photo'];
+		$final_name1 = $_POST['current_banner'];
 
-		if($path == '' && $path1 == '') {
-			$statement = $pdo->prepare("UPDATE tbl_team_member SET name=?, slug=?, designation_id=?, degree=?, detail=?, facebook=?, twitter=?, linkedin=?, youtube=?, google_plus=?, instagram=?, flickr=?, address=?, practice_location=?, phone=?, email=?, website=?, status=?, meta_title=?, meta_keyword=?, meta_description=? WHERE id=?");
-    		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
+		// ══ Simpan foto baru sebagai WebP (kalau ada) ══
+		if($has_new_photo) {
+			$final_name = image_upload_save_as_webp(
+				$_FILES['photo'],
+				'team-member-'.$_REQUEST['id'],
+				__DIR__.'/../assets/uploads/'
+			);
+			if($final_name === false) {
+				$valid = 0;
+				$error_message .= 'Gambar foto tidak dapat diunggah.<br>';
+			}
 		}
 
-		if($path != '' && $path1 == '') {
-			unlink('../assets/uploads/'.$_POST['current_photo']);
-
-			$final_name = 'team-member-'.$_REQUEST['id'].'.'.$ext;
-        	move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-			$statement = $pdo->prepare("UPDATE tbl_team_member SET name=?, slug=?, designation_id=?, photo=?, degree=?, detail=?, facebook=?, twitter=?, linkedin=?, youtube=?, google_plus=?, instagram=?, flickr=?, address=?, practice_location=?, phone=?, email=?, website=?, status=?, meta_title=?, meta_keyword=?, meta_description=? WHERE id=?");
-    		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
+		// ══ Simpan banner baru sebagai WebP (kalau ada) ══
+		if($valid && $has_new_banner) {
+			$final_name1 = image_upload_save_as_webp(
+				$_FILES['banner'],
+				'team-member-banner-'.$_REQUEST['id'],
+				__DIR__.'/../assets/uploads/'
+			);
+			if($final_name1 === false) {
+				$valid = 0;
+				$error_message .= 'Gambar banner tidak dapat diunggah.<br>';
+			}
 		}
 
-		if($path == '' && $path1 != '') {
-			unlink('../assets/uploads/'.$_POST['current_banner']);
-
-			$final_name1 = 'team-member-banner-'.$_REQUEST['id'].'.'.$ext1;
-        	move_uploaded_file( $path_tmp1, '../assets/uploads/'.$final_name1 );
-
-			$statement = $pdo->prepare("UPDATE tbl_team_member SET name=?, slug=?, designation_id=?, banner=?, degree=?, detail=?, facebook=?, twitter=?, linkedin=?, youtube=?, google_plus=?, instagram=?, flickr=?, address=?, practice_location=?, phone=?, email=?, website=?, status=?, meta_title=?, meta_keyword=?, meta_description=? WHERE id=?");
-    		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
-		}
-
-		if($path != '' && $path1 != '') {
-			unlink('../assets/uploads/'.$_POST['current_photo']);
-			unlink('../assets/uploads/'.$_POST['current_banner']);
-
-			$final_name = 'team-member-'.$_REQUEST['id'].'.'.$ext;
-        	move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-			$final_name1 = 'team-member-banner-'.$_REQUEST['id'].'.'.$ext1;
-        	move_uploaded_file( $path_tmp1, '../assets/uploads/'.$final_name1 );
-
+		if($valid == 1) {
 			$statement = $pdo->prepare("UPDATE tbl_team_member SET name=?, slug=?, designation_id=?, photo=?, banner=?, degree=?, detail=?, facebook=?, twitter=?, linkedin=?, youtube=?, google_plus=?, instagram=?, flickr=?, address=?, practice_location=?, phone=?, email=?, website=?, status=?, meta_title=?, meta_keyword=?, meta_description=? WHERE id=?");
-    		$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
-		}
+			$statement->execute(array($_POST['name'],$slug,$_POST['designation_id'],$final_name,$final_name1,$_POST['degree'],$_POST['detail'],$_POST['facebook'],$_POST['twitter'],$_POST['linkedin'],$_POST['youtube'],$_POST['google_plus'],$_POST['instagram'],$_POST['flickr'],$_POST['address'],$_POST['practice_location'],$_POST['phone'],$_POST['email'],$_POST['website'],$_POST['status'],$_POST['meta_title'],$_POST['meta_keyword'],$_POST['meta_description'],$_REQUEST['id']));
 
-	    $success_message = 'Penghargaan berhasil diperbarui!';
+			// ══ Hapus file lama SETELAH update berhasil & namanya beda ══
+			if($has_new_photo && $_POST['current_photo'] !== $final_name) {
+				$old_photo_path = __DIR__.'/../assets/uploads/'.basename($_POST['current_photo']);
+				if(!empty($_POST['current_photo']) && is_file($old_photo_path)) {
+					unlink($old_photo_path);
+				}
+			}
+			if($has_new_banner && $_POST['current_banner'] !== $final_name1) {
+				$old_banner_path = __DIR__.'/../assets/uploads/'.basename($_POST['current_banner']);
+				if(!empty($_POST['current_banner']) && is_file($old_banner_path)) {
+					unlink($old_banner_path);
+				}
+			}
+
+		    $success_message = 'Penghargaan berhasil diperbarui!';
+		}
 	}
 }
 ?>
@@ -250,7 +256,7 @@ foreach ($result as $row) {
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label">Ganti Gambar</label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="photo">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="photo">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">
@@ -260,9 +266,9 @@ foreach ($result as $row) {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Banner <span>*</span></label>
+							<label for="" class="col-sm-2 control-label">Banner </label>
 							<div class="col-sm-9" style="padding-top:5px">
-								<input type="file" name="banner">(Only jpg, jpeg, gif and png are allowed)
+								<input type="file" name="banner">(Only jpg and png are allowed, max 3 MB)
 							</div>
 						</div>
 						<div class="form-group">

@@ -82,20 +82,28 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'Slug already exists.<br>';
 	}
 
-	$new_image_name = $form_data['image'];
-	$has_new_image = isset($_FILES['image']['name']) && $_FILES['image']['name'] !== '';
+	// Upload gambar bersifat OPSIONAL saat edit.
+	// Cek apakah user benar-benar memilih file baru (bukan dikosongkan)
+	$has_new_image = isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE;
+
 	if($has_new_image) {
-		$image_extension = promo_event_upload_extension($_FILES['image']);
-		if($image_extension === false) {
+		$image_valid = image_upload_validate($_FILES['image']);
+		if($image_valid === false) {
 			$valid = 0;
-			$error_message .= 'Unggah gambar JPG, PNG, GIF, atau WebP yang valid dengan ukuran maksimal 8 MB.<br>';
+			$error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
 		}
 	}
 
 	if($valid) {
+		$new_image_name = $form_data['image'];
+
 		if($has_new_image) {
-			$new_image_name = promo_event_image_name($form_data['slug'], $image_extension);
-			if(!move_uploaded_file($_FILES['image']['tmp_name'], __DIR__.'/../assets/uploads/'.$new_image_name)) {
+			$new_image_name = image_upload_save_as_webp(
+				$_FILES['image'],
+				'promo-event-'.$form_data['slug'],
+				__DIR__.'/../assets/uploads/'
+			);
+			if($new_image_name === false) {
 				$valid = 0;
 				$error_message .= 'Gambar tidak dapat diunggah.<br>';
 			}

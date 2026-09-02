@@ -1,85 +1,92 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
 	$valid = 1;
 
-	$path = $_FILES['photo_logo']['name'];
-    $path_tmp = $_FILES['photo_logo']['tmp_name'];
-
-    if($path == '') {
+	$image_valid = isset($_FILES['photo_logo']) ? image_upload_validate($_FILES['photo_logo']) : false;
+    if($image_valid === false) {
     	$valid = 0;
-        $error_message .= 'You must have to select a photo<br>';
-    } else {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if($valid == 1) {
-    	// removing the existing photo
-    	$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-    	$statement->execute();
-    	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-    	foreach ($result as $row) {
-    		$logo = $row['logo'];
-    		unlink('../assets/uploads/'.$logo);
-    	}
-
     	// updating the data
-    	$final_name = 'logo'.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+    	$final_name = image_upload_save_as_webp(
+    		$_FILES['photo_logo'],
+    		'logo',
+    		__DIR__.'/../assets/uploads/'
+    	);
 
-        // updating the database
-		$statement = $pdo->prepare("UPDATE tbl_settings SET logo=? WHERE id=1");
-		$statement->execute(array($final_name));
+    	if($final_name === false) {
+    		$valid = 0;
+    		$error_message .= 'Gambar tidak dapat diunggah.<br>';
+    	} else {
+    		// removing the existing photo
+    		$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+    		$statement->execute();
+    		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    		foreach ($result as $row) {
+    			$old_logo = $row['logo'];
+    			if($old_logo !== $final_name) {
+    				$old_path = __DIR__.'/../assets/uploads/'.basename($old_logo);
+    				if(is_file($old_path)) {
+    					unlink($old_path);
+    				}
+    			}
+    		}
 
-        $success_message = 'Logo is updated successfully.';
-    	
+    		// updating the database
+			$statement = $pdo->prepare("UPDATE tbl_settings SET logo=? WHERE id=1");
+			$statement->execute(array($final_name));
+
+	        $success_message = 'Logo is updated successfully.';
+    	}
     }
 }
 
 if(isset($_POST['form2'])) {
 	$valid = 1;
 
-	$path = $_FILES['photo_favicon']['name'];
-    $path_tmp = $_FILES['photo_favicon']['tmp_name'];
-
-    if($path == '') {
+	$image_valid = isset($_FILES['photo_favicon']) ? image_upload_validate($_FILES['photo_favicon']) : false;
+    if($image_valid === false) {
     	$valid = 0;
-        $error_message .= 'You must have to select a photo<br>';
-    } else {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if($valid == 1) {
-    	// removing the existing photo
-    	$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-    	$statement->execute();
-    	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-    	foreach ($result as $row) {
-    		$favicon = $row['favicon'];
-    		unlink('../assets/uploads/'.$favicon);
-    	}
-
     	// updating the data
-    	$final_name = 'favicon'.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+    	$final_name = image_upload_save_as_webp(
+    		$_FILES['photo_favicon'],
+    		'favicon',
+    		__DIR__.'/../assets/uploads/'
+    	);
 
-        // updating the database
-		$statement = $pdo->prepare("UPDATE tbl_settings SET favicon=? WHERE id=1");
-		$statement->execute(array($final_name));
+    	if($final_name === false) {
+    		$valid = 0;
+    		$error_message .= 'Gambar tidak dapat diunggah.<br>';
+    	} else {
+    		// removing the existing photo
+    		$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+    		$statement->execute();
+    		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    		foreach ($result as $row) {
+    			$old_favicon = $row['favicon'];
+    			if($old_favicon !== $final_name) {
+    				$old_path = __DIR__.'/../assets/uploads/'.basename($old_favicon);
+    				if(is_file($old_path)) {
+    					unlink($old_path);
+    				}
+    			}
+    		}
 
-        $success_message = 'Favicon is updated successfully.';
-    	
+    		// updating the database
+			$statement = $pdo->prepare("UPDATE tbl_settings SET favicon=? WHERE id=1");
+			$statement->execute(array($final_name));
+
+	        $success_message = 'Favicon is updated successfully.';
+    	}
     }
 }
 
@@ -129,45 +136,56 @@ if(isset($_POST['form_newsletter'])) {
 
     $valid = 1;
 
-    $path = $_FILES['newsletter_photo']['name'];
-    $path_tmp = $_FILES['newsletter_photo']['tmp_name'];
+    $has_new_image = isset($_FILES['newsletter_photo']) && $_FILES['newsletter_photo']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['newsletter_photo']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
 
-        if($path != '') {
-            // removing the existing photo
-            $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-            $statement->execute();
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
-            foreach ($result as $row) {
-                $newsletter_photo = $row['newsletter_photo'];
-                unlink('../assets/uploads/'.$newsletter_photo);
+        if($has_new_image) {
+            $final_name = image_upload_save_as_webp(
+                $_FILES['newsletter_photo'],
+                'newsletter',
+                __DIR__.'/../assets/uploads/'
+            );
+
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            } else {
+                // removing the existing photo
+                $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($result as $row) {
+                    $old_newsletter_photo = $row['newsletter_photo'];
+                    if($old_newsletter_photo !== $final_name) {
+                        $old_path = __DIR__.'/../assets/uploads/'.basename($old_newsletter_photo);
+                        if(is_file($old_path)) {
+                            unlink($old_path);
+                        }
+                    }
+                }
+
+                // updating the database
+                $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_title=?,newsletter_text=?,newsletter_photo=?,newsletter_status=? WHERE id=1");
+                $statement->execute(array($_POST['newsletter_title'],$_POST['newsletter_text'],$final_name,$_POST['newsletter_status']));
+
+                $success_message = 'Newsletter Data is updated successfully.';
             }
-
-            // updating the data
-            $final_name = 'newsletter'.'.'.$ext;
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-            // updating the database
-            $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_title=?,newsletter_text=?,newsletter_photo=?,newsletter_status=? WHERE id=1");
-            $statement->execute(array($_POST['newsletter_title'],$_POST['newsletter_text'],$final_name,$_POST['newsletter_status']));
-
         } else {
             // updating the database
             $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_title=?,newsletter_text=?,newsletter_status=? WHERE id=1");
             $statement->execute(array($_POST['newsletter_title'],$_POST['newsletter_text'],$_POST['newsletter_status']));
-        }
 
-        $success_message = 'Newsletter Data is updated successfully.';
+            $success_message = 'Newsletter Data is updated successfully.';
+        }
         
     }
 }
@@ -176,82 +194,86 @@ if(isset($_POST['form_newsletter'])) {
 if(isset($_POST['form_banner_search'])) {
     $valid = 1;
 
-    $path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
-
-    if($path == '') {
+    $image_valid = isset($_FILES['photo']) ? image_upload_validate($_FILES['photo']) : false;
+    if($image_valid === false) {
         $valid = 0;
-        $error_message .= 'You must have to select a photo<br>';
-    } else {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if($valid == 1) {
-        // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
-        foreach ($result as $row) {
-            $banner_search = $row['banner_search'];
-            unlink('../assets/uploads/'.$banner_search);
+        $final_name = image_upload_save_as_webp(
+            $_FILES['photo'],
+            'banner-search',
+            __DIR__.'/../assets/uploads/'
+        );
+
+        if($final_name === false) {
+            $valid = 0;
+            $error_message .= 'Gambar tidak dapat diunggah.<br>';
+        } else {
+            // removing the existing photo
+            $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($result as $row) {
+                $old_banner_search = $row['banner_search'];
+                if($old_banner_search !== $final_name) {
+                    $old_path = __DIR__.'/../assets/uploads/'.basename($old_banner_search);
+                    if(is_file($old_path)) {
+                        unlink($old_path);
+                    }
+                }
+            }
+
+            // updating the database
+            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_search=? WHERE id=1");
+            $statement->execute(array($final_name));
+
+            $success_message = 'Search Page Banner is updated successfully.';
         }
-
-        // updating the data
-        $final_name = 'banner_search'.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-        // updating the database
-        $statement = $pdo->prepare("UPDATE tbl_settings SET banner_search=? WHERE id=1");
-        $statement->execute(array($final_name));
-
-        $success_message = 'Search Page Banner is updated successfully.';
-        
     }
 }
 
 if(isset($_POST['form_banner_category'])) {
     $valid = 1;
 
-    $path = $_FILES['photo']['name'];
-    $path_tmp = $_FILES['photo']['tmp_name'];
-
-    if($path == '') {
+    $image_valid = isset($_FILES['photo']) ? image_upload_validate($_FILES['photo']) : false;
+    if($image_valid === false) {
         $valid = 0;
-        $error_message .= 'You must have to select a photo<br>';
-    } else {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
-            $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
-        }
+        $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
     }
 
     if($valid == 1) {
-        // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
-        foreach ($result as $row) {
-            $banner_category = $row['banner_category'];
-            unlink('../assets/uploads/'.$banner_category);
+        $final_name = image_upload_save_as_webp(
+            $_FILES['photo'],
+            'banner-category',
+            __DIR__.'/../assets/uploads/'
+        );
+
+        if($final_name === false) {
+            $valid = 0;
+            $error_message .= 'Gambar tidak dapat diunggah.<br>';
+        } else {
+            // removing the existing photo
+            $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($result as $row) {
+                $old_banner_category = $row['banner_category'];
+                if($old_banner_category !== $final_name) {
+                    $old_path = __DIR__.'/../assets/uploads/'.basename($old_banner_category);
+                    if(is_file($old_path)) {
+                        unlink($old_path);
+                    }
+                }
+            }
+
+            // updating the database
+            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_category=? WHERE id=1");
+            $statement->execute(array($final_name));
+
+            $success_message = 'Category Page Banner is updated successfully.';
         }
-
-        // updating the data
-        $final_name = 'banner_category'.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-        // updating the database
-        $statement = $pdo->prepare("UPDATE tbl_settings SET banner_category=? WHERE id=1");
-        $statement->execute(array($final_name));
-
-        $success_message = 'Category Page Banner is updated successfully.';
-        
     }
 }
 
@@ -273,45 +295,56 @@ if(isset($_POST['form_home_testimonial'])) {
 
     $valid = 1;
 
-    $path = $_FILES['home_photo_testimonial']['name'];
-    $path_tmp = $_FILES['home_photo_testimonial']['tmp_name'];
+    $has_new_image = isset($_FILES['home_photo_testimonial']) && $_FILES['home_photo_testimonial']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['home_photo_testimonial']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
 
-        if($path != '') {
-            // removing the existing photo
-            $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-            $statement->execute();
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
-            foreach ($result as $row) {
-                $home_photo_testimonial = $row['home_photo_testimonial'];
-                unlink('../assets/uploads/'.$home_photo_testimonial);
+        if($has_new_image) {
+            $final_name = image_upload_save_as_webp(
+                $_FILES['home_photo_testimonial'],
+                'testimonial',
+                __DIR__.'/../assets/uploads/'
+            );
+
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            } else {
+                // removing the existing photo
+                $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($result as $row) {
+                    $old_home_photo_testimonial = $row['home_photo_testimonial'];
+                    if($old_home_photo_testimonial !== $final_name) {
+                        $old_path = __DIR__.'/../assets/uploads/'.basename($old_home_photo_testimonial);
+                        if(is_file($old_path)) {
+                            unlink($old_path);
+                        }
+                    }
+                }
+
+                // updating the database
+                $statement = $pdo->prepare("UPDATE tbl_settings SET home_title_testimonial=?, home_subtitle_testimonial=?,home_photo_testimonial=?, home_status_testimonial=? WHERE id=1");
+                $statement->execute(array($_POST['home_title_testimonial'],$_POST['home_subtitle_testimonial'],$final_name,$_POST['home_status_testimonial']));
+
+                $success_message = 'Testimonial Data is updated successfully.';
             }
-
-            // updating the data
-            $final_name = 'testimonial'.'.'.$ext;
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-            // updating the database
-            $statement = $pdo->prepare("UPDATE tbl_settings SET home_title_testimonial=?, home_subtitle_testimonial=?,home_photo_testimonial=?, home_status_testimonial=? WHERE id=1");
-            $statement->execute(array($_POST['home_title_testimonial'],$_POST['home_subtitle_testimonial'],$final_name,$_POST['home_status_testimonial']));
-
         } else {
             // updating the database
            	$statement = $pdo->prepare("UPDATE tbl_settings SET home_title_testimonial=?, home_subtitle_testimonial=?,home_status_testimonial=? WHERE id=1");
             $statement->execute(array($_POST['home_title_testimonial'],$_POST['home_subtitle_testimonial'],$_POST['home_status_testimonial']));
-        }
 
-        $success_message = 'Testimonial Data is updated successfully.';
+            $success_message = 'Testimonial Data is updated successfully.';
+        }
         
     }
 }
@@ -334,45 +367,56 @@ if(isset($_POST['form_home_counter'])) {
 
     $valid = 1;
 
-    $path = $_FILES['counter_photo']['name'];
-    $path_tmp = $_FILES['counter_photo']['tmp_name'];
+    $has_new_image = isset($_FILES['counter_photo']) && $_FILES['counter_photo']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['counter_photo']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>';
         }
     }
 
     if($valid == 1) {
 
-        if($path != '') {
-            // removing the existing photo
-            $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-            $statement->execute();
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
-            foreach ($result as $row) {
-                $counter_photo = $row['counter_photo'];
-                unlink('../assets/uploads/'.$counter_photo);
+        if($has_new_image) {
+            $final_name = image_upload_save_as_webp(
+                $_FILES['counter_photo'],
+                'counter',
+                __DIR__.'/../assets/uploads/'
+            );
+
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
+            } else {
+                // removing the existing photo
+                $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($result as $row) {
+                    $old_counter_photo = $row['counter_photo'];
+                    if($old_counter_photo !== $final_name) {
+                        $old_path = __DIR__.'/../assets/uploads/'.basename($old_counter_photo);
+                        if(is_file($old_path)) {
+                            unlink($old_path);
+                        }
+                    }
+                }
+
+                // updating the database
+                $statement = $pdo->prepare("UPDATE tbl_settings SET counter_1_title=?, counter_1_value=?, counter_2_title=?, counter_2_value=?, counter_3_title=?, counter_3_value=?, counter_4_title=?, counter_4_value=?, counter_photo=?, counter_status=? WHERE id=1");
+                $statement->execute(array($_POST['counter_1_title'],$_POST['counter_1_value'],$_POST['counter_2_title'],$_POST['counter_2_value'],$_POST['counter_3_title'],$_POST['counter_3_value'],$_POST['counter_4_title'],$_POST['counter_4_value'],$final_name,$_POST['counter_status']));
+
+                $success_message = 'Counter Data is updated successfully.';
             }
-
-            // updating the data
-            $final_name = 'counter'.'.'.$ext;
-            move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
-
-            // updating the database
-            $statement = $pdo->prepare("UPDATE tbl_settings SET counter_1_title=?, counter_1_value=?, counter_2_title=?, counter_2_value=?, counter_3_title=?, counter_3_value=?, counter_4_title=?, counter_4_value=?, counter_photo=?, counter_status=? WHERE id=1");
-            $statement->execute(array($_POST['counter_1_title'],$_POST['counter_1_value'],$_POST['counter_2_title'],$_POST['counter_2_value'],$_POST['counter_3_title'],$_POST['counter_3_value'],$_POST['counter_4_title'],$_POST['counter_4_value'],$final_name,$_POST['counter_status']));
-
         } else {
             // updating the database
             $statement = $pdo->prepare("UPDATE tbl_settings SET counter_1_title=?, counter_1_value=?, counter_2_title=?, counter_2_value=?, counter_3_title=?, counter_3_value=?, counter_4_title=?, counter_4_value=?, counter_status=? WHERE id=1");
             $statement->execute(array($_POST['counter_1_title'],$_POST['counter_1_value'],$_POST['counter_2_title'],$_POST['counter_2_value'],$_POST['counter_3_title'],$_POST['counter_3_value'],$_POST['counter_4_title'],$_POST['counter_4_value'],$_POST['counter_status']));
-        }
 
-        $success_message = 'Counter Data is updated successfully.';
+            $success_message = 'Counter Data is updated successfully.';
+        }
         
     }
 }

@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+<?php require_once('image-upload-utils.php'); ?>
 
 <style>
 .no-plus-icon::before {
@@ -49,46 +50,59 @@ if(isset($_POST['form1'])) {
         $error_message .= "Prize name can not be empty<br>";
     }
 
-    $path = $_FILES['img']['name'];
-    $path_tmp = $_FILES['img']['tmp_name'];
+    // ══ Cek apakah user upload file baru ══
+    $has_new_image = isset($_FILES['img']) && $_FILES['img']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    if($path != '') {
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
-        $file_name = basename($path, "." . $ext);
-        if($ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' && $ext!='webp') {
+    // ══ Validasi HANYA kalau ada file baru ══
+    if($has_new_image) {
+        $image_valid = image_upload_validate($_FILES['img']);
+        if($image_valid === false) {
             $valid = 0;
-            $error_message .= "You must have to upload jpg, jpeg, gif, webp or png file<br>";
+            $error_message .= "Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>";
         }
     }
 
     if($valid == 1) {
-        $final_name = $data['img'];
+        $final_name = $data['img']; // default: tetap pakai yang lama
 
-        // Jika upload gambar baru
-        if($path != '') {
-            if(!empty($data['img']) && file_exists('../assets/uploads/'.$data['img'])) {
-                unlink('../assets/uploads/'.$data['img']);
+        if($has_new_image) {
+            $final_name = image_upload_save_as_webp(
+                $_FILES['img'],
+                'reward-'.$_POST['id_periode'].'-'.time(),
+                __DIR__.'/../assets/uploads/'
+            );
+            if($final_name === false) {
+                $valid = 0;
+                $error_message .= 'Gambar tidak dapat diunggah.<br>';
             }
-            $final_name = 'reward-'.$_POST['id_periode'].'-'.time().'.'.$ext;
-            move_uploaded_file($path_tmp, '../assets/uploads/'.$final_name);
         }
 
-        $grand_prize = isset($_POST['grand_prize']) ? (int)$_POST['grand_prize'] : 0;
+        if($valid == 1) {
+            $grand_prize = isset($_POST['grand_prize']) ? (int)$_POST['grand_prize'] : 0;
 
-        $statement = $pdo->prepare("UPDATE tbl_reward SET id_periode=?, prize_name=?, grand_prize=?, img=?, qty=?, description=? WHERE id=?");
-        $statement->execute(array(
-            $_POST['id_periode'],
-            $_POST['prize_name'],
-            $grand_prize,
-            $final_name,
-            $_POST['qty'],
-            $_POST['description'],
-            $id
-        ));
+            $statement = $pdo->prepare("UPDATE tbl_reward SET id_periode=?, prize_name=?, grand_prize=?, img=?, qty=?, description=? WHERE id=?");
+            $statement->execute(array(
+                $_POST['id_periode'],
+                $_POST['prize_name'],
+                $grand_prize,
+                $final_name,
+                $_POST['qty'],
+                $_POST['description'],
+                $id
+            ));
 
-        $_SESSION['success_message'] = 'Reward updated successfully.';
-        header('Location: reward.php');
-        exit;
+            // ══ Hapus file lama SETELAH update berhasil & namanya beda ══
+            if($has_new_image && $data['img'] !== $final_name) {
+                $old_path = __DIR__.'/../assets/uploads/'.basename($data['img']);
+                if(!empty($data['img']) && is_file($old_path)) {
+                    unlink($old_path);
+                }
+            }
+
+            $_SESSION['success_message'] = 'Reward updated successfully.';
+            header('Location: reward.php');
+            exit;
+        }
     }
 
     $data['id_periode']  = $_POST['id_periode'];
@@ -188,7 +202,7 @@ $periode_list = $statement->fetchAll(PDO::FETCH_ASSOC);
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Change Image</label>
                             <div class="col-sm-4">
-                                <input type="file" name="img">
+                                <input type="file" name="img">(Only jpg and png are allowed, max 3 MB)
                             </div>
                         </div>
 
