@@ -5,22 +5,20 @@
 .no-plus-icon::before {
     display: none !important;
 }
-
 .no-plus-icon {
     text-align: center;
 }
-
-.content-header{
+.content-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
 }
-.content-header h1{
+.content-header h1 {
     margin: 0;
 }
-.content-header-right{
-    margin-left: auto; /* jaga-jaga kalau parent belum flex */
+.content-header-right {
+    margin-left: auto;
 }
 </style>
 
@@ -31,7 +29,7 @@ $statement = $pdo->prepare("SELECT * FROM tbl_winners WHERE id = ?");
 $statement->execute(array($id));
 $data = $statement->fetch(PDO::FETCH_ASSOC);
 
-if (!$data) {
+if(!$data) {
     header('Location: winners.php');
     exit;
 }
@@ -57,12 +55,23 @@ if(isset($_POST['form1'])) {
         $error_message .= "Winner name can not be empty<br>";
     }
 
-    // ══ Cek apakah user upload file baru ══
+    // Cek reward harus sesuai dengan periode yang dipilih
+    if(!empty($_POST['id_periode']) && !empty($_POST['id_reward'])) {
+        $statement = $pdo->prepare("SELECT COUNT(*) FROM tbl_reward WHERE id = ? AND id_periode = ?");
+        $statement->execute(array($_POST['id_reward'], $_POST['id_periode']));
+
+        if($statement->fetchColumn() == 0) {
+            $valid = 0;
+            $error_message .= "Reward tidak sesuai dengan periode yang dipilih.<br>";
+        }
+    }
+
+    // Cek apakah user upload foto baru
     $has_new_photo = isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE;
 
-    // ══ Validasi HANYA kalau ada file baru ══
     if($has_new_photo) {
         $photo_valid = image_upload_validate($_FILES['photo']);
+
         if($photo_valid === false) {
             $valid = 0;
             $error_message .= "Unggah gambar JPG atau PNG yang valid dengan ukuran maksimal 3 MB.<br>";
@@ -70,14 +79,16 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
-        $final_name = $data['photo']; // default: tetap pakai yang lama
+        $final_name = $data['photo'];
 
+        // Simpan foto baru sebagai WebP
         if($has_new_photo) {
             $final_name = image_upload_save_as_webp(
                 $_FILES['photo'],
                 'winner-'.$_POST['id_periode'].'-'.time(),
                 __DIR__.'/../assets/uploads/'
             );
+
             if($final_name === false) {
                 $valid = 0;
                 $error_message .= 'Gambar tidak dapat diunggah.<br>';
@@ -91,16 +102,17 @@ if(isset($_POST['form1'])) {
                 $_POST['id_reward'],
                 $_POST['winners_name'],
                 $final_name,
-                $_POST['address'],
-                $_POST['member_number'],
-                $_POST['testimonial'],
-                $_POST['description'],
+                $_POST['address'] ?? '',
+                $_POST['member_number'] ?? '',
+                $_POST['testimonial'] ?? '',
+                $_POST['description'] ?? '',
                 $id
             ));
 
-            // ══ Hapus file lama SETELAH update berhasil & namanya beda ══
+            // Hapus foto lama jika ada foto baru
             if($has_new_photo && $data['photo'] !== $final_name) {
                 $old_path = __DIR__.'/../assets/uploads/'.basename($data['photo']);
+
                 if(!empty($data['photo']) && is_file($old_path)) {
                     unlink($old_path);
                 }
@@ -112,16 +124,17 @@ if(isset($_POST['form1'])) {
         }
     }
 
-    $data['id_periode']    = $_POST['id_periode'];
-    $data['id_reward']     = $_POST['id_reward'];
-    $data['winners_name']  = $_POST['winners_name'];
-    $data['address']       = $_POST['address'];
-    $data['member_number'] = $_POST['member_number'];
-    $data['testimonial']   = $_POST['testimonial'];
-    $data['description']   = $_POST['description'];
+    // Jika validasi gagal, simpan input agar tidak reset
+    $data['id_periode'] = $_POST['id_periode'] ?? '';
+    $data['id_reward'] = $_POST['id_reward'] ?? '';
+    $data['winners_name'] = $_POST['winners_name'] ?? '';
+    $data['address'] = $_POST['address'] ?? '';
+    $data['member_number'] = $_POST['member_number'] ?? '';
+    $data['testimonial'] = $_POST['testimonial'] ?? '';
+    $data['description'] = $_POST['description'] ?? '';
 }
 
-// Option list Periode & Program (Urutan ASC)
+// Option list Periode & Program
 $statement = $pdo->prepare("SELECT p.id, p.periode_name, pr.program_name, pr.year 
                             FROM tbl_periode p 
                             LEFT JOIN tbl_program pr ON p.id_program = pr.id 
@@ -129,21 +142,24 @@ $statement = $pdo->prepare("SELECT p.id, p.periode_name, pr.program_name, pr.yea
 $statement->execute();
 $periode_list = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-// Option list Reward (Urutan ASC)
-$statement = $pdo->prepare("SELECT id, prize_name FROM tbl_reward ORDER BY id ASC");
+// Option list Reward
+$statement = $pdo->prepare("SELECT id, id_periode, prize_name FROM tbl_reward ORDER BY id ASC");
 $statement->execute();
 $reward_list = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+$selected_reward = (int)($data['id_reward'] ?? 0);
 ?>
 
-<section class="content-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+<section class="content-header">
     <div class="content-header-left">
-        <h1 style="margin:0;">Edit Winner</h1>
+        <h1>Edit Winner</h1>
     </div>
-        <a href="winners.php" class="btn btn-primary btn-sm no-plus-icon"><i class="fa fa-arrow-left" style="text-align: center;"></i> View All</a>
+    <div class="content-header-right">
+        <a href="winners.php" class="btn btn-primary btn-sm no-plus-icon"><i class="fa fa-arrow-left"></i> View All</a>
+    </div>
 </section>
 
 <section class="content">
-
     <div class="row">
         <div class="col-md-12">
 
@@ -167,7 +183,7 @@ $reward_list = $statement->fetchAll(PDO::FETCH_ASSOC);
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Periode & Program <span>*</span></label>
                             <div class="col-sm-5">
-                                <select class="form-control" name="id_periode">
+                                <select class="form-control" name="id_periode" id="id_periode">
                                     <option value="">-- Select Periode --</option>
                                     <?php foreach($periode_list as $periode): ?>
                                     <option value="<?php echo $periode['id']; ?>" <?php echo ($data['id_periode'] == $periode['id']) ? 'selected' : ''; ?>>
@@ -181,13 +197,8 @@ $reward_list = $statement->fetchAll(PDO::FETCH_ASSOC);
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Reward <span>*</span></label>
                             <div class="col-sm-5">
-                                <select class="form-control" name="id_reward">
+                                <select class="form-control" name="id_reward" id="id_reward">
                                     <option value="">-- Select Reward --</option>
-                                    <?php foreach($reward_list as $reward): ?>
-                                    <option value="<?php echo $reward['id']; ?>" <?php echo ($data['id_reward'] == $reward['id']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($reward['prize_name']); ?>
-                                    </option>
-                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -259,7 +270,48 @@ $reward_list = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         </div>
     </div>
-
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const periodeSelect = document.getElementById('id_periode');
+    const rewardSelect = document.getElementById('id_reward');
+
+    const rewards = <?php echo json_encode($reward_list, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    let selectedReward = <?php echo (int)$selected_reward; ?>;
+
+    function loadRewards(keepSelected = true) {
+        const periodeId = periodeSelect.value;
+
+        rewardSelect.innerHTML = '<option value="">-- Select Reward --</option>';
+
+        if(!periodeId) {
+            return;
+        }
+
+        rewards.forEach(function(reward) {
+            if(String(reward.id_periode) === String(periodeId)) {
+                const option = document.createElement('option');
+
+                option.value = reward.id;
+                option.textContent = reward.prize_name;
+
+                if(keepSelected && String(reward.id) === String(selectedReward)) {
+                    option.selected = true;
+                }
+
+                rewardSelect.appendChild(option);
+            }
+        });
+    }
+
+    loadRewards(true);
+
+    periodeSelect.addEventListener('change', function() {
+        selectedReward = 0;
+        loadRewards(false);
+    });
+});
+</script>
 
 <?php require_once('footer.php'); ?>
