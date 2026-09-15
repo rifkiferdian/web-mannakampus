@@ -93,6 +93,8 @@
 .mk-highlight-media{ position:relative; aspect-ratio:4/3; overflow:hidden; background:#f3eee9; }
 .mk-highlight-content{ flex:1; }
 .mk-highlight-media img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
+.mk-highlight-media.no-image{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#f3eee9,#ded2c8); color:#765b49; font-size:42px; text-align:center; }
+.mk-highlight-media.no-image small{ font-size:15px; font-weight:700; letter-spacing:.3px; }
 .mk-highlight-card:hover .mk-highlight-media img{ transform:scale(1.04); }
 .mk-highlight-platform{ position:absolute; top:12px; left:12px; display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,.72); color:#fff; font-size:18px; }
 .mk-highlight-play{ position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:32px; text-shadow:0 2px 8px rgba(0,0,0,.45); }
@@ -214,7 +216,17 @@ $stmt = $pdo->query(
 );
 $social_highlights = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+function mk_normalize_social_url($url) {
+    $url = trim(html_entity_decode($url, ENT_QUOTES, 'UTF-8'));
+    if (preg_match('#(?:href|cite|data-instgrm-permalink)=["\']([^"\']+)["\']#i', $url, $m)) {
+        $url = $m[1];
+    }
+    $url = strtok($url, '?');
+    return rtrim($url, '/');
+}
+
 function mk_get_embed_url($platform, $url) {
+    $url = mk_normalize_social_url($url);
     switch ($platform) {
         case 'youtube':
             if (preg_match('#(?:shorts/|v=|youtu\.be/)([A-Za-z0-9_-]{6,})#', $url, $m)) {
@@ -227,11 +239,9 @@ function mk_get_embed_url($platform, $url) {
             }
             break;
         case 'facebook':
-            $clean_url = strtok($url, '?');
-            return 'https://www.facebook.com/plugins/video.php?href=' . urlencode($clean_url) . '&show_text=false&autoplay=true';
+            return 'https://www.facebook.com/plugins/video.php?href=' . urlencode($url) . '&show_text=false&autoplay=true';
         case 'instagram':
-            $clean_url = strtok($url, '?');
-            return rtrim($clean_url, '/') . '/embed';
+            return $url . '/embed';
     }
     return $url;
 }
@@ -248,17 +258,21 @@ function mk_get_embed_url($platform, $url) {
 		<div class="mk-highlights-grid">
 			<?php foreach ($social_highlights as $highlight):
 				$is_video = $highlight['type'] === 'video';
-				$embed_url = $is_video ? mk_get_embed_url($highlight['platform'], $highlight['url']) : '';
+				$post_url = mk_normalize_social_url($highlight['url']);
+				$embed_url = mk_get_embed_url($highlight['platform'], $post_url);
 			?>
 			<button type="button" class="mk-highlight-card mk-highlight-video-trigger"
 				data-embed="<?php echo htmlspecialchars($embed_url, ENT_QUOTES, 'UTF-8'); ?>"
 				data-title="<?php echo htmlspecialchars($highlight['title'], ENT_QUOTES, 'UTF-8'); ?>"
-				data-url="<?php echo htmlspecialchars($highlight['url'], ENT_QUOTES, 'UTF-8'); ?>"
+				data-url="<?php echo htmlspecialchars($post_url, ENT_QUOTES, 'UTF-8'); ?>"
+				data-platform="<?php echo htmlspecialchars($highlight['platform'], ENT_QUOTES, 'UTF-8'); ?>"
 				data-image="<?php echo BASE_URL . 'assets/uploads/' . htmlspecialchars($highlight['image'], ENT_QUOTES, 'UTF-8'); ?>"
-				data-type="<?php echo htmlspecialchars($highlight['type'], ENT_QUOTES, 'UTF-8'); ?>">
+			data-type="<?php echo htmlspecialchars($highlight['type'], ENT_QUOTES, 'UTF-8'); ?>">
 
 				<div class="mk-highlight-media">
+					<?php if (!empty($highlight['image'])): ?>
 					<img src="<?php echo BASE_URL . 'assets/uploads/' . htmlspecialchars($highlight['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($highlight['title'], ENT_QUOTES, 'UTF-8'); ?>">
+					<?php else: ?><div class="mk-highlight-media no-image"><i class="fa-brands fa-<?php echo htmlspecialchars($highlight['platform'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i><small>Lihat postingan <?php echo ucfirst(htmlspecialchars($highlight['platform'], ENT_QUOTES, 'UTF-8')); ?></small></div><?php endif; ?>
 					<span class="mk-highlight-platform"><i class="fa-brands fa-<?php echo htmlspecialchars($highlight['platform'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
 					<?php if ($is_video): ?><span class="mk-highlight-play"><i class="fa-solid fa-play" aria-hidden="true"></i></span><?php endif; ?>
 				</div>
@@ -284,6 +298,8 @@ function mk_get_embed_url($platform, $url) {
 	</div>
 </div>
 
+<script async src="https://www.instagram.com/embed.js"></script>
+<script async src="https://www.tiktok.com/embed.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 	var modal = document.getElementById('mkVideoModal');
@@ -291,18 +307,50 @@ document.addEventListener('DOMContentLoaded', function () {
 	var titleEl = modal.querySelector('.mk-video-modal-title');
 	var originalEl = modal.querySelector('.mk-video-modal-original');
 
+	function processSocialEmbed(platform) {
+		var process = function () {
+			if (platform === 'instagram' && window.instgrm && window.instgrm.Embeds) {
+				window.instgrm.Embeds.process();
+			} else if (platform === 'tiktok' && window.tiktokEmbed && window.tiktokEmbed.lib) {
+				window.tiktokEmbed.lib.render();
+			}
+		};
+		process();
+		setTimeout(process, 300);
+		setTimeout(process, 1000);
+		setTimeout(process, 2500);
+	}
+
 	document.querySelectorAll('.mk-highlight-video-trigger').forEach(function (btn) {
 		btn.addEventListener('click', function () {
 			var src = btn.getAttribute('data-embed');
 			var title = btn.getAttribute('data-title');
 			var url = btn.getAttribute('data-url');
 			var type = btn.getAttribute('data-type');
+			var platform = btn.getAttribute('data-platform');
 			titleEl.textContent = title;
 			originalEl.href = url;
-			frame.classList.toggle('is-video', type === 'video');
-			frame.innerHTML = type === 'video'
-				? '<iframe src="' + src + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>'
-				: '<img src="' + btn.getAttribute('data-image') + '" alt="' + title.replace(/"/g, '&quot;') + '">';
+			frame.classList.toggle('is-video', type === 'video' || platform === 'instagram' || platform === 'tiktok');
+			frame.innerHTML = '';
+			if (platform === 'instagram' || platform === 'tiktok') {
+				var quote = document.createElement('blockquote');
+				quote.className = platform === 'instagram' ? 'instagram-media' : 'tiktok-embed';
+				quote.setAttribute(platform === 'instagram' ? 'data-instgrm-permalink' : 'cite', url.split('?')[0]);
+				if (platform === 'tiktok') quote.setAttribute('data-video-id', (url.match(/\/video\/(\d+)/) || [])[1] || '');
+				frame.appendChild(quote);
+				processSocialEmbed(platform);
+			} else if (type !== 'video') {
+				var image = document.createElement('img');
+				image.src = btn.getAttribute('data-image');
+				image.alt = title;
+				frame.appendChild(image);
+			} else {
+				var iframe = document.createElement('iframe');
+				iframe.src = src;
+				iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+				iframe.allowFullscreen = true;
+				frame.appendChild(iframe);
+			}
 			modal.classList.add('is-open');
 		});
 	});

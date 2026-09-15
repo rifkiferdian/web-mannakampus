@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 include("config.php");
+require_once __DIR__ . '/functions.php';
 $error_message = '';
 $success_message = '';
 $error_message1 = '';

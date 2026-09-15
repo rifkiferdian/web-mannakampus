@@ -14,7 +14,7 @@ if ($id > 0) {
 
     // Hapus file gambar dari server (opsional, aman kalau file tidak ada)
     if ($row && !empty($row['image'])) {
-        $filePath = __DIR__ . '/../' . $row['image'];
+        $filePath = __DIR__ . '/../assets/uploads/' . basename($row['image']);
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
