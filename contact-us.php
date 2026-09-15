@@ -2,8 +2,8 @@
 $contact_hotline = $contact_hotline ?? '(0274) 555-123';
 $contact_email = $contact_email ?? 'care@mannakampus.co.id';
 $contact_jam_operasional = $contact_jam_operasional ?? 'Senin - Minggu, 08:00 - 21:00 WIB';
-$contact_form_message = $contact_form_message ?? '';
-
+$contact_form_message = $_SESSION['contact_form_message'] ?? '';
+unset($_SESSION['contact_form_message']);
 require_once('header.php');
 
 $statement = $pdo->prepare("SELECT * FROM tbl_cabang ORDER BY id ASC");
@@ -136,14 +136,6 @@ $first_map_location = !empty($result_cabang[0]['alamat']) ? $result_cabang[0]['a
 					<h3 class="mk-card-title">Layanan Pelanggan</h3>
 
 					<div class="mk-contact-item">
-						<div class="mk-contact-icon"><i class="fa fa-phone" aria-hidden="true"></i></div>
-						<div>
-							<p class="mk-contact-label">Hotline 24/7</p>
-							<p class="mk-contact-value"><?php echo htmlspecialchars($contact_hotline, ENT_QUOTES, 'UTF-8'); ?></p>
-						</div>
-					</div>
-
-					<div class="mk-contact-item">
 						<div class="mk-contact-icon"><i class="fa fa-envelope" aria-hidden="true"></i></div>
 						<div>
 							<p class="mk-contact-label">Email Kami</p>
@@ -164,7 +156,7 @@ $first_map_location = !empty($result_cabang[0]['alamat']) ? $result_cabang[0]['a
 					<div class="mk-livechat-icon"><i class="fa fa-comment" aria-hidden="true"></i></div>
 					<h4>Live Chat</h4>
 					<p>Dapatkan jawaban instan melalui layanan pesan singkat kami.</p>
-					<a href="#" class="mk-btn-outline">Mulai Chat</a>
+					<a href="#" class="mk-btn-outline" id="btnMulaiChat">Mulai Chat</a>				
 				</div>
 			</div>
 
@@ -176,7 +168,7 @@ $first_map_location = !empty($result_cabang[0]['alamat']) ? $result_cabang[0]['a
 				<div class="mk-form-alert success"><?php echo htmlspecialchars($contact_form_message, ENT_QUOTES, 'UTF-8'); ?></div>
 				<?php endif; ?>
 
-				<form action="proses_kontak.php" method="post">
+				<form action="proses-kontak.php" method="post">
 					<div class="mk-form-row">
 						<div class="mk-field">
 							<label for="nama_lengkap">Nama Lengkap</label>
@@ -195,6 +187,26 @@ $first_map_location = !empty($result_cabang[0]['alamat']) ? $result_cabang[0]['a
 							<option value="Keluhan">Keluhan</option>
 							<option value="Kemitraan">Kemitraan</option>
 							<option value="Lainnya">Lainnya</option>
+						</select>
+					</div>
+
+					<div class="mk-field" id="subjek-lainnya-wrapper" style="display:none;">
+						<label for="subjek_lainnya">Sebutkan Subjek Lainnya</label>
+						<input type="text" id="subjek_lainnya" name="subjek_lainnya" placeholder="Tuliskan subjek pesan Anda">
+					</div>
+
+					<div class="mk-field">
+						<label for="cabang">Manna Kampus</label>
+						<select id="cabang" name="cabang" required>
+							<?php if (!empty($result_cabang)): ?>
+								<?php foreach ($result_cabang as $cabang): ?>
+									<option value="<?php echo htmlspecialchars($cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?>">
+										<?php echo htmlspecialchars($cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?>
+									</option>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<option value="">Belum ada data cabang</option>
+							<?php endif; ?>
 						</select>
 					</div>
 
@@ -322,5 +334,26 @@ if (storeSearchInput) {
             }
         }
     });
+}
+
+/* --- Toggle field "Sebutkan Subjek Lainnya" saat pilih "Lainnya" --- */
+const subjekSelect = document.getElementById('subjek');
+const lainnyaWrapper = document.getElementById('subjek-lainnya-wrapper');
+const lainnyaInput = document.getElementById('subjek_lainnya');
+
+if (subjekSelect && lainnyaWrapper) {
+    function toggleSubjekLainnya() {
+        if (subjekSelect.value === 'Lainnya') {
+            lainnyaWrapper.style.display = 'block';
+            lainnyaInput.setAttribute('required', 'required');
+        } else {
+            lainnyaWrapper.style.display = 'none';
+            lainnyaInput.removeAttribute('required');
+            lainnyaInput.value = '';
+        }
+    }
+
+    subjekSelect.addEventListener('change', toggleSubjekLainnya);
+    toggleSubjekLainnya(); // jalankan sekali saat load
 }
 </script>

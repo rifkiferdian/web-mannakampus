@@ -8,22 +8,25 @@ if(isset($_SESSION['success_message'])) {
 ?>
 
 <style>
-    /* Mencegah teks URL merusak lebar kolom */
-    #example1 td {
-        word-break: break-all;
+    #example1 td { word-break: break-all; }
+    .payment-logo-cell img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fff;
+        padding: 4px;
     }
-    .thumb-img{
-        max-width:120px;
-        height:auto;
-    }
+    .no-logo { color: #999; font-size: 12px; }
 </style>
 
 <section class="content-header">
     <div class="content-header-left">
-        <h1>Branch Galleries</h1>
+        <h1>Branch Payments</h1>
     </div>
     <div class="content-header-right">
-        <a href="branch-galleries-add.php" class="btn btn-primary btn-sm">Add New</a>
+        <a href="branch-payments-add.php" class="btn btn-primary btn-sm">Add New</a>
     </div>
 </section>
 
@@ -42,17 +45,18 @@ if(isset($_SESSION['success_message'])) {
           <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th width="50">No</th>
+                    <th>No</th>
                     <th width="200">Branch</th>
-                    <th>Foto</th>
-                    <th>Caption</th>
+                    <th width="220">Payment Method</th>
+                    <th>Keterangan</th>
+                    <th width="90">Logo</th>
                     <th width="150">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $i=0;
-                $statement = $pdo->prepare("SELECT g.*, c.nama_cabang FROM tbl_cabang_galeri g LEFT JOIN tbl_cabang c ON g.id_cabang = c.id ORDER BY g.id ASC");
+                $statement = $pdo->prepare("SELECT p.*, c.nama_cabang FROM tbl_cabang_pembayaran p LEFT JOIN tbl_cabang c ON p.id_cabang = c.id ORDER BY p.id ASC");
                 $statement->execute();
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -62,18 +66,18 @@ if(isset($_SESSION['success_message'])) {
                     <tr>
                         <td><?php echo $i; ?></td>
                         <td><?php echo htmlspecialchars($row['nama_cabang'] ?? $row['id_cabang'] ?? ''); ?></td>
-                        <td>
-                            <?php if(!empty($row['foto'])): ?>
-                                <?php $img = htmlspecialchars($row['foto']); ?>
-                                <img src="../assets/uploads/<?php echo $img; ?>" alt="" class="thumb-img img-thumbnail">
+                        <td><?php echo htmlspecialchars($row['nama_pembayaran'] ?? ''); ?></td>
+                        <td><?php echo !empty($row['keterangan']) ? htmlspecialchars($row['keterangan']) : '-'; ?></td>
+                        <td class="payment-logo-cell">
+                            <?php if (!empty($row['logo'])): ?>
+                            <img src="../assets/uploads/<?php echo htmlspecialchars($row['logo']); ?>" alt="">
                             <?php else: ?>
-                                -
+                            <span class="no-logo">No logo</span>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo !empty($row['caption']) ? htmlspecialchars($row['caption']) : '-'; ?></td>
                         <td>
-                            <a href="branch-galleries-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="branch-galleries-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+                            <a href="branch-payments-edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                            <a href="#" class="btn btn-danger btn-xs" data-href="branch-payments-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
                         </td>
                     </tr>
                     <?php

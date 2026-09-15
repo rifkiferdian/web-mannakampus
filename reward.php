@@ -495,8 +495,9 @@ if (!empty($periode['draw_date'])) {
 
         <div class="mk-terms-footer">
             <p class="mk-terms-note">Keputusan panitia bersifat mutlak dan tidak dapat diganggu gugat. Hati-hati terhadap penipuan!</p>
-            <a href="document-syarat-ketentuan.pdf" class="mk-terms-download" target="_blank">
-                Unduh Dokumen Lengkap (PDF)
+            <a href="<?php echo BASE_URL; ?>assets/uploads/dummy-legalitas.pdf"
+               class="mk-terms-download" download="dummy-legalitas.pdf">
+                Unduh Legalitas Undian (PDF)
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>

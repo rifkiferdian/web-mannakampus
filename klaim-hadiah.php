@@ -590,11 +590,11 @@
                                 Kami TIDAK PERNAH meminta kode OTP atau data perbankan pribadi.
                             </li>
                         </ul>
-                        <div class="contact-box">
+                        <!-- <div class="contact-box">
                             <p>Hubungi Panitia Resmi:</p>
                             <strong>(0274) 555978</strong>
                             <p>Senin - Sabtu | 08.00 - 16.00 WIB</p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -649,7 +649,7 @@
                 <h2>Masih Memiliki Pertanyaan?</h2>
                 <p>Tim layanan pelanggan siap membantu menyelesaikan proses klaim hadiah agar berjalan dengan lancar dan nyaman.</p>
             </div>
-            <a href="#" class="btn-white">Hubungi Customer Service</a>
+            <a href="#" id="btnMulaiChat" class="btn-white">Hubungi Customer Service</a>
         </div>
     </div>
 </section>
