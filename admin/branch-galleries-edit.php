@@ -51,8 +51,8 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {
         if(!$has_new_image) {
-            $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ? WHERE id = ?");
-            $statement->execute(array($_POST['id_cabang'],$id));
+            $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ?, caption = ? WHERE id = ?");
+            $statement->execute(array($_POST['id_cabang'], $_POST['caption'], $id));
 
             $_SESSION['success_message'] = 'Branch gallery is updated successfully.';
             header('Location: branch-galleries.php');
@@ -75,8 +75,8 @@ if(isset($_POST['form1'])) {
             if($final_name === false) {
                 $error_message .= 'Gambar tidak dapat diunggah.<br>';
             } else {
-                $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ?, foto = ? WHERE id = ?");
-                $statement->execute(array($_POST['id_cabang'],$final_name,$id));
+                $statement = $pdo->prepare("UPDATE tbl_cabang_galeri SET id_cabang = ?, foto = ?, caption = ? WHERE id = ?");
+                $statement->execute(array($_POST['id_cabang'], $final_name, $_POST['caption'], $id));
 
                 // Hapus foto lama SETELAH update berhasil
                 if($old_photo != '' && $old_photo !== $final_name) {
@@ -100,6 +100,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach($result as $row) {
     $id_cabang_db = $row['id_cabang'];
     $foto_db = $row['foto'];
+    $caption_db = $row['caption'];
 }
 
 $statement = $pdo->prepare("SELECT id, nama_cabang FROM tbl_cabang ORDER BY nama_cabang ASC");
@@ -164,6 +165,13 @@ $cabang_list = $statement->fetchAll();
                             <label for="" class="col-sm-2 control-label">Replace Photo</label>
                             <div class="col-sm-4" style="padding-top:6px;">
                                 <input type="file" name="foto"> (Only JPG or PNG, max 3 MB)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Caption</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="caption" value="<?php echo htmlspecialchars($caption_db ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Optional, contoh: Suasana area kasir">
+                                <p class="help-block">Teks ini akan muncul saat foto diperbesar di halaman publik.</p>
                             </div>
                         </div>
                         <div class="form-group">

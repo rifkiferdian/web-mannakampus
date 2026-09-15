@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ob_start();
 session_start();
 include("admin/config.php");
@@ -629,6 +629,8 @@ if($cur_page == 'blog.php')
 			max-width: 180px!important;
 			max-height: 48px!important;
 			object-fit: contain!important;
+			/* Menyamarkan latar putih pada file logo yang belum transparan. */
+			mix-blend-mode: multiply;
 		}
 		.mk-mobile-menu {
 			display: none!important;
@@ -1330,32 +1332,6 @@ foreach ($result as $row)
 			<div class="container">
 					<div class="mk-topbar-inner">
 					<div class="mk-topbar-left">
-						<div class="mk-topbar-menu">
-							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger">MannaKampus</a>
-						</div>
-						<div class="mk-topbar-menu has-dropdown">
-							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Mitra Bisnis</a>
-							<div class="mk-topbar-dropdown">
-								<a href="#">Gerai</a>
-								<a href="#">Daftarkan Pemasok Baru</a>
-								<a href="#">Bisnis Antar Bisnis</a>
-							</div>
-						</div>
-						<div class="mk-topbar-menu has-dropdown">
-							<a href="#" class="mk-topbar-link mk-topbar-menu-trigger" role="button" aria-expanded="false">Mitra Kami
-
-							
-							</a>
-							<div class="mk-topbar-dropdown">
-								<a target="_blank" href="#">Lega Legi Kopi & Resto </a>
-								<a target="_blank" href="#">ROEMI Xtraordinary Ice Cream</a>
-								<a target="_blank" href="https://mannabakeryjogja.com/">Manna Bakery Jogja</a>
-							</div>
-						</div>
-						
-					</div>
-					<div class="mk-topbar-right">
-						<a href="mailto:<?php echo $contact_email; ?>" class="mk-topbar-button"><i class="fa fa-commenting-o"></i> Hubungi Kami</a>
 					</div>
 				</div>
 			</div>
@@ -1368,6 +1344,11 @@ foreach ($result as $row)
 			$is_shopping_menu = in_array($current_page, array('belanja-online.php', 'lokasi-outlet.php', 'explor.php'));
 			$is_membership_menu = in_array($current_page, array('member.php', 'community.php'));
 			$is_promo_menu = in_array($current_page, array('promo.php', 'blog.php', 'news.php'));
+			$is_another_brand = false;
+			// Ganti USERNAME_LEGA_LEGI dan USERNAME_ROEMI dengan username Instagram yang sebenarnya.
+			$lega_legi_instagram = 'https://www.instagram.com/legalegi_kopi.resto/';
+			$roemi_instagram = 'https://www.instagram.com/roemixtra/';
+			$manna_bakery_website = 'https://mannabakeryjogja.com/';
 		?>
 		<!-- Header Start -->
 		<header class="mk-header">
@@ -1417,6 +1398,14 @@ foreach ($result as $row)
 								<a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Artikel</a>
 							</div>
 						</details>
+						<details class="mk-nav-group<?php echo $is_another_brand ? ' active' : ''; ?>">
+							<summary>Another Brand</summary>
+							<div class="mk-nav-submenu">
+								<a href="<?php echo htmlspecialchars($lega_legi_instagram, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Lega Legi Kopi &amp; Resto</a>
+								<a href="<?php echo htmlspecialchars($roemi_instagram, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Roemi Xtraordinary Ice Cream</a>
+								<a href="<?php echo htmlspecialchars($manna_bakery_website, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Manna Bakery Jogja</a>
+							</div>
+						</details>
 					</nav>
 
 					<details class="mk-mobile-menu">
@@ -1428,6 +1417,7 @@ foreach ($result as $row)
 							<details class="mk-mobile-nav-group<?php echo $is_shopping_menu ? ' active' : ''; ?>"<?php echo $is_shopping_menu ? ' open' : ''; ?>><summary>Belanja</summary><a href="belanja-online.php" class="<?php echo ($current_page == 'belanja-online.php') ? 'active' : ''; ?>">Belanja Online</a><a href="lokasi-outlet.php" class="<?php echo ($current_page == 'lokasi-outlet.php') ? 'active' : ''; ?>">Lokasi Outlet</a></details>
 							<details class="mk-mobile-nav-group<?php echo $is_membership_menu ? ' active' : ''; ?>"<?php echo $is_membership_menu ? ' open' : ''; ?>><summary>Keanggotaan &amp; Komunitas</summary><a href="member.php" class="<?php echo ($current_page == 'member.php') ? 'active' : ''; ?>">Keanggotaan</a><a href="community.php" class="<?php echo ($current_page == 'community.php') ? 'active' : ''; ?>">Pusat Komunitas</a></details>
 							<details class="mk-mobile-nav-group<?php echo $is_promo_menu ? ' active' : ''; ?>"<?php echo $is_promo_menu ? ' open' : ''; ?>><summary>Promo &amp; Berita</summary><a href="promo.php" class="<?php echo ($current_page == 'promo.php') ? 'active' : ''; ?>">Promo Terbaru</a><a href="blog.php" class="<?php echo in_array($current_page, array('blog.php', 'news.php')) ? 'active' : ''; ?>">Blog / Artikel</a></details>
+							<details class="mk-mobile-nav-group"><summary>Another Brand</summary><a href="<?php echo htmlspecialchars($lega_legi_instagram, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Lega Legi Kopi &amp; Resto</a><a href="<?php echo htmlspecialchars($roemi_instagram, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Roemi Xtraordinary Ice Cream</a><a href="<?php echo htmlspecialchars($manna_bakery_website, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Manna Bakery Jogja</a></details>
 						</nav>
 					</details>
 				</div>

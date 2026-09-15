@@ -36,6 +36,7 @@ $branch_videos_pages     = ['branch-videos.php', 'branch-videos-add.php', 'branc
 $branch_tenants_pages    = ['branch-tenants.php', 'branch-tenants-add.php', 'branch-tenants-edit.php'];
 $branch_katalog_pages    = ['branch-katalog.php', 'branch-katalog-add.php', 'branch-katalog-edit.php'];
 $branch_facilities_pages = ['branch-facilities.php', 'branch-facilities-add.php', 'branch-facilities-edit.php'];
+$branch_payments_pages   = ['branch-payments.php', 'branch-payments-add.php', 'branch-payments-edit.php'];
 $branch_galleries_pages  = ['branch-galleries.php', 'branch-galleries-add.php', 'branch-galleries-edit.php'];
 $branch_promo_pages      = ['branch-promo.php', 'branch-promo-add.php', 'branch-promo-edit.php'];
 
@@ -46,6 +47,7 @@ $outlet_pages = array_merge(
     $branch_tenants_pages,
     $branch_katalog_pages,
     $branch_facilities_pages,
+	$branch_payments_pages,
     $branch_galleries_pages,
     $branch_promo_pages
 );
@@ -242,6 +244,10 @@ document.addEventListener('DOMContentLoaded', function () {
         'service-add.php': 'CONTENT',
         'service-edit.php': 'CONTENT',
 
+		'community-highlight.php': 'CONTENT',
+		'community-highlight-add.php': 'CONTENT',
+		'community-highlight-edit.php': 'CONTENT',
+
         'slider.php': 'MEDIA',
         'slider-add.php': 'MEDIA',
         'slider-edit.php': 'MEDIA',
@@ -346,6 +352,10 @@ document.addEventListener('DOMContentLoaded', function () {
         'branch-facilities.php': 'Outlet',
         'branch-facilities-add.php': 'Outlet',
         'branch-facilities-edit.php': 'Outlet',
+
+		'branch-payments.php': 'Outlet',
+		'branch-payments-add.php': 'Outlet',
+		'branch-payments-edit.php': 'Outlet',
 
         'branch-galleries.php': 'Outlet',
         'branch-galleries-add.php': 'Outlet',
@@ -567,6 +577,12 @@ document.addEventListener('DOMContentLoaded', function () {
 							</a>
 						</li>
 
+						<li class="treeview <?php if( ($cur_page == 'community-highlight.php')||($cur_page == 'community-highlight-add.php')||($cur_page == 'community-highlight-edit.php') ) {echo 'active';} ?>">
+							<a href="community-highlight.php">
+								<i class="fa fa-hand-o-right"></i> <span>Community Highlight</span>
+							</a>
+						</li>
+
 						<li class="treeview <?php echo $is_faq_active ? 'active menu-open' : ''; ?>">
 							<a href="#">
 								<i class="fa fa-hand-o-right"></i>
@@ -611,6 +627,9 @@ document.addEventListener('DOMContentLoaded', function () {
 								</li>
 								<li class="<?php echo in_array($cur_page, $branch_facilities_pages) ? 'active' : ''; ?>">
 									<a href="branch-facilities.php"><i class="fa fa-circle-o"></i> Branch Facilities</a>
+								</li>
+								<li class="<?php echo in_array($cur_page, $branch_payments_pages) ? 'active' : ''; ?>">
+									<a href="branch-payments.php"><i class="fa fa-circle-o"></i> Branch Payments</a>
 								</li>
 								<li class="<?php echo in_array($cur_page, $branch_galleries_pages) ? 'active' : ''; ?>">
 									<a href="branch-galleries.php"><i class="fa fa-circle-o"></i> Branch Galleries</a>

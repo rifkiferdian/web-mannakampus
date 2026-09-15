@@ -35,8 +35,8 @@ if(isset($_POST['form1'])) {
         if($final_name === false) {
             $error_message .= 'Gambar tidak dapat diunggah.<br>';
         } else {
-            $statement = $pdo->prepare("INSERT INTO tbl_cabang_galeri (id_cabang, foto) VALUES (?,?)");
-            $statement->execute(array($_POST['id_cabang'],$final_name));
+            $statement = $pdo->prepare("INSERT INTO tbl_cabang_galeri (id_cabang, foto, caption) VALUES (?,?,?)");
+            $statement->execute(array($_POST['id_cabang'], $final_name, $_POST['caption']));
 
             $_SESSION['success_message'] = 'Branch gallery is added successfully.';
             header('Location: branch-galleries.php');
@@ -99,6 +99,13 @@ $cabang_list = $statement->fetchAll();
                             <label for="" class="col-sm-2 control-label">Upload Photo <span>*</span></label>
                             <div class="col-sm-4" style="padding-top:6px;">
                                 <input type="file" name="foto"> (Only JPG or PNG, max 3 MB)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Caption</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="caption" value="<?php echo htmlspecialchars($_POST['caption'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Optional, contoh: Suasana area kasir">
+                                <p class="help-block">Teks ini akan muncul saat foto diperbesar di halaman publik.</p>
                             </div>
                         </div>
                         <div class="form-group">

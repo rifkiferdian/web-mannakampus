@@ -86,18 +86,42 @@
 .mk-highlights-link{ display:inline-flex; align-items:center; gap:6px; color: #da5c2a; font-weight:700; font-size:1.25rem; white-space:nowrap; }
 .mk-highlights-link i{ font-size:1.25rem; }
 
-.mk-highlights-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:16px; }
+.mk-highlights-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:stretch; }
+.mk-highlight-card{ position:relative; display:flex; flex-direction:column; height:100%; min-width:0; overflow:hidden; background:#fff; border-radius:10px; box-shadow:0 5px 18px rgba(46,38,32,.10); color:inherit; text-decoration:none; transition:transform .2s ease, box-shadow .2s ease; }
+.mk-highlight-card:hover{ transform:translateY(-4px); box-shadow:0 10px 24px rgba(46,38,32,.16); }
+.mk-highlight-card{ border:0; padding:0; text-align:left; width:100%; cursor:pointer; }
+.mk-highlight-media{ position:relative; aspect-ratio:4/3; overflow:hidden; background:#f3eee9; }
+.mk-highlight-content{ flex:1; }
+.mk-highlight-media img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
+.mk-highlight-card:hover .mk-highlight-media img{ transform:scale(1.04); }
+.mk-highlight-platform{ position:absolute; top:12px; left:12px; display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,.72); color:#fff; font-size:18px; }
+.mk-highlight-play{ position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:32px; text-shadow:0 2px 8px rgba(0,0,0,.45); }
+.mk-highlight-content{ padding:14px 16px 16px; }
+.mk-highlight-title{ margin:0 0 6px; font-size:1.05rem; font-weight:700; }
+.mk-highlight-author{ margin:0; color:var(--mk-muted); font-size:.92rem; }
+.mk-highlights-grid .mk-highlights-main,.mk-highlights-grid .mk-highlights-side,.mk-highlights-side-top,.mk-highlights-side-bottom{ display:contents; }
 .mk-highlights-main img{ width:100%; height:100%; object-fit:cover; border-radius:10px; display:block; }
 .mk-highlights-side{ display:grid; grid-template-rows:1fr 1fr; gap:16px; }
 .mk-highlights-side-top img{ width:100%; height:100%; object-fit:cover; border-radius:10px; display:block; }
 .mk-highlights-side-bottom{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .mk-highlights-side-bottom img{ width:100%; height:100%; object-fit:cover; border-radius:10px; display:block; }
 
+.mk-video-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;}
+.mk-video-modal.is-open{display:flex;}
+.mk-video-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.75);}
+.mk-video-modal-box{position:relative;background:#fff;border-radius:12px;padding:18px;max-width:720px;width:92%;max-height:90vh;z-index:1;overflow:auto;}
+.mk-video-modal-frame{position:relative;width:100%;padding-top:75%;}
+.mk-video-modal-frame.is-video{padding-top:120%;max-width:440px;margin:0 auto;}
+.mk-video-modal-frame iframe,.mk-video-modal-frame img{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:8px;object-fit:contain;background:#f3f3f3;}
+.mk-video-modal-original{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:12px 18px;border:1px solid #da5c2a;border-radius:8px;background:#da5c2a;color:#fff;font-weight:700;text-decoration:none;transition:background .2s ease;}
+.mk-video-modal-original:hover{background:#b9471e;color:#fff;}
+.mk-video-modal-close{position:absolute;top:8px;right:12px;background:none;border:0;font-size:24px;cursor:pointer;}
+.mk-highlight-video-trigger{cursor:pointer;background:none;border:0;padding:0;text-align:left;width:100%;}
+
 @media (max-width:768px){
 	.mk-highlights-grid{ grid-template-columns:1fr; }
-	.mk-highlights-main{ height:260px; }
-	.mk-highlights-side{ height:auto; }
 }
+@media (max-width:560px){ .mk-highlights-grid{ grid-template-columns:1fr; } }
 
 /* ---------------- Newsletter Section ---------------- */
 .mk-newsletter{ background: #F7F5F1; padding:70px 24px 70px; }
@@ -143,7 +167,7 @@
 			<div class="mk-connect-icon instagram"><i class="fab fa-instagram"></i></div>
 			<p class="mk-connect-name">Instagram</p>
 			<p class="mk-connect-handle">@mannakampus</p>
-			<a href="#" class="mk-connect-follow instagram">Follow</a>
+			<a href="https://www.instagram.com/mannakampus" class="mk-connect-follow instagram">Follow</a>
 		</div>
 
 		<div class="mk-connect-card">
@@ -164,14 +188,14 @@
 			<div class="mk-connect-icon youtube"><i class="fab fa-youtube-play"></i></div>
 			<p class="mk-connect-name">YouTube</p>
 			<p class="mk-connect-handle">@mannakampus</p>
-			<a href="#" class="mk-connect-follow youtube">Follow</a>
+			<a href="https://www.youtube.com/@MannaKampus" class="mk-connect-follow youtube">Follow</a>
 		</div>
 
 		<div class="mk-connect-card">
 			<div class="mk-connect-icon tiktok"><i class="fab fa-tiktok"></i></div>
 			<p class="mk-connect-name">TikTok</p>
 			<p class="mk-connect-handle">@mannakampus</p>
-			<a href="#" class="mk-connect-follow tiktok">Follow</a>
+			<a href="https://www.tiktok.com/@mannakampus" class="mk-connect-follow tiktok">Follow</a>
 		</div>
 
 	</div>
@@ -179,6 +203,39 @@
 <!-- Connect Section End -->
 
 <!-- Community Highlights Start -->
+<?php
+
+$stmt = $pdo->query(
+    "SELECT title, platform, image, url, author, type 
+     FROM sorotan_komunitas 
+     WHERE is_active = 1 
+     ORDER BY sort_order ASC, id DESC 
+     LIMIT 8"
+);
+$social_highlights = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+function mk_get_embed_url($platform, $url) {
+    switch ($platform) {
+        case 'youtube':
+            if (preg_match('#(?:shorts/|v=|youtu\.be/)([A-Za-z0-9_-]{6,})#', $url, $m)) {
+                return 'https://www.youtube.com/embed/' . $m[1] . '?autoplay=1';
+            }
+            break;
+        case 'tiktok':
+            if (preg_match('#/video/(\d+)#', $url, $m)) {
+                return 'https://www.tiktok.com/embed/v2/' . $m[1];
+            }
+            break;
+        case 'facebook':
+            $clean_url = strtok($url, '?');
+            return 'https://www.facebook.com/plugins/video.php?href=' . urlencode($clean_url) . '&show_text=false&autoplay=true';
+        case 'instagram':
+            $clean_url = strtok($url, '?');
+            return rtrim($clean_url, '/') . '/embed';
+    }
+    return $url;
+}
+?>
 <section class="mk-highlights">
 	<div class="mk-highlights-wrap">
 		<div class="mk-highlights-head">
@@ -186,25 +243,78 @@
 				<h2 class="mk-highlights-title">Sorotan Komunitas</h2>
 				<p class="mk-highlights-sub">Lihat apa yang terjadi di Rumah Belanja Terpercaya Anda.</p>
 			</div>
-			<a href="#" class="mk-highlights-link">Lihat Galeri <i class="fa fa-external-link"></i></a>
 		</div>
 
 		<div class="mk-highlights-grid">
-			<div class="mk-highlights-main">
-				<img src="<?php echo BASE_URL; ?>assets/uploads/service-convenience.png" alt="Suasana toko Manna Kampus">
-			</div>
-			<div class="mk-highlights-side">
-				<div class="mk-highlights-side-top">
-					<img src="<?php echo BASE_URL; ?>assets/uploads/service-premium-quality.png" alt="Chef sedang memasak">
+			<?php foreach ($social_highlights as $highlight):
+				$is_video = $highlight['type'] === 'video';
+				$embed_url = $is_video ? mk_get_embed_url($highlight['platform'], $highlight['url']) : '';
+			?>
+			<button type="button" class="mk-highlight-card mk-highlight-video-trigger"
+				data-embed="<?php echo htmlspecialchars($embed_url, ENT_QUOTES, 'UTF-8'); ?>"
+				data-title="<?php echo htmlspecialchars($highlight['title'], ENT_QUOTES, 'UTF-8'); ?>"
+				data-url="<?php echo htmlspecialchars($highlight['url'], ENT_QUOTES, 'UTF-8'); ?>"
+				data-image="<?php echo BASE_URL . 'assets/uploads/' . htmlspecialchars($highlight['image'], ENT_QUOTES, 'UTF-8'); ?>"
+				data-type="<?php echo htmlspecialchars($highlight['type'], ENT_QUOTES, 'UTF-8'); ?>">
+
+				<div class="mk-highlight-media">
+					<img src="<?php echo BASE_URL . 'assets/uploads/' . htmlspecialchars($highlight['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($highlight['title'], ENT_QUOTES, 'UTF-8'); ?>">
+					<span class="mk-highlight-platform"><i class="fa-brands fa-<?php echo htmlspecialchars($highlight['platform'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
+					<?php if ($is_video): ?><span class="mk-highlight-play"><i class="fa-solid fa-play" aria-hidden="true"></i></span><?php endif; ?>
 				</div>
-				<div class="mk-highlights-side-bottom">
-					<img src="<?php echo BASE_URL; ?>assets/uploads/slider-13.png" alt="Keluarga belanja bersama">
-					<img src="<?php echo BASE_URL; ?>assets/uploads/promo-dairy-delights.png" alt="Roti dan keju">
+				<div class="mk-highlight-content">
+					<h3 class="mk-highlight-title"><?php echo htmlspecialchars($highlight['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+					<p class="mk-highlight-author"><?php echo htmlspecialchars($highlight['author'], ENT_QUOTES, 'UTF-8'); ?></p>
 				</div>
-			</div>
+
+			</button>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </section>
+
+<!-- Modal untuk pemutaran video -->
+<div class="mk-video-modal" id="mkVideoModal" aria-hidden="true">
+	<div class="mk-video-modal-backdrop" data-mk-close></div>
+	<div class="mk-video-modal-box">
+		<button type="button" class="mk-video-modal-close" data-mk-close aria-label="Tutup">&times;</button>
+		<h4 class="mk-video-modal-title"></h4>
+		<div class="mk-video-modal-frame"></div>
+		<a class="mk-video-modal-original" href="#" target="_blank" rel="noopener noreferrer">Buka postingan asli</a>
+	</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	var modal = document.getElementById('mkVideoModal');
+	var frame = modal.querySelector('.mk-video-modal-frame');
+	var titleEl = modal.querySelector('.mk-video-modal-title');
+	var originalEl = modal.querySelector('.mk-video-modal-original');
+
+	document.querySelectorAll('.mk-highlight-video-trigger').forEach(function (btn) {
+		btn.addEventListener('click', function () {
+			var src = btn.getAttribute('data-embed');
+			var title = btn.getAttribute('data-title');
+			var url = btn.getAttribute('data-url');
+			var type = btn.getAttribute('data-type');
+			titleEl.textContent = title;
+			originalEl.href = url;
+			frame.classList.toggle('is-video', type === 'video');
+			frame.innerHTML = type === 'video'
+				? '<iframe src="' + src + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>'
+				: '<img src="' + btn.getAttribute('data-image') + '" alt="' + title.replace(/"/g, '&quot;') + '">';
+			modal.classList.add('is-open');
+		});
+	});
+
+	modal.querySelectorAll('[data-mk-close]').forEach(function (el) {
+		el.addEventListener('click', function () {
+			modal.classList.remove('is-open');
+			frame.innerHTML = '';
+		});
+	});
+});
+</script>
 <!-- Community Highlights End -->
 
 <!-- Newsletter Section Start -->

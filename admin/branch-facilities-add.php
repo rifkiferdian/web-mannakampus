@@ -1,6 +1,13 @@
 <?php require_once('header.php'); ?>
-
+<style>
+.gallery-item { position: relative; display: inline-block; margin: 6px; border: 1px solid #ddd; border-radius: 4px; padding: 4px; background: #fff; }
+.gallery-item img { width: 100px; height: 100px; object-fit: cover; display: block; }
+</style>
 <?php
+$upload_dir = '../assets/uploads/';
+$allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
+$max_size = 2 * 1024 * 1024;
+
 if(isset($_POST['form1'])) {
     $valid = 1;
 
@@ -14,6 +21,38 @@ if(isset($_POST['form1'])) {
         $error_message .= "Facility name can not be empty<br>";
     }
 
+    $uploaded_files = [];
+    if (!empty($_FILES['gambar']['name'][0])) {
+        foreach ($_FILES['gambar']['name'] as $key => $filename) {
+            if ($_FILES['gambar']['error'][$key] === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            if ($_FILES['gambar']['error'][$key] !== UPLOAD_ERR_OK) {
+                $valid = 0;
+                $error_message .= "Gagal upload file: " . htmlspecialchars($filename) . "<br>";
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowed_ext)) {
+                $valid = 0;
+                $error_message .= "Format file tidak didukung: " . htmlspecialchars($filename) . " (hanya jpg, jpeg, png, webp)<br>";
+                continue;
+            }
+
+            if ($_FILES['gambar']['size'][$key] > $max_size) {
+                $valid = 0;
+                $error_message .= "Ukuran file terlalu besar: " . htmlspecialchars($filename) . " (maks 2MB)<br>";
+                continue;
+            }
+
+            $uploaded_files[] = [
+                'tmp_name' => $_FILES['gambar']['tmp_name'][$key],
+                'ext' => $ext,
+            ];
+        }
+    }
+
     if($valid == 1) {
         $statement = $pdo->prepare("INSERT INTO tbl_cabang_fasilitas (id_cabang, nama_fasilitas, deskripsi, icon) VALUES (?,?,?,?)");
         $statement->execute(array(
@@ -22,6 +61,21 @@ if(isset($_POST['form1'])) {
             $_POST['deskripsi'],
             $_POST['icon']
         ));
+
+        $new_id = $pdo->lastInsertId();
+
+        if (!empty($uploaded_files)) {
+            $insert_gambar = $pdo->prepare("INSERT INTO tbl_cabang_fasilitas_gambar (id_fasilitas, gambar) VALUES (?, ?)");
+
+            foreach ($uploaded_files as $file) {
+                $new_filename = 'fasilitas-' . $new_id . '-' . time() . '-' . uniqid() . '.' . $file['ext'];
+                $destination = $upload_dir . $new_filename;
+
+                if (move_uploaded_file($file['tmp_name'], $destination)) {
+                    $insert_gambar->execute(array($new_id, $new_filename));
+                }
+            }
+        }
 
         $_SESSION['success_message'] ='Branch facility is added successfully.';
         header('Location: branch-facilities.php');
@@ -51,6 +105,12 @@ $icon_options = [
     'fa-solid fa-book' => 'Books / Stationery',
     'fa-solid fa-box-open' => 'Retail / Package',
     'fa-solid fa-medkit' => 'Medical / Pharmacy',
+    'fa-solid fa-credit-card' => 'Bank / Finance',
+    'fa-solid fa-building-o' => 'Office / Corporate',
+    'fa-solid fa-restroom' => 'Restroom / Facility',
+    'fa-solid fa-parking' => 'Parking / Facility',
+    'fa-solid fa-cutlery' => 'Dining / Restaurant',
+    'fa-solid fa-mosque' => 'Mushola / Ibadah',
 ];
 ?>
 
@@ -84,7 +144,7 @@ $icon_options = [
             </div>
             <?php endif; ?>
 
-            <form class="form-horizontal" action="" method="post">
+            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 
                 <div class="box box-info">
                     <div class="box-body">
@@ -128,6 +188,13 @@ $icon_options = [
                                         <span class="icon-preview-text" style="color:#777; font-size:12px;"><?php echo !empty($_POST['icon']) ? '<i class="'.htmlspecialchars($_POST['icon'], ENT_QUOTES, 'UTF-8').'" style="font-size:16px;"></i>' : 'No icon selected'; ?></span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Gambar / Logo</label>
+                            <div class="col-sm-6">
+                                <input type="file" name="gambar[]" multiple accept=".jpg,.jpeg,.png,.webp">
+                                <p class="help-block">Bisa pilih lebih dari satu file sekaligus. Format: jpg, jpeg, png, webp. Maks 2MB per file.</p>
                             </div>
                         </div>
                         <div class="form-group">

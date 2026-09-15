@@ -69,9 +69,22 @@ $stmt_fac->execute([$current_cabang['id']]);
 $facilities = $stmt_fac->fetchAll(PDO::FETCH_ASSOC);
 
 // I. Query Galeri
-$stmt_galeri = $pdo->prepare("SELECT foto FROM tbl_cabang_galeri WHERE id_cabang = ? ORDER BY id ASC LIMIT 5");
+$stmt_galeri = $pdo->prepare("SELECT foto, caption FROM tbl_cabang_galeri WHERE id_cabang = ? ORDER BY id ASC LIMIT 5");
 $stmt_galeri->execute([$current_cabang['id']]);
-$result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
+$result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_ASSOC);
+
+// J. Query Berita / Blog Cabang - berdasarkan kategori yang terhubung ke cabang ini
+$stmt_news = $pdo->prepare("
+    SELECT n.*
+    FROM tbl_news n
+    INNER JOIN tbl_category c ON n.category_id = c.category_id
+    WHERE c.id_cabang = ?
+    ORDER BY n.news_date DESC
+    LIMIT 4
+");
+$stmt_news->execute([$current_cabang['id']]);
+$result_news = $stmt_news->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <style>
@@ -274,7 +287,62 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 .mk-facility-icon { font-size: 2rem; color: #E8792E; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; height: 50px; }
 .mk-facility-name { font-size: 1.25rem; font-weight: 700; color: #2E2620; margin: 0 0 6px 0; }
 .mk-facility-desc { font-size: 1.05rem; color: #8A7F73; margin: 0; }
+.mk-facility-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #F0E6DA;
+}
+.mk-facility-logos img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border: 1px solid #EAEAEA;
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+.mk-facility-logos img:hover {
+    transform: scale(1.1);
+    border-color: #E8792E;
+}
 @media (max-width: 768px) { .mk-facility-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------------- SECTION 6B PAYMENT METHOD ---------------- */
+.mk-payment-section { padding: 50px 24px; background: #FDFBF8; text-align: center; }
+.mk-payment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 18px; max-width: 900px; margin: 0 auto; }
+.mk-payment-card { background: #FFFFFF; border: 1px solid #EAEAEA; border-radius: 12px; padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.mk-payment-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(232,121,46,0.12); border-color: #E8792E; }
+.mk-payment-card img { width: 100%; max-width: 60px; height: 50px; object-fit: contain; }
+.mk-payment-placeholder { width: 100%; height: 50px; }
+.mk-payment-noimg { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; color: #E8792E; font-size: 1.75rem; }
+.mk-payment-card p { margin: 0; font-size: 1.25rem; font-weight: 600; color: #2E2620; }
+@media (max-width: 480px) { .mk-payment-grid { grid-template-columns: repeat(3, 1fr); } }
+
+
+/* ---------------- SECTION 6C: BERITA & BLOG CABANG ---------------- */
+.mk-sec-news { background-color: #ffffff; padding: 60px 0; }
+.mk-news-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.mk-news-card { background: #FFFFFF; border: 1px solid #EAEAEA; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); transition: transform 0.25s ease, box-shadow 0.25s ease; text-decoration: none; }
+.mk-news-card:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); }
+
+.mk-news-thumb { width: 100%; height: 190px; background: #F8F8F8; overflow: hidden; }
+.mk-news-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.mk-news-card:hover .mk-news-thumb img { transform: scale(1.05); }
+
+.mk-news-info { padding: 18px 16px; display: flex; flex-direction: column; flex: 1; }
+.mk-news-date { font-size: 10px; color: #E8792E; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.mk-news-title { font-size: 14px; font-weight: 800; color: #2E2620; margin: 0 0 10px 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.mk-news-excerpt { font-size: 13px; color: #8A7F73; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+@media (max-width: 1024px) { .mk-news-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .mk-news-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .mk-news-grid { grid-template-columns: 1fr; } }
 
 /* ---------------- SECTION 7 GALERI FOTO CABANG ---------------- */
 .mk-gallery-section { padding: 80px 0; background: #FDFBF8; }
@@ -287,7 +355,7 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 .mk-gallery-link-all:hover { color: #A04000; }
 .mk-gallery-grid-clean { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
 .mk-gallery-card { overflow: hidden; border-radius: 12px; position: relative; cursor: zoom-in; background: #f8f9fa; box-shadow: 0 4px 12px rgba(0,0,0,0.06); transition: transform 0.3s ease, box-shadow 0.3s ease; display: block; }
-.mk-gallery-card img { width： 100%; height: 200px; display: block; object-fit: cover; transition: transform 0.4s ease; }
+.mk-gallery-card img { width: 100%; height: 200px; display: block; object-fit: cover; transition: transform 0.4s ease; }
 .mk-gallery-card:hover { transform: translateY(-8px); box-shadow: 0 16px 30px rgba(0,0,0,0.12); }
 .mk-gallery-card:hover img { transform: scale(1.05); }
 @media (max-width: 991px) { .mk-gallery-grid-clean { grid-template-columns: repeat(2, 1fr); } }
@@ -301,7 +369,7 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
         <div class="container">
             <h1 class="mk-blog-hero-title">
                 Eksplorasi Outlet <br>
-                <span>Manna Kampus</span>
+                <span><?php echo htmlspecialchars($nama_cabang_pilihan, ENT_QUOTES, 'UTF-8'); ?></span>
             </h1>
             <p class="mk-blog-hero-sub">
                 Rasakan pengalaman belanja terpercaya dengan standar pelayanan terbaik di setiap sudut kota. Pilih cabang favorit Anda untuk melihat tur virtual dan penawaran spesial.
@@ -319,7 +387,7 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
                 
                 <!-- Tombol Kembali ke Daftar Outlet -->
                 <div style="padding-top: 24px; margin-bottom: 20px;">
-                    <a href="<?php echo BASE_URL; ?>outlet.php" style="display:inline-flex; align-items:center; gap:8px; color:#E8792E; font-weight:700; font-size:1.05rem; text-decoration:none;">
+                    <a href="<?php echo BASE_URL; ?>lokasi-outlet.php" style="display:inline-flex; align-items:center; gap:8px; color:#E8792E; font-weight:700; font-size:1.05rem; text-decoration:none;">
                         <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Outlet
                     </a>
                 </div>
@@ -585,24 +653,124 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 
                 <div class="mk-facility-grid">
                     <?php
-                        // Mengambil data fasilitas berdasarkan cabang yang sedang aktif dari tbl_cabang_fasilitas
                         $stmt_fac = $pdo->prepare("SELECT * FROM tbl_cabang_fasilitas WHERE id_cabang = ? ORDER BY id ASC");
                         $stmt_fac->execute([$current_cabang['id']]);
                         $facilities = $stmt_fac->fetchAll(PDO::FETCH_ASSOC);
+
+                        $facility_images_map = [];
+                        if (!empty($facilities)) {
+                            $fac_ids = array_column($facilities, 'id');
+                            $placeholders = implode(',', array_fill(0, count($fac_ids), '?'));
+                            $stmt_fac_img = $pdo->prepare("SELECT id_fasilitas, gambar FROM tbl_cabang_fasilitas_gambar WHERE id_fasilitas IN ($placeholders) ORDER BY id ASC");
+                            $stmt_fac_img->execute($fac_ids);
+                            $all_fac_images = $stmt_fac_img->fetchAll(PDO::FETCH_ASSOC);
+
+                            foreach ($all_fac_images as $fi) {
+                                $facility_images_map[$fi['id_fasilitas']][] = $fi['gambar'];
+                            }
+                        }
                     ?>
 
                     <?php if (!empty($facilities)): ?>
-                        <?php foreach ($facilities as $fac): ?>
+                        <?php foreach ($facilities as $fac): 
+                            $fac_images = $facility_images_map[$fac['id']] ?? [];
+                        ?>
                             <div class="mk-facility-card">
                                 <div class="mk-facility-icon">
                                     <i class="fa <?php echo htmlspecialchars($fac['icon'] ?? 'fa-check', ENT_QUOTES, 'UTF-8'); ?>"></i>
                                 </div>
                                 <h4 class="mk-facility-name"><?php echo htmlspecialchars($fac['nama_fasilitas'], ENT_QUOTES, 'UTF-8'); ?></h4>
                                 <p class="mk-facility-desc"><?php echo htmlspecialchars($fac['deskripsi'], ENT_QUOTES, 'UTF-8'); ?></p>
+
+                                <?php if (!empty($fac_images)): ?>
+                                <div class="mk-facility-logos">
+                                    <?php foreach ($fac_images as $img): ?>
+                                    <img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($img, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($fac['nama_fasilitas'], ENT_QUOTES, 'UTF-8'); ?>" onclick="openImageModal('<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($img, ENT_QUOTES, 'UTF-8'); ?>')">
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <p style="grid-column: 1 / -1; text-align: center; color: #8A7F73;">Belum ada informasi fasilitas untuk cabang ini.</p>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- SECTION 6B : METODE PEMBAYARAN -->
+        <section class="mk-payment-section">
+            <div class="mk-facility-wrap">
+                
+                <div class="mk-facility-header">
+                    <h2>Pembayaran yang Tersedia di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                    <div class="mk-facility-underline"></div>
+                </div>
+
+                <?php
+                    $stmt_payment = $pdo->prepare("SELECT * FROM tbl_cabang_pembayaran WHERE id_cabang = ? ORDER BY id ASC");
+                    $stmt_payment->execute([$current_cabang['id']]);
+                    $payments = $stmt_payment->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+
+                <?php if (!empty($payments)): ?>
+                <div class="mk-payment-grid">
+                    <?php foreach ($payments as $pay): ?>
+                    <div class="mk-payment-card">
+                        <?php if (!empty($pay['logo'])): ?>
+                        <img src="<?php echo BASE_URL; ?>assets/uploads/<?php echo htmlspecialchars($pay['logo'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($pay['nama_pembayaran'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <?php else: ?>
+                        <div class="mk-payment-placeholder" aria-hidden="true"></div>
+                        <?php endif; ?>
+                        <p><?php echo htmlspecialchars($pay['nama_pembayaran'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php else: ?>
+                <p style="text-align: center; color: #8A7F73;">Belum ada informasi metode pembayaran untuk cabang ini.</p>
+                <?php endif; ?>
+
+            </div>
+        </section>
+
+        <!-- SECTION 6C: BERITA & BLOG CABANG -->
+        <section class="mk-sec-news">
+            <div class="mk-container">
+
+                <div class="mk-promo-header">
+                    <div class="mk-promo-title-box">
+                        <h2>Berita & Blog <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                        <div class="mk-promo-underline"></div>
+                    </div>
+                    <a href="<?php echo BASE_URL . URL_CATEGORY; ?>manna-kampus-1-babarsari" class="mk-promo-link-all">
+                        Lihat Semua <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+
+                <div class="mk-news-grid">
+                    <?php if (!empty($result_news)): ?>
+                        <?php foreach ($result_news as $n):
+                            $foto_news = !empty($n['photo'])
+                                ? BASE_URL . 'assets/uploads/' . $n['photo']
+                                : BASE_URL . 'assets/uploads/default-news.jpg';
+                            $tanggal_news = date('d M Y', strtotime($n['news_date']));
+                        ?>
+                            <a href="<?php echo BASE_URL . URL_NEWS . urlencode($n['news_slug']); ?>" class="mk-news-card">
+                                <div class="mk-news-thumb">
+                                    <img src="<?php echo $foto_news; ?>" alt="<?php echo htmlspecialchars($n['news_title'], ENT_QUOTES, 'UTF-8'); ?>">
+                                </div>
+                                <div class="mk-news-info">
+                                    <span class="mk-news-date"><i class="fa-regular fa-calendar"></i> <?php echo $tanggal_news; ?></span>
+                                    <h4 class="mk-news-title"><?php echo htmlspecialchars($n['news_title'], ENT_QUOTES, 'UTF-8'); ?></h4>
+                                    <p class="mk-news-excerpt"><?php echo htmlspecialchars($n['news_content_short'], ENT_QUOTES, 'UTF-8'); ?></p>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div style="grid-column: 1 / -1; text-align:center; color:#8A7F73; padding: 30px 0;">
+                            <p>Belum ada berita untuk cabang ini.</p>
+                        </div>
                     <?php endif; ?>
                 </div>
 
@@ -623,11 +791,12 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
                 
                 <?php if (!empty($result_galeri)): ?>
                     <div class="mk-gallery-grid-clean">
-                        <?php foreach ($result_galeri as $foto): 
-                            $foto_url = BASE_URL . 'assets/uploads/' . htmlspecialchars($foto, ENT_QUOTES, 'UTF-8');
+                        <?php foreach ($result_galeri as $g): 
+                            $foto_url = BASE_URL . 'assets/uploads/' . htmlspecialchars($g['foto'], ENT_QUOTES, 'UTF-8');
+                            $caption_text = !empty($g['caption']) ? $g['caption'] : $current_cabang['nama_cabang'];
                         ?>
-                            <div class="mk-gallery-card" onclick="openImageModal('<?php echo $foto_url; ?>')">
-                                <img src="<?php echo $foto_url; ?>" alt="Galeri Manna Kampus">
+                            <div class="mk-gallery-card" onclick="openImageModal('<?php echo $foto_url; ?>', '<?php echo htmlspecialchars(addslashes($caption_text), ENT_QUOTES, 'UTF-8'); ?>')">
+                                <img src="<?php echo $foto_url; ?>" alt="<?php echo htmlspecialchars($caption_text, ENT_QUOTES, 'UTF-8'); ?>">
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -648,11 +817,13 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 <!-- ========================================== -->
 <!-- 1. HTML MODAL POP-UP (Perbesar & Silang Oranye) -->
 <!-- ========================================== -->
-<div id="imageModal" style="display:none; position:fixed; z-index:9999999; left:0; top:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.88); justify-content:center; align-items:center;" onclick="closeImageModal(event)">
+<div id="imageModal" style="display:none; position:fixed; z-index:9999999; left:0; top:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.88); flex-direction:column; justify-content:center; align-items:center;" onclick="closeImageModal(event)">
     
     <span style="position:absolute; top:25px; right:30px; background-color:#D65A18; color:#fff; width:45px; height:45px; border-radius:50%; font-size:24px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:10000001;" onclick="closeImageModal(event)">&times;</span>
     
-    <img id="imageModalImg" style="max-width:95vw; max-height:95vh; width:auto; height:75vh; margin:auto; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.5); object-fit:contain;" onclick="event.stopPropagation()">
+    <img id="imageModalImg" style="max-width:95vw; max-height:75vh; width:auto; height:75vh; margin:auto; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.5); object-fit:contain;" onclick="event.stopPropagation()">
+    
+    <p id="imageModalCaption" style="position:absolute; top:calc(50% + 37.5vh); left:50%; transform:translateX(-50%); width:90vw; box-sizing:border-box; color:#fff; font-size:1.5rem; font-weight:600; text-align:center; margin:0; padding:10px 16px; max-width:90vw; display:none;" onclick="event.stopPropagation()"></p>
 </div>
 
 <!-- ========================================== -->
@@ -660,8 +831,18 @@ $result_galeri = $stmt_galeri->fetchAll(PDO::FETCH_COLUMN);
 <!-- ========================================== -->
 <script>
 // Fungsi untuk Membuka & Menutup Modal Perbesar Gambar
-function openImageModal(src) {
+function openImageModal(src, caption) {
     document.getElementById('imageModalImg').src = src;
+
+    var captionEl = document.getElementById('imageModalCaption');
+    if (caption) {
+        captionEl.textContent = caption;
+        captionEl.style.display = 'block';
+    } else {
+        captionEl.textContent = '';
+        captionEl.style.display = 'none';
+    }
+
     document.getElementById('imageModal').style.display = 'flex';
 }
 
@@ -678,7 +859,6 @@ function updateDownloadLink() {
         var imgSrc = $centerSlide.attr('src');
         $downloadBtn.attr('href', imgSrc);
 
-        // Ambil nama file asli dari URL untuk nama file download
         var fileName = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
         $downloadBtn.attr('download', fileName);
     }
@@ -694,7 +874,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let activeVideoUrl = "<?php echo $video_master; ?>";
 
-    // Play Video Utama
     if (playBtn) {
         playBtn.addEventListener('click', function() {
             if(activeVideoUrl) {
@@ -706,7 +885,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Change Active Video
 function changeActiveVideo(videoUrl, element) {
     $('.mk-video-list-card').removeClass('active');
     $(element).addClass('active');
@@ -753,10 +931,21 @@ window.addEventListener('load', function () {
         ]
     });
 
+    // FIX GAP: paksa Slick hitung ulang posisi/tinggi track setelah benar-benar settle.
+    // Ini mengatasi kasus di mana Slick sempat salah hitung tinggi awal carousel
+    // (menyisakan ruang kosong besar) sebelum layout benar-benar selesai reflow.
+    setTimeout(function () {
+        $slider.slick('setPosition');
+    }, 300);
+
+    // Jaga-jaga juga kalau user resize window manual setelah halaman terbuka
+    $(window).on('resize', function () {
+        $slider.slick('setPosition');
+    });
+
     $('#mk-flyer-prev').on('click', function () { $slider.slick('slickPrev'); });
     $('#mk-flyer-next').on('click', function () { $slider.slick('slickNext'); });
 
-    // Klik gambar: kalau bukan slide tengah -> geser ke situ. Kalau slide tengah -> buka lightbox.
     $slider.on('click', '.mk-flyer-slide-inner', function () {
         var $slide = $(this).closest('.slick-slide');
 
