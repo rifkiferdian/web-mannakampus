@@ -99,8 +99,8 @@
 .mk-highlight-platform{ position:absolute; top:12px; left:12px; display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,.72); color:#fff; font-size:18px; }
 .mk-highlight-play{ position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:32px; text-shadow:0 2px 8px rgba(0,0,0,.45); }
 .mk-highlight-content{ padding:14px 16px 16px; }
-.mk-highlight-title{ margin:0 0 6px; font-size:1.05rem; font-weight:700; }
-.mk-highlight-author{ margin:0; color:var(--mk-muted); font-size:.92rem; }
+.mk-highlight-title{ margin:0 0 8px; font-size:1.55rem; line-height:1.35; font-weight:700; }
+.mk-highlight-author{ margin:0; color:var(--mk-muted); font-size:1.254rem; line-height:1.4; }
 .mk-highlights-grid .mk-highlights-main,.mk-highlights-grid .mk-highlights-side,.mk-highlights-side-top,.mk-highlights-side-bottom{ display:contents; }
 .mk-highlights-main img{ width:100%; height:100%; object-fit:cover; border-radius:10px; display:block; }
 .mk-highlights-side{ display:grid; grid-template-rows:1fr 1fr; gap:16px; }
@@ -111,9 +111,9 @@
 .mk-video-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;}
 .mk-video-modal.is-open{display:flex;}
 .mk-video-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.75);}
-.mk-video-modal-box{position:relative;background:#fff;border-radius:12px;padding:18px;max-width:720px;width:92%;max-height:90vh;z-index:1;overflow:auto;}
-.mk-video-modal-frame{position:relative;width:100%;padding-top:75%;}
-.mk-video-modal-frame.is-video{padding-top:120%;max-width:440px;margin:0 auto;}
+.mk-video-modal-box{position:relative;background:#fff;border-radius:12px;padding:14px;max-width:560px;width:90%;max-height:calc(100vh - 32px);z-index:1;overflow:hidden;}
+.mk-video-modal-frame{position:relative;width:100%;height:min(64vh,560px);}
+.mk-video-modal-frame.is-video{height:min(68vh,600px);max-width:360px;margin:0 auto;}
 .mk-video-modal-frame iframe,.mk-video-modal-frame img{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:8px;object-fit:contain;background:#f3f3f3;}
 .mk-video-modal-original{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:12px 18px;border:1px solid #da5c2a;border-radius:8px;background:#da5c2a;color:#fff;font-weight:700;text-decoration:none;transition:background .2s ease;}
 .mk-video-modal-original:hover{background:#b9471e;color:#fff;}
@@ -333,12 +333,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			frame.classList.toggle('is-video', type === 'video' || platform === 'instagram' || platform === 'tiktok');
 			frame.innerHTML = '';
 			if (platform === 'instagram' || platform === 'tiktok') {
-				var quote = document.createElement('blockquote');
-				quote.className = platform === 'instagram' ? 'instagram-media' : 'tiktok-embed';
-				quote.setAttribute(platform === 'instagram' ? 'data-instgrm-permalink' : 'cite', url.split('?')[0]);
-				if (platform === 'tiktok') quote.setAttribute('data-video-id', (url.match(/\/video\/(\d+)/) || [])[1] || '');
-				frame.appendChild(quote);
-				processSocialEmbed(platform);
+				var socialFrame = document.createElement('iframe');
+				socialFrame.src = src;
+				socialFrame.allow = 'autoplay; encrypted-media; picture-in-picture';
+				socialFrame.allowFullscreen = true;
+				frame.appendChild(socialFrame);
 			} else if (type !== 'video') {
 				var image = document.createElement('img');
 				image.src = btn.getAttribute('data-image');
