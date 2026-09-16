@@ -6,7 +6,9 @@ if(isset($_POST['form1'])) {
     $valid = 1;
     $error_message = '';
 
-    if(empty($_POST['id_cabang'])) {
+    // Branch: boleh "all" (Semua Cabang) atau id cabang tertentu.
+    // Hanya string kosong (belum dipilih sama sekali) yang dianggap tidak valid.
+    if(!isset($_POST['id_cabang']) || $_POST['id_cabang'] === '') {
         $valid = 0;
         $error_message .= "Branch can not be empty<br>";
     }
@@ -53,6 +55,12 @@ if(isset($_POST['form1'])) {
         if($final_name === false) {
             $error_message .= 'Gambar tidak dapat diunggah.<br>';
         } else {
+
+            // "all" berarti flyer nasional / berlaku semua cabang -> disimpan sebagai NULL
+            $id_cabang_to_save = ($_POST['id_cabang'] === 'all')
+                ? null
+                : (int) $_POST['id_cabang'];
+
             $statement = $pdo->prepare("
                 INSERT INTO tbl_flyer 
                 (id_cabang, photo, start_date, end_date) 
@@ -60,7 +68,7 @@ if(isset($_POST['form1'])) {
             ");
 
             $statement->execute(array(
-                $_POST['id_cabang'],
+                $id_cabang_to_save,
                 $final_name,
                 $_POST['start_date'],
                 $_POST['end_date']
@@ -115,6 +123,13 @@ $cabang_list = $statement->fetchAll();
 
                                 <select class="form-control" name="id_cabang">
                                     <option value="">-- Select Branch --</option>
+
+                                    <option 
+                                        value="all"
+                                        <?php echo (isset($_POST['id_cabang']) && $_POST['id_cabang'] === 'all') ? 'selected' : ''; ?>
+                                    >
+                                        🌍 Semua Cabang (All Manna Kampus)
+                                    </option>
 
                                     <?php foreach($cabang_list as $cabang): ?>
 
