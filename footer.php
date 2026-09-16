@@ -31,7 +31,16 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-.footer-main .footer-brand .footer-logo{margin-bottom:35px;}
+.footer-main .footer-brand .footer-logo{
+	display:inline-flex;
+	align-items:center;
+	width:fit-content;
+	max-width:100%;
+	margin-bottom:35px;
+	padding:12px 14px;
+	background:#ff7a00;
+	border-radius:10px;
+}
 .footer-main .footer-brand .footer-logo img{max-width:250px;width:100%;height:auto;display:block;}
 
 .footer-main .footer-brand p{margin-bottom: 0;}
