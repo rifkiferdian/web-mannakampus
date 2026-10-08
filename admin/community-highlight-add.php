@@ -24,10 +24,7 @@ if(isset($_POST['form1'])) {
 
     $new_filename = null;
 
-    if (empty($_FILES['image']['name'])) {
-        $valid = 0;
-        $error_message .= "Thumbnail image can not be empty<br>";
-    } else {
+    if (!empty($_FILES['image']['name'])) {
         if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
             $valid = 0;
             $error_message .= "Gagal upload file: " . htmlspecialchars($_FILES['image']['name']) . "<br>";
@@ -47,8 +44,9 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
+        if (!$new_filename) $new_filename = download_social_thumbnail($_POST['url'], $upload_dir, 'highlight');
         $destination = $upload_dir . $new_filename;
-        move_uploaded_file($_FILES['image']['tmp_name'], $destination);
+        if (!empty($_FILES['image']['tmp_name'])) move_uploaded_file($_FILES['image']['tmp_name'], $destination);
 
         $statement = $pdo->prepare(
             "INSERT INTO sorotan_komunitas (title, platform, image, url, author, type, sort_order, is_active)
@@ -146,10 +144,10 @@ if(isset($_POST['form1'])) {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">Thumbnail Image <span>*</span></label>
+                            <label for="" class="col-sm-2 control-label">Thumbnail Image</label>
                             <div class="col-sm-6">
                                 <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp">
-                                <p class="help-block">Format: jpg, jpeg, png, webp. Maks 2MB.</p>
+                                <p class="help-block">Opsional. Kosongkan jika ingin memakai embed media sosial. Format: jpg, jpeg, png, webp. Maks 2MB.</p>
                             </div>
                         </div>
                         <div class="form-group">

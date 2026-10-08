@@ -487,7 +487,7 @@ if($cur_page == 'blog.php')
 			display: none!important;
 			min-width: 210px!important;
 			padding: 8px!important;
-			background: #fff!important;
+			background: #302b2b!important;
 			border: 1px solid rgba(15,23,42,0.08)!important;
 			border-radius: 6px!important;
 			box-shadow: 0 18px 45px rgba(15,23,42,0.16)!important;
@@ -616,6 +616,14 @@ if($cur_page == 'blog.php')
 		.mk-brand,
 		.mk-brand:hover,
 		.mk-brand:focus {
+			display: inline-flex!important;
+			align-items: center!important;
+			justify-content: center!important;
+			align-self: stretch!important;
+			padding: 0 14px!important;
+			border-radius: 0!important;
+			background: #ff7a00!important;
+			clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%)!important;
 			color: #ff7a00!important;
 			font-size: 24px!important;
 			font-weight: 800!important;
@@ -629,8 +637,8 @@ if($cur_page == 'blog.php')
 			max-width: 180px!important;
 			max-height: 48px!important;
 			object-fit: contain!important;
-			/* Menyamarkan latar putih pada file logo yang belum transparan. */
-			mix-blend-mode: multiply;
+			/* Bidang gelap menjaga tagline putih tetap terbaca. */
+			mix-blend-mode: normal;
 		}
 		.mk-mobile-menu {
 			display: none!important;
