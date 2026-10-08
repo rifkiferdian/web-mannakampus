@@ -57,6 +57,12 @@ if(isset($_POST['form1'])) {
     if($valid == 1) {
         $image_to_save = $data['image'];
 
+        if (!empty($_POST['remove_image']) && !empty($image_to_save)) {
+            $old_path = $upload_dir . $image_to_save;
+            if (file_exists($old_path)) { @unlink($old_path); }
+            $image_to_save = null;
+        }
+
         if ($new_filename) {
             $destination = $upload_dir . $new_filename;
             if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
@@ -67,6 +73,8 @@ if(isset($_POST['form1'])) {
                 $image_to_save = $new_filename;
             }
         }
+
+        if (!$image_to_save) $image_to_save = download_social_thumbnail($_POST['url'], $upload_dir, 'highlight-' . $id);
 
         $statement = $pdo->prepare(
             "UPDATE sorotan_komunitas
@@ -180,7 +188,8 @@ if(isset($_POST['form1'])) {
                                 </div>
                                 <?php endif; ?>
                                 <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp">
-                                <p class="help-block">Kosongkan jika tidak ingin mengganti gambar. Format: jpg, jpeg, png, webp. Maks 2MB.</p>
+                                <?php if (!empty($data['image'])): ?><label style="display:block;margin-top:8px;"><input type="checkbox" name="remove_image" value="1"> Hapus thumbnail saat disimpan</label><?php endif; ?>
+                                <p class="help-block">Opsional. Kosongkan jika tidak ingin mengganti gambar. Format: jpg, jpeg, png, webp. Maks 2MB.</p>
                             </div>
                         </div>
                         <div class="form-group">

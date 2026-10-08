@@ -5,31 +5,40 @@ $cabangList = [];
 $stmtCabangAll = $pdo->query("SELECT * FROM tbl_cabang ORDER BY id ASC");
 $cabangList = $stmtCabangAll->fetchAll(PDO::FETCH_ASSOC);
 
-// 1. Tentukan id cabang dari URL (?cabang=ID)
-$selected_cabang_id = isset($_GET['cabang']) ? (int) $_GET['cabang'] : 0;
+// 1. Ambil parameter cabang dari URL
+$cabang_param  = isset($_GET['cabang']) ? $_GET['cabang'] : null;
+$show_all      = ($cabang_param === 'all'); // true jika user pilih "All Manna Kampus"
+
+$selected_cabang_id = 0;
 $current_cabang = null;
 
-// 2. Cari data cabang sesuai ID yang dipilih
-if ($selected_cabang_id > 0) {
-    foreach ($cabangList as $cabang) {
-        if ($cabang['id'] == $selected_cabang_id) {
-            $current_cabang = $cabang;
-            break;
+if (!$show_all) {
+    // 2. Cari data cabang sesuai ID yang dipilih
+    $selected_cabang_id = (int) $cabang_param;
+    if ($selected_cabang_id > 0) {
+        foreach ($cabangList as $cabang) {
+            if ($cabang['id'] == $selected_cabang_id) {
+                $current_cabang = $cabang;
+                break;
+            }
         }
     }
-}
 
-// 3. Jika ID tidak valid atau tidak ada di URL, gunakan cabang pertama sebagai default
-if (!$current_cabang && count($cabangList) > 0) {
-    $current_cabang = $cabangList[0];
-    $selected_cabang_id = $current_cabang['id'];
+    // 3. Jika ID tidak valid / tidak ada di URL, default ke cabang pertama
+    if (!$current_cabang && count($cabangList) > 0) {
+        $current_cabang = $cabangList[0];
+        $selected_cabang_id = $current_cabang['id'];
+    }
 }
 
 $first_map_location = !empty($current_cabang['alamat']) ? $current_cabang['alamat'] : 'Manna Kampus Yogyakarta';
 
-// 4. Query mengambil daftar produk promo eksklusif milik cabang yang sedang diakses
+// 4. Query mengambil daftar produk promo eksklusif
 $result_promos = [];
-if ($current_cabang) {
+if ($show_all) {
+    $stmt_promo = $pdo->query("SELECT * FROM tbl_cabang_promo ORDER BY id DESC LIMIT 8");
+    $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
+} elseif ($current_cabang) {
     $stmt_promo = $pdo->prepare("SELECT * FROM tbl_cabang_promo WHERE id_cabang = ? ORDER BY id DESC LIMIT 8");
     $stmt_promo->execute([$current_cabang['id']]);
     $result_promos = $stmt_promo->fetchAll(PDO::FETCH_ASSOC);
@@ -97,7 +106,7 @@ if ($current_cabang) {
 .mk-flyer-wrap{ max-width:800px; margin:0 auto; position:relative; padding:0 60px; }
 .mk-flyer-slider{ margin:0 -12px; }
 .mk-flyer-slide{ padding:0 12px; }
-.mk-flyer-slide-inner{ background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08); }
+.mk-flyer-slide-inner{ background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08); position:relative; }
 .mk-flyer-slide img{
     width:100%;
     display:block;
@@ -116,6 +125,20 @@ if ($current_cabang) {
     box-shadow:0 22px 48px rgba(0,0,0,.20);
 }
 .mk-flyer-slider .slick-slide{ transition:all .35s ease; }
+
+.mk-flyer-national-badge{
+    position:absolute;
+    top:14px;
+    left:14px;
+    background:#2E2620;
+    color:#fff;
+    font-size:0.95rem;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:6px;
+    z-index:3;
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+}
 
 .mk-flyer-arrow{
     position:absolute;
@@ -288,31 +311,35 @@ if ($current_cabang) {
 <!-- Hero Shop End -->
 
 <?php
-// Ambil flyer sesuai cabang terpilih dan tanggal aktif
-if ($selected_cabang_id > 0) {
+// Ambil flyer sesuai cabang terpilih dan tanggal aktif.
+// id_cabang NULL = flyer nasional (berlaku untuk semua cabang).
+if ($show_all) {
 
+    // Mode "All Manna Kampus": HANYA flyer nasional (id_cabang IS NULL)
     $statement = $pdo->prepare("
         SELECT *
         FROM tbl_flyer
-        WHERE id_cabang = ?
+        WHERE id_cabang IS NULL
           AND start_date <= CURDATE()
           AND end_date >= CURDATE()
         ORDER BY id ASC
     ");
 
-    $statement->execute([$selected_cabang_id]);
+    $statement->execute();
 
 } else {
 
+    // Mode cabang tertentu: flyer khusus cabang tsb + flyer nasional
     $statement = $pdo->prepare("
         SELECT *
         FROM tbl_flyer
-        WHERE start_date <= CURDATE()
+        WHERE (id_cabang = ? OR id_cabang IS NULL)
+          AND start_date <= CURDATE()
           AND end_date >= CURDATE()
-        ORDER BY id ASC
+        ORDER BY (id_cabang IS NULL) ASC, id ASC
     ");
 
-    $statement->execute();
+    $statement->execute([$selected_cabang_id]);
 }
 
 // Simpan hasil query ke variabel $flyers
@@ -328,8 +355,9 @@ $flyers = $statement->fetchAll(PDO::FETCH_ASSOC);
         <?php if (count($cabangList) > 0): ?>
         <div class="mk-flyer-branch-picker">
             <select id="mk-flyer-branch-select" onchange="window.location.href='promo.php?cabang='+this.value+'#mk-flyer-section'">
+                <option value="all" <?php echo $show_all ? 'selected' : ''; ?>>All Manna Kampus</option>
                 <?php foreach ($cabangList as $cabang): ?>
-                    <option value="<?php echo $cabang['id']; ?>" <?php echo ($cabang['id'] == $selected_cabang_id) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $cabang['id']; ?>" <?php echo (!$show_all && $cabang['id'] == $selected_cabang_id) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?>
                     </option>
                 <?php endforeach; ?>
@@ -345,9 +373,15 @@ $flyers = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="mk-flyer-slider">
                 <?php foreach ($flyers as $flyer): ?>
-                    <?php $photoFile = htmlspecialchars($flyer['photo'], ENT_QUOTES, 'UTF-8'); ?>
+                    <?php
+                        $photoFile = htmlspecialchars($flyer['photo'], ENT_QUOTES, 'UTF-8');
+                        $is_national = ($flyer['id_cabang'] === null);
+                    ?>
                     <div class="mk-flyer-slide">
                         <div class="mk-flyer-slide-inner">
+                            <?php if ($is_national): ?>
+                                <span class="mk-flyer-national-badge">Berlaku Semua Cabang</span>
+                            <?php endif; ?>
                             <img
                                 src="<?php echo BASE_URL; ?>assets/uploads/<?php echo $photoFile; ?>"
                                 data-photo="<?php echo $photoFile; ?>"
@@ -378,11 +412,16 @@ $flyers = $statement->fetchAll(PDO::FETCH_ASSOC);
                 
                 <div class="mk-promo-header">
                     <div class="mk-promo-title-box">
-                        <h2>Promo Exclusive Cabang <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
-                        <p>Hanya berlaku di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></p>
+                        <?php if ($show_all): ?>
+                            <h2>Promo Exclusive Seluruh Manna Kampus</h2>
+                            <p>Kumpulan promo pilihan dari semua cabang Manna Kampus</p>
+                        <?php else: ?>
+                            <h2>Promo Exclusive Cabang <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                            <p>Hanya berlaku di <?php echo htmlspecialchars($current_cabang['nama_cabang'], ENT_QUOTES, 'UTF-8'); ?></p>
+                        <?php endif; ?>
                         <div class="mk-promo-underline"></div>
                     </div>
-                    <a href="promo.php?cabang=<?php echo $current_cabang['id']; ?>" class="mk-promo-link-all">
+                    <a href="promo.php?cabang=<?php echo $show_all ? 'all' : $current_cabang['id']; ?>" class="mk-promo-link-all">
                         Lihat Semua <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>
@@ -539,14 +578,6 @@ window.addEventListener('load', function () {
     if ($slider.hasClass('slick-initialized')) {
         $slider.slick('unslick');
     }
-
-    // Data semua flyer untuk gallery lightbox, urutannya sama dengan slide
-    var flyerItems = [
-        { src: 'http://localhost/web-mannakampus/assets/uploads/promo-1.jpg' },
-        { src: 'http://localhost/web-mannakampus/assets/uploads/promo-2.jpg' },
-        { src: 'http://localhost/web-mannakampus/assets/uploads/promo-3.jpg' },
-        { src: 'http://localhost/web-mannakampus/assets/uploads/promo-1.jpg' }
-    ];
 
     $slider.slick({
         centerMode: true,

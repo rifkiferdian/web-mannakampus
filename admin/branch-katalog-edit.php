@@ -43,7 +43,9 @@ if (!$data) {
 if(isset($_POST['form1'])) {
     $valid = 1;
 
-    if(empty($_POST['id_cabang'])) {
+    // Branch: boleh "all" (Semua Cabang) atau id cabang tertentu.
+    // Hanya string kosong (belum dipilih sama sekali) yang dianggap tidak valid.
+    if(!isset($_POST['id_cabang']) || $_POST['id_cabang'] === '') {
         $valid = 0;
         $error_message .= "Branch can not be empty<br>";
     }
@@ -94,6 +96,12 @@ if(isset($_POST['form1'])) {
         }
 
         if($valid == 1) {
+
+            // "all" berarti flyer nasional / berlaku semua cabang -> disimpan sebagai NULL
+            $id_cabang_to_save = ($_POST['id_cabang'] === 'all')
+                ? null
+                : (int) $_POST['id_cabang'];
+
             $statement = $pdo->prepare("
                 UPDATE tbl_flyer 
                 SET id_cabang=?, photo=?, start_date=?, end_date=? 
@@ -101,7 +109,7 @@ if(isset($_POST['form1'])) {
             ");
 
             $statement->execute(array(
-                $_POST['id_cabang'],
+                $id_cabang_to_save,
                 $final_name,
                 $_POST['start_date'],
                 $_POST['end_date'],
@@ -123,6 +131,7 @@ if(isset($_POST['form1'])) {
         }
     }
 
+    // Simpan input yang barusan dikirim supaya form tidak reset saat ada error validasi
     $data['id_cabang'] = $_POST['id_cabang'];
     $data['start_date'] = $_POST['start_date'];
     $data['end_date'] = $_POST['end_date'];
@@ -131,6 +140,11 @@ if(isset($_POST['form1'])) {
 $statement = $pdo->prepare("SELECT id, nama_cabang FROM tbl_cabang ORDER BY nama_cabang ASC");
 $statement->execute();
 $cabang_list = $statement->fetchAll();
+
+// Untuk keperluan menandai option yang aktif di dropdown:
+// - kalau id_cabang di data NULL (flyer nasional), anggap value-nya "all"
+// - kalau id_cabang berasal dari input form yang gagal validasi, dia sudah string "all" atau angka, biarkan apa adanya
+$selected_branch_value = ($data['id_cabang'] === null) ? 'all' : $data['id_cabang'];
 ?>
 
 <section class="content-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;">
@@ -176,11 +190,18 @@ $cabang_list = $statement->fetchAll();
 
                                     <option value="">-- Select Branch --</option>
 
+                                    <option 
+                                        value="all"
+                                        <?php echo ($selected_branch_value === 'all') ? 'selected' : ''; ?>
+                                    >
+                                        🌍 Semua Cabang (All Manna Kampus)
+                                    </option>
+
                                     <?php foreach($cabang_list as $cabang): ?>
 
                                     <option 
                                         value="<?php echo $cabang['id']; ?>"
-                                        <?php echo ($data['id_cabang'] == $cabang['id']) ? 'selected' : ''; ?>
+                                        <?php echo ($selected_branch_value == $cabang['id']) ? 'selected' : ''; ?>
                                     >
                                         <?php echo htmlspecialchars($cabang['nama_cabang']); ?>
                                     </option>
