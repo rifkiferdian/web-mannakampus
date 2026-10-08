@@ -24,10 +24,29 @@ if(isset($_POST['form1'])) {
                 $row_password = $row['password'];
             }
         
-            if( $row_password != md5($password) ) {
+            // Password baru menggunakan password_hash() (bcrypt saat ini).
+            // Hash MD5 lama tetap diterima sekali agar akun lama dapat dimigrasikan.
+            $is_legacy_md5 = preg_match('/^[a-f0-9]{32}$/i', $row_password) === 1;
+            $password_is_valid = password_verify($password, $row_password);
+
+            if (!$password_is_valid && $is_legacy_md5) {
+                $password_is_valid = hash_equals(strtolower($row_password), md5($password));
+            }
+
+            if (!$password_is_valid) {
                 $error_message .= 'Password does not match<br>';
             } else {       
-            
+
+                // Upgrade otomatis hash MD5 lama (atau parameter bcrypt lama) setelah login sukses.
+                if ($is_legacy_md5 || password_needs_rehash($row_password, PASSWORD_DEFAULT)) {
+                    $new_password_hash = password_hash($password, PASSWORD_DEFAULT);
+                    if ($new_password_hash !== false) {
+                        $statement = $pdo->prepare("UPDATE tbl_user SET password=? WHERE id=?");
+                        $statement->execute(array($new_password_hash, $row['id']));
+                        $row['password'] = $new_password_hash;
+                    }
+                }
+
 				$_SESSION['user'] = $row;
                 header("location: index.php");
             }

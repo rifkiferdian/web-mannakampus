@@ -82,13 +82,20 @@ if(isset($_POST['form3'])) {
 
     if($valid == 1) {
 
-    	$_SESSION['user']['password'] = md5($_POST['password']);
+        // PASSWORD_DEFAULT memakai bcrypt pada PHP saat ini dan menyimpan salt secara aman.
+        $new_password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    	// updating the database
-		$statement = $pdo->prepare("UPDATE tbl_user SET password=? WHERE id=?");
-		$statement->execute(array(md5($_POST['password']),$_SESSION['user']['id']));
+        if ($new_password_hash === false) {
+            $error_message .= 'Password could not be updated. Please try again.<br>';
+        } else {
+            $_SESSION['user']['password'] = $new_password_hash;
 
-    	$success_message = 'User Password is updated successfully.';
+            // updating the database
+            $statement = $pdo->prepare("UPDATE tbl_user SET password=? WHERE id=?");
+            $statement->execute(array($new_password_hash,$_SESSION['user']['id']));
+
+            $success_message = 'User Password is updated successfully.';
+        }
     }
 }
 ?>
